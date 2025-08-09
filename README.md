@@ -36,10 +36,10 @@ Pursuing the ultimate, always striving for perfection
 
 ### ✨ Features
 - 🌈 Native Control Extension。
-- 🎨 Pure GDI vector graphics, comfortable dynamic effects that can be interrupted
-- 👓 Emoji breaks the black and white boundaries and adds fun
-- 💎 Superior shadow effects on Winforms
-- 📦 Borderless window with native window features
+- 🎨 ...
+- 👓 ...
+- 💎 ...
+- 📦 ...
 
 ### Sponsorship support
 If you think it's good to use, you can sponsor my coffee.
