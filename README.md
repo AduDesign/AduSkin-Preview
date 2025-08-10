@@ -17,7 +17,6 @@ Pursuing the ultimate, always striving for perfection
 ```c
 <Application x:Class="Your project"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:AduSkin="clr-namespace:AduSkin;assembly=AduSkin">
     <Application.Resources>
         <ResourceDictionary>
