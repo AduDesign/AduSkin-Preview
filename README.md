@@ -12,7 +12,7 @@ Pursuing the ultimate, always striving for perfection
 
 ![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/Detail.png?raw=true)
 
-![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/Home.png?raw=true)
+![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/Use.png?raw=true)
 
 ### 💎 Using Reference "AduSkin.Demo"
 ```c
