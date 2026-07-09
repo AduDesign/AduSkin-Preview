@@ -1,5 +1,6 @@
 <div align="center">
-
+    
+<img src="https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/logo.png" alt="logo" width="100" height="auto" style="display:block; margin:20;">
 <h1>AduSkin</h1>
 
 #### A Beautiful WPF Control UI.
@@ -8,7 +9,6 @@ Pursuing the ultimate, always striving for perfection
 </div>
 
 ### 😍 Preview
-
 ![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/Use.png?raw=true)
 
 ![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/Use2.png?raw=true)
