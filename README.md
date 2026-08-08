@@ -45,11 +45,11 @@ Pursuing the ultimate, always striving for perfection
 - QQ Group3:[252480168](https://jq.qq.com/?_wv=1027&k=5fyhmof)
 
 ### ✨ Features
-- 🌈 Native Control Extension。
-- 🎨 ...
-- 👓 ...
-- 💎 ...
-- 📦 ...
+- 🌈 Native Control Extension.
+- 🎨 Multi color theme.
+- 💎 Internationalization support.
+- 👓 Low code components.
+- 📦 Basic chart.
 
 ### Sponsorship support
 If you think it's good to use, you can sponsor my coffee.
