@@ -65,4 +65,6 @@ If you think it's good to use, you can sponsor my coffee.
 
 ![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/AduMusic1.png)
 
+![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/AduMusic2.png)
+
 
