@@ -61,6 +61,6 @@ If you think it's good to use, you can sponsor my coffee.
 
 > 【[SuperEvil](https://github.com/AduDesign/SuperEvil)】
 
-![image](https://github.com/aduskin/AduSkin/blob/master/screenshot/project/SuperEvil.png)
+![image](https://github.com/AduDesign/AduSkin-Preview/blob/main/Screenshot/AduMusic1.png)
 
 
