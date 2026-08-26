@@ -6,6 +6,8 @@
 #### A Beautiful WPF Control UI.
 
 Pursuing the ultimate, always striving for perfection
+
+【[关于AduSkin](aduskin.github.io)】
 </div>
 
 ### 😍 Preview
