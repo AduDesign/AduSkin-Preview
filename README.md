@@ -7,7 +7,7 @@
 
 Pursuing the ultimate, always striving for perfection
 
-【[关于AduSkin](aduskin.github.io)】
+【[关于AduSkin](https://aduskin.github.io/)】
 </div>
 
 ### 😍 Preview
