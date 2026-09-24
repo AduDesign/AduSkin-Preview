@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "AduSkin/2.0.2": {
+      "AduSkin/2.0.3": {
         "runtime": {
           "AduSkin.dll": {}
         }
@@ -14,7 +14,7 @@
     }
   },
   "libraries": {
-    "AduSkin/2.0.2": {
+    "AduSkin/2.0.3": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

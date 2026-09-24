@@ -6405,6 +6405,11 @@
             Owns a complete drag session and translates overlay targets into layout operations.
             </summary>
         </member>
+        <member name="T:AduSkin.Controls.DockLayoutPreview">
+            <summary>
+            Draws a lightweight, automatically updated preview of a <see cref="T:AduSkin.Controls.DockLayout"/>.
+            </summary>
+        </member>
         <member name="T:AduSkin.Controls.DockOverlayPresenter">
             <summary>Draws dock indicators and the resulting layout preview for the active drag session.</summary>
         </member>
@@ -6441,7 +6446,9 @@
             <summary>Gets or sets whether this document stays in the pinned section of its tab group.</summary>
         </member>
         <member name="T:AduSkin.Controls.DockFloatingPane">
-            <summary>Compatibility wrapper for the original single-pane floating model.</summary>
+            <summary>
+            Compatibility wrapper for the original single-pane floating model.
+            </summary>
         </member>
         <member name="P:AduSkin.Controls.DockNode.MaxLength">
             <summary>
