@@ -1,0 +1,23 @@
+﻿<Grid>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="auto"/>
+        <ColumnDefinition/>
+    </Grid.ColumnDefinitions> 
+    <StackPanel Grid.Column="0" Orientation="Horizontal">
+        <AduSkin:AduFormBox Header="Input" AduAttach:HeaderAttach.Width="40">
+            <AduSkin:AduTextBox Width="100" AduAttach:BorderAttach.CornerRadius="2"/>
+        </AduSkin:AduFormBox>
+        <AduSkin:AduPathIconButton Content="点击" BorderThickness="1" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:BorderAttach.CornerRadius="2" Margin="6,0" Width="auto" Padding="10,0"/>
+        <AduSkin:AduPathIconButton Content="点击" BorderThickness="1" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:BorderAttach.CornerRadius="2" Width="auto" Padding="10,0"/>
+        <AduSkin:AduPathIconButton Content="点击" BorderThickness="1" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:BorderAttach.CornerRadius="2" Margin="6,0" Width="auto" Padding="10,0"/>
+        <AduSkin:AduSplitButton Padding="10,0" Command="{Binding MenuExecuteCommand}" Content="{Binding CurrentTempModel.String1}" AduAttach:BorderAttach.CornerRadius="2" AduAttach:PathDataAttach.PathData="{DynamicResource Icon_Preview}"> 
+            <AduSkin:AduSplitButton.DropDownMenu>
+                <AduSkin:AduContextMenu VerticalOffset="-18" HorizontalOffset="-20" ItemsSource="{Binding Menus}"/>
+            </AduSkin:AduSplitButton.DropDownMenu>
+        </AduSkin:AduSplitButton>
+    </StackPanel>
+    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"> 
+        <AduSkin:AduPathIconButton Content="保存" BorderThickness="1" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:BorderAttach.CornerRadius="2" Margin="6,0" Width="auto" Padding="10,0"/>
+        <AduSkin:AduPathIconButton Content="保存并退出" BorderThickness="1" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:BorderAttach.CornerRadius="2" Width="auto" Padding="10,0" /> 
+    </StackPanel>
+</Grid> 

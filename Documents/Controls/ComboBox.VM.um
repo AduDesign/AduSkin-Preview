@@ -1,0 +1,125 @@
+﻿#region 默认下拉框/复选下拉框
+public void InitDefault()
+{
+    ItemsSource = new ObservableCollection<string>() { "AduSkin", "AntDesign", "HandyControl" };
+    for (int i = 0; i < 10; i++)
+        ItemsSource.Add($"TestItem{i + 1}");
+    SelectedItem = ItemsSource.FirstOrDefault();
+}
+[ObservableProperty]
+private ObservableCollection<string> _itemsSource;
+
+[ObservableProperty]
+private string _selectedItem;
+
+[ObservableProperty]
+private string _selectedItem2; 
+
+/// <summary>
+/// 多选列表，需要提前初始化，并且直接往集合内添加，不会对集合进行Set
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<string> _selectedItems = new ObservableCollection<string>();
+partial void OnSelectedItemsChanged(ObservableCollection<string>? oldValue, ObservableCollection<string> newValue)
+{
+
+} 
+[RelayCommand]
+void ShowSelectedItems()
+{
+    AduMessageBox.Show($"已选择{SelectedItems.Count}个");
+}
+#endregion
+
+#region 树形下拉框
+/// <summary>
+/// 初始化树形数据
+/// </summary>
+private void InitTreeData()
+{
+    TreeItemsSource = new ObservableCollection<NodeModel>
+    {
+        new NodeModel
+        {
+            Name = "Electronics",
+            Children = new ObservableCollection<NodeModel>
+            {
+                new NodeModel
+                {
+                    Name = "Computers",
+                    Children = new ObservableCollection<NodeModel>
+                    {
+                        new NodeModel { Name = "Laptops" },
+                        new NodeModel { Name = "Desktops" },
+                        new NodeModel { Name = "Tablets" }
+                    }
+                },
+                new NodeModel
+                {
+                    Name = "Phones",
+                    Children = new ObservableCollection<NodeModel>
+                    {
+                        new NodeModel { Name = "Smartphones" },
+                        new NodeModel { Name = "Feature Phones" }
+                    }
+                },
+                new NodeModel { Name = "Accessories" }
+            }
+        },
+        new NodeModel
+        {
+            Name = "Clothing",
+            Children = new ObservableCollection<NodeModel>
+            {
+                new NodeModel
+                {
+                    Name = "Men",
+                    Children = new ObservableCollection<NodeModel>
+                    {
+                        new NodeModel { Name = "Shirts" },
+                        new NodeModel { Name = "Pants" },
+                        new NodeModel { Name = "Jackets" }
+                    }
+                },
+                new NodeModel
+                {
+                    Name = "Women",
+                    Children = new ObservableCollection<NodeModel>
+                    {
+                        new NodeModel { Name = "Dresses" },
+                        new NodeModel { Name = "Skirts" },
+                        new NodeModel { Name = "Blouses" }
+                    }
+                },
+                new NodeModel { Name = "Kids" }
+            }
+        },
+        new NodeModel
+        {
+            Name = "Books",
+            Children = new ObservableCollection<NodeModel>
+            {
+                new NodeModel { Name = "Fiction" },
+                new NodeModel { Name = "Non-Fiction" },
+                new NodeModel { Name = "Textbooks" },
+                new NodeModel { Name = "Comics" }
+            }
+        },
+        new NodeModel { Name = "Sports" },
+        new NodeModel { Name = "Home & Garden" }
+    };
+
+    // 默认选中第一个叶子节点
+    SelectedTreeNode = TreeItemsSource[0].Children[0].Children[0];
+}
+/// <summary>
+/// 树形数据源
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<NodeModel> _treeItemsSource;
+/// <summary>
+/// 选中的树形节点
+/// </summary>
+[ObservableProperty]
+private NodeModel _selectedTreeNode;
+#endregion

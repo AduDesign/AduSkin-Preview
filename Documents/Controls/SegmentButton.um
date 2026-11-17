@@ -1,0 +1,58 @@
+AduSegmentButton 是一个分段选择控件，继承自 WPF `ListBox`。它使用 `AduSegmentButtonItem` 作为项容器，支持水平排列、单项选择和项点击事件，适合做模式切换、筛选分组和紧凑选项切换。
+
+以下默认值以 `AduSegmentButton` 的默认样式为准。控件继承 `ListBox` 的选择模型，可使用 `SelectedIndex`、`SelectedItem`、`ItemsSource` 等标准属性。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsAllRound` | 是否让子项四周圆角与外部容器一致。源码公开该属性，当前默认模板未直接使用。 | `bool` | `False` |
+
+## 路由事件
+| 名称 | 描述 |
+| --- | --- |
+| `ItemClick` | 子项鼠标左键抬起时触发，事件新旧值均为当前 `AduSegmentButtonItem`。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 分段项数据源。 | `IEnumerable` | `null` |
+| `SelectedIndex` | 当前选中索引。 | `int` | `-1` |
+| `SelectedItem` | 当前选中项。 | `object` | `null` |
+| `SelectionMode` | 选择模式。继承自 `ListBox`。 | `SelectionMode` | `Single` |
+| `ScrollViewer.HorizontalScrollBarVisibility` | 横向滚动条可见性。 | `ScrollBarVisibility` | `Auto` |
+| `ScrollViewer.VerticalScrollBarVisibility` | 纵向滚动条可见性。 | `ScrollBarVisibility` | `Auto` |
+
+## 容器样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 外层背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `Foreground` | 默认前景色。 | `Brush` | `NormalBrush` 动态资源 |
+| `BorderBrush` | 外层边框颜色。 | `Brush` | `PanelBorderBrush` 动态资源 |
+| `BorderThickness` | 外层边框厚度。 | `Thickness` | `1` |
+| `Padding` | 外层内边距。 | `Thickness` | `2` |
+| `AduAttach:BorderAttach.CornerRadius` | 外层圆角。 | `CornerRadius` | `8` |
+
+## AduSegmentButtonItem 样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 子项圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.SelectedBackground` | 子项选中背景。 | `Brush` | `SelectedBackground` 动态资源 |
+| `AduAttach:BorderAttach.SelectedBorderBrush` | 子项选中边框。 | `Brush` | `SelectedBorderBrush` 动态资源 |
+| `AduAttach:ForegroundAttach.SelectedForeground` | 子项选中文字颜色。 | `Brush` | `SelectedForeground` 动态资源 |
+| `MinWidth` | 子项最小宽度。 | `double` | `40` |
+| `MinHeight` | 子项最小高度。 | `double` | `20` |
+| `Padding` | 子项内边距。 | `Thickness` | `6` |
+| `Margin` | 子项外边距。 | `Thickness` | `1` |
+
+## 使用说明
+- `AduSegmentButton` 默认使用水平 `StackPanel` 排列子项。
+- 直接声明子项时可使用 `AduSegmentButtonItem`；绑定数据源时控件也会自动生成 `AduSegmentButtonItem` 容器。
+- 选中项会切换子项背景、边框和前景色。
+- 需要监听子项点击时使用 `ItemClick`；需要监听选择变化时仍可使用 `SelectionChanged`。
+- 外层使用 `AduScrollViewer`，内容超出时支持滚动。
+
+## 典型场景
+- 列表/网格/卡片视图模式切换。
+- 时间范围、分类、状态筛选。
+- 一组选项中的单项切换。
+- 工具栏中的分段控制。

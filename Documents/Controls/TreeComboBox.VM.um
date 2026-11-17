@@ -1,0 +1,102 @@
+// TreeComboBox ViewModel Example
+
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+
+public partial class TreeComboBoxViewModel : ObservableObject
+{
+    public TreeComboBoxViewModel()
+    {
+        TreeItemsSource = new ObservableCollection<TreeNodeModel>
+        {
+            new TreeNodeModel
+            {
+                Name = "Electronics",
+                Children = new ObservableCollection<TreeNodeModel>
+                {
+                    new TreeNodeModel
+                    {
+                        Name = "Computers",
+                        Children = new ObservableCollection<TreeNodeModel>
+                        {
+                            new TreeNodeModel { Name = "Laptops" },
+                            new TreeNodeModel { Name = "Desktops" },
+                            new TreeNodeModel { Name = "Tablets" }
+                        }
+                    },
+                    new TreeNodeModel
+                    {
+                        Name = "Phones",
+                        Children = new ObservableCollection<TreeNodeModel>
+                        {
+                            new TreeNodeModel { Name = "Smartphones" },
+                            new TreeNodeModel { Name = "Feature Phones" }
+                        }
+                    },
+                    new TreeNodeModel { Name = "Accessories" }
+                }
+            },
+            new TreeNodeModel
+            {
+                Name = "Clothing",
+                Children = new ObservableCollection<TreeNodeModel>
+                {
+                    new TreeNodeModel
+                    {
+                        Name = "Men",
+                        Children = new ObservableCollection<TreeNodeModel>
+                        {
+                            new TreeNodeModel { Name = "Shirts" },
+                            new TreeNodeModel { Name = "Pants" },
+                            new TreeNodeModel { Name = "Jackets" }
+                        }
+                    },
+                    new TreeNodeModel
+                    {
+                        Name = "Women",
+                        Children = new ObservableCollection<TreeNodeModel>
+                        {
+                            new TreeNodeModel { Name = "Dresses" },
+                            new TreeNodeModel { Name = "Skirts" },
+                            new TreeNodeModel { Name = "Blouses" }
+                        }
+                    },
+                    new TreeNodeModel { Name = "Kids" }
+                }
+            },
+            new TreeNodeModel
+            {
+                Name = "Books",
+                Children = new ObservableCollection<TreeNodeModel>
+                {
+                    new TreeNodeModel { Name = "Fiction" },
+                    new TreeNodeModel { Name = "Non-Fiction" },
+                    new TreeNodeModel { Name = "Textbooks" },
+                    new TreeNodeModel { Name = "Comics" }
+                }
+            },
+            new TreeNodeModel { Name = "Sports" },
+            new TreeNodeModel { Name = "Home & Garden" }
+        };
+
+        // Default selection
+        SelectedNode = TreeItemsSource[0].Children[0].Children[0];
+    }
+
+    public ObservableCollection<TreeNodeModel> TreeItemsSource { get; set; }
+
+    public TreeNodeModel SelectedNode { get; set; }
+}
+
+// TreeNodeModel - can be defined in your project or use the one from AduSkin.Controls
+// Note: AduSkin.Controls.TreeNodeModel is already provided in AduTreeComboBox.cs
+
+// Using the TreeNodeModel from AduSkin.Controls:
+// - Make sure AduSkin assembly is referenced
+// - The model is in AduSkin.Controls namespace
+
+// Key Properties:
+// - Name: Display text for the node
+// - Value: Optional value associated with the node
+// - Children: Child nodes collection
+// - IsExpanded: Whether the node is expanded in the tree

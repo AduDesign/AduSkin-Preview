@@ -1,0 +1,48 @@
+﻿[ObservableProperty]
+private int _value;
+
+[ObservableProperty]
+private int _value1;
+
+[ObservableProperty]
+private int _value2;
+
+[ObservableProperty]
+private int _value3;
+
+RefreshArgGaugeValueTask Task => RefreshArgGaugeValueTask.Instance;
+
+public void RefreshValues(int value1, int value2, int value3)
+{
+    Value1 = value1;
+    Value2 = value2;
+    Value3 = value3;
+}
+
+public ArcGaugeViewModel()
+{
+
+}
+~ ArcGaugeViewModel()
+{
+    IsRunning = false;
+}
+
+[ObservableProperty]
+private bool _isRunning;
+partial void OnIsRunningChanged(bool oldValue, bool newValue)
+{
+    if (newValue)
+    {
+        Task.RollBack = RefreshValues;
+        if (!LoopTaskManager.Instance.TryGet(Task.Id, out _))
+            LoopTaskManager.Instance.Register(Task);
+        if (!Task.IsRunning)
+            LoopTaskManager.Instance.Restart(Task.Id);
+    }
+    else
+    {
+        if (Task.IsRunning)
+            LoopTaskManager.Instance.Stop(Task.Id);
+    }
+}

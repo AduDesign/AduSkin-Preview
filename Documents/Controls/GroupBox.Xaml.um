@@ -1,0 +1,58 @@
+﻿<!--  Example 1: GroupBox with Different Header Alignments  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: GroupBox with Different Header Alignments" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Group boxes with custom header styles and alignments"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="2" Rows="2">
+			<UniformGrid.Resources>
+				<Style TargetType="TextBlock">
+					<Setter Property="HorizontalAlignment" Value="Center" />
+					<Setter Property="VerticalAlignment" Value="Center" />
+					<Setter Property="Margin" Value="20" />
+					<Setter Property="FontFamily" Value="{DynamicResource FontSong}" />
+				</Style>
+			</UniformGrid.Resources>
+
+			<AduSkin:AduGroupBox
+				Margin="4"
+				AduAttach:BorderAttach.CornerRadius="6"
+				AduAttach:HeaderAttach.Background="{DynamicResource PanelBackground}"
+				Foreground="Red"
+				Header="Custom Header">
+				<TextBlock Text="Content" />
+			</AduSkin:AduGroupBox>
+
+			<AduSkin:AduGroupBox
+				Margin="4"
+				AduAttach:HeaderAttach.HorizontalAlignment="Center"
+				AduAttach:SplitterAttach.Visible="Collapsed"
+				Header="Centered Header">
+				<TextBlock Text="Content" />
+			</AduSkin:AduGroupBox>
+
+			<AduSkin:AduGroupBox
+				Margin="4"
+				AduAttach:HeaderAttach.HorizontalAlignment="Right"
+				Header="Right Aligned Header">
+				<TextBlock Text="Content" />
+			</AduSkin:AduGroupBox>
+
+			<AduSkin:AduGroupBox Margin="4" Header="Default GroupBox">
+				<TextBlock Text="Content" />
+			</AduSkin:AduGroupBox>
+		</UniformGrid>
+	</StackPanel>
+</Border>

@@ -1,0 +1,228 @@
+﻿   <!--  Example 1: Integer UpDown (Horizontal)  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: Integer UpDown - Horizontal Direction" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Horizontal layout for integer numeric input"
+                        TextWrapping="Wrap" />
+
+                    <AduSkin:AduIntegerUpDown
+                        Width="100"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        AduAttach:LayoutAttach.DirectionType="Horizontal"
+                        FlowDirection="LeftToRight"
+                        LimitMode="Both"
+                        Maximum="{Binding IntMax}"
+                        Minimum="{Binding IntMin}"
+                        Value="{Binding IntValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 2: Integer UpDown (Vertical)  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="0,15">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 2: Integer UpDown - Vertical Direction" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Vertical layout with left-to-right and right-to-left flow"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid HorizontalAlignment="Left" Columns="2">
+                        <StackPanel Margin="0,0,10,0">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Left-to-Right" />
+                            <AduSkin:AduIntegerUpDown
+                                AduAttach:LayoutAttach.DirectionType="Vertical"
+                                FlowDirection="LeftToRight"
+                                Maximum="{Binding IntMax}"
+                                Minimum="{Binding IntMin}"
+                                Value="{Binding IntValue}" />
+                        </StackPanel>
+                        <StackPanel Margin="10,0,0,0">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Right-to-Left" />
+                            <AduSkin:AduIntegerUpDown
+                                AduAttach:LayoutAttach.DirectionType="Vertical"
+                                FlowDirection="RightToLeft"
+                                Maximum="{Binding IntMax}"
+                                Minimum="{Binding IntMin}"
+                                Value="{Binding IntValue}" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 3: Double UpDown  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="0,15">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 3: Double UpDown" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Decimal/double value inputs with horizontal and vertical layouts"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        HorizontalAlignment="Left"
+                        Columns="2"
+                        Rows="1">
+                        <AduSkin:AduFormBox Margin="0,0,10,0" Header="Horizontal Direction">
+                            <AduSkin:AduDoubleUpDown
+                                AduAttach:LayoutAttach.DirectionType="Horizontal"
+                                DecimalPlaces="10"
+                                FlowDirection="LeftToRight"
+                                Maximum="{Binding IntMax}"
+                                Minimum="{Binding IntMin}"
+                                Value="{Binding DoubleValue}" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="10,0,0,0" Header="Vertical Direction">
+                            <AduSkin:AduDoubleUpDown
+                                AduAttach:LayoutAttach.DirectionType="Vertical"
+                                FlowDirection="LeftToRight"
+                                Maximum="4444"
+                                Minimum="-232"
+                                TextAlignment="Center"
+                                Value="{Binding DoubleValue}" />
+                        </AduSkin:AduFormBox>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 4: Limit Modes  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="0,15">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 4: Limit Modes" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Use LimitMode to apply both limits, only one side, or no input limit"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        HorizontalAlignment="Left"
+                        Columns="2"
+                        Rows="2">
+                        <AduSkin:AduFormBox Margin="0,0,10,10" Header="Both: 0 to 100">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                LimitMode="Both"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="50" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="10,0,0,10" Header="Maximum only: 50">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                LimitMode="MaximumOnly"
+                                Maximum="50"
+                                Value="-20" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="0,10,10,0" Header="Minimum only: 0">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                LimitMode="MinimumOnly"
+                                Minimum="0"
+                                Value="150" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="10,10,0,0" Header="No limit">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                LimitMode="None"
+                                Value="150" />
+                        </AduSkin:AduFormBox>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 5: Indicator Buttons and Increment  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="0,15">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 5: Indicator Buttons and Increment" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Use IndicatorButtonVisible to show or hide the spinner buttons, and Increment to control the step value"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        HorizontalAlignment="Left"
+                        Columns="2"
+                        Rows="2">
+                        <AduSkin:AduFormBox Margin="0,0,10,10" Header="Integer increment: 5">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                Increment="5"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="25" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="10,0,0,10" Header="Double increment: 0.25">
+                            <AduSkin:AduDoubleUpDown
+                                Width="130"
+                                DecimalPlaces="2"
+                                Increment="0.25"
+                                Maximum="10"
+                                Minimum="0"
+                                Value="2.5" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="0,10,10,0" Header="Buttons hidden">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                Increment="10"
+                                IndicatorButtonVisible="False"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="40" />
+                        </AduSkin:AduFormBox>
+
+                        <AduSkin:AduFormBox Margin="10,10,0,0" Header="Buttons visible">
+                            <AduSkin:AduIntegerUpDown
+                                Width="130"
+                                Increment="10"
+                                IndicatorButtonVisible="True"
+                                Maximum="100"
+                                Minimum="0"
+                                Value="40" />
+                        </AduSkin:AduFormBox>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>

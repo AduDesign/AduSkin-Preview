@@ -1,0 +1,197 @@
+﻿public TreeDataGridViewModel()
+{
+    InitializeData();
+    InitializeExpandLevels();
+}
+
+#region Properties
+
+[ObservableProperty]
+private ObservableCollection<FileNodeModel> _fileTreeData;
+
+[ObservableProperty]
+private ObservableCollection<int> _expandLevels;
+
+[ObservableProperty]
+private int _selectedExpandLevel = 0;
+
+[ObservableProperty]
+private double _indentSize = 20.0;
+
+#endregion
+
+#region Initialization
+
+private void InitializeExpandLevels()
+{
+    ExpandLevels = new ObservableCollection<int> { -1, 0, 1, 2, 3 };
+}
+
+private void InitializeData()
+{
+    FileTreeData = new ObservableCollection<FileNodeModel>
+    {
+        FileNodeModel.CreateFolder("文档",
+            FileNodeModel.CreateFolder("工作文档",
+                FileNodeModel.CreateFile("项目计划.docx", "Word 文档", "2.5 MB"),
+                FileNodeModel.CreateFile("会议记录.docx", "Word 文档", "1.2 MB"),
+                FileNodeModel.CreateFile("年度报告.xlsx", "Excel 表格", "3.8 MB")
+            ),
+            FileNodeModel.CreateFolder("个人文档",
+                FileNodeModel.CreateFile("简历.pdf", "PDF 文档", "856 KB"),
+                FileNodeModel.CreateFile("备忘录.txt", "文本文档", "12 KB")
+            ),
+            FileNodeModel.CreateFile("README.md", "Markdown", "5 KB")
+        ),
+
+        FileNodeModel.CreateFolder("图片",
+            FileNodeModel.CreateFolder("假期照片",
+                FileNodeModel.CreateFile("海滩.jpg", "JPEG 图像", "4.2 MB"),
+                FileNodeModel.CreateFile("日落.jpg", "JPEG 图像", "3.8 MB"),
+                FileNodeModel.CreateFile("全家福.jpg", "JPEG 图像", "5.1 MB")
+            ),
+            FileNodeModel.CreateFolder("工作截图",
+                FileNodeModel.CreateFile("界面设计.png", "PNG 图像", "2.3 MB"),
+                FileNodeModel.CreateFile("数据图表.png", "PNG 图像", "1.7 MB")
+            ),
+            FileNodeModel.CreateFile("logo.svg", "SVG 图像", "45 KB")
+        ),
+
+        FileNodeModel.CreateFolder("视频",
+            FileNodeModel.CreateFolder("教程视频",
+                FileNodeModel.CreateFile("WPF入门.mp4", "MP4 视频", "125 MB"),
+                FileNodeModel.CreateFile("MVVM模式.mp4", "MP4 视频", "98 MB")
+            ),
+            FileNodeModel.CreateFile("演示.avi", "AVI 视频", "256 MB")
+        ),
+
+        FileNodeModel.CreateFolder("代码项目",
+            FileNodeModel.CreateFolder("AduSkin",
+                FileNodeModel.CreateFolder("Controls",
+                    FileNodeModel.CreateFile("AduButton.cs", "C# 源代码", "8 KB"),
+                    FileNodeModel.CreateFile("AduDataGrid.cs", "C# 源代码", "15 KB"),
+                    FileNodeModel.CreateFile("AduTreeDataGrid.cs", "C# 源代码", "12 KB")
+                ),
+                FileNodeModel.CreateFolder("Themes",
+                    FileNodeModel.CreateFile("AduSkin.xaml", "XAML 资源", "25 KB"),
+                    FileNodeModel.CreateFile("Colors.xaml", "XAML 资源", "6 KB")
+                ),
+                FileNodeModel.CreateFile("AduSkin.csproj", "项目文件", "3 KB")
+            ),
+            FileNodeModel.CreateFolder("Demo",
+                FileNodeModel.CreateFile("App.xaml", "XAML 应用", "2 KB"),
+                FileNodeModel.CreateFile("App.xaml.cs", "C# 源代码", "4 KB")
+            )
+        ),
+
+        FileNodeModel.CreateFolder("音乐",
+            FileNodeModel.CreateFile("夏日.mp3", "MP3 音频", "5.6 MB"),
+            FileNodeModel.CreateFile("钢琴曲.flac", "FLAC 音频", "38 MB"),
+            FileNodeModel.CreateFile("播放列表.m3u", "播放列表", "2 KB")
+        ),
+
+        FileNodeModel.CreateFile("安装说明.txt", "文本文档", "1 KB"),
+        FileNodeModel.CreateFile("许可证.pdf", "PDF 文档", "256 KB")
+    };
+}
+
+#endregion
+
+#region Commands
+
+[RelayCommand]
+private void ExpandAll()
+{
+    SelectedExpandLevel = -1;
+}
+
+[RelayCommand]
+private void CollapseAll()
+{
+    SelectedExpandLevel = 0;
+}
+
+[RelayCommand]
+private void AddFile()
+{
+    var newFile = FileNodeModel.CreateFile(
+        $"新文件_{DateTime.Now:HHmmss}.txt",
+        "文本文档",
+        "0 KB"
+    );
+    FileTreeData.Add(newFile);
+}
+
+[RelayCommand]
+private void AddFolder()
+{
+    var newFolder = FileNodeModel.CreateFolder($"新文件夹_{DateTime.Now:HHmmss}");
+    FileTreeData.Add(newFolder);
+}
+
+[RelayCommand]
+private void RefreshData()
+{
+    InitializeData();
+}
+
+[RelayCommand]
+private void View(TreeDataGridItem item)
+{
+    if (item?.DataItem is FileNodeModel fileNode)
+    {
+        AduMessageBox.Show($"查看: {fileNode.Name}\n类型: {fileNode.Type}\n大小: {fileNode.Size}", "查看详情");
+    }
+}
+
+[RelayCommand]
+private void Edit(TreeDataGridItem item)
+{
+    if (item?.DataItem is FileNodeModel fileNode)
+    {
+        AduMessageBox.Show($"编辑: {fileNode.Name}\n\n这里可以实现编辑功能", "编辑");
+    }
+}
+
+[RelayCommand]
+private void Delete(TreeDataGridItem item)
+{
+    if (item?.DataItem is FileNodeModel fileNode)
+    {
+        var result = AduMessageBox.Show(
+            $"确定要删除 '{fileNode.Name}' 吗？",
+            "确认删除",
+            MessageBoxButton.YesNo);
+
+        if (result == MessageBoxResult.Yes)
+        {
+            // 从父节点中移除
+            if (RemoveNode(FileTreeData, fileNode))
+            {
+                // 触发刷新
+                var temp = FileTreeData;
+                FileTreeData = null;
+                FileTreeData = temp;
+            }
+        }
+    }
+}
+
+/// <summary>
+/// 递归删除节点
+/// </summary>
+private bool RemoveNode(ObservableCollection<FileNodeModel> nodes, FileNodeModel target)
+{
+    if (nodes.Remove(target))
+        return true;
+
+    foreach (var node in nodes)
+    {
+        if (RemoveNode(node.Children, target))
+            return true;
+    }
+
+    return false;
+}
+
+#endregion

@@ -1,0 +1,16 @@
+﻿<Border 
+    BorderThickness="1"
+    CornerRadius="8">
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Text="Example 1: Basic Filter" />
+
+        <AduSkin:AduConditionsFilter
+            Title="Customer Filters"
+            RootGroup="{Binding BasicFilterGroup}"
+            Subtitle="BASIC CONDITIONS" />
+    </StackPanel>
+</Border>

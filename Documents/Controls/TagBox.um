@@ -1,0 +1,47 @@
+AduTagBox 是一个用于编辑标签集合的输入控件，整体交互参考 Ant Design Tag。控件会以标签形式展示集合内容，点击标签右侧关闭按钮可删除；点击新增入口后显示输入框，输入文本并按回车即可添加为新标签。适合用于关键词、分类、技能、筛选条件、备注标签等轻量文本集合维护场景。
+
+以下默认值以 `AduTagBox` 的默认样式为准；标签数据通过 `Tags` 集合进行绑定和同步。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Tags` | 标签集合。控件会展示集合中的每一项，新增和删除操作会直接更新该集合。 | `IList` | 空字符串集合 |
+| `InputText` | 当前输入框中的文本。可用于外部绑定或读取正在输入的标签内容。 | `string` | 空字符串 |
+| `AddButtonText` | 新增入口显示文本。默认样式会显示为带加号的文本按钮。 | `string` | `New Tag` |
+| `DuplicateAllowed` | 是否允许添加重复标签。为 `False` 时，文本相同的标签不会重复加入。 | `bool` | `False` |
+| `AddOnLostFocus` | 输入框失去键盘焦点时是否自动提交当前输入。 | `bool` | `False` |
+| `IsInputVisible` | 输入框是否可见。点击新增入口时会切换为可见，提交或取消后恢复隐藏。 | `bool` | `False` |
+| `AddTagCommand` | 新增标签命令。默认命令会打开输入框或提交当前输入。 | `ICommand` | 内置命令 |
+| `RemoveTagCommand` | 删除标签命令。默认命令会从 `Tags` 集合中移除对应标签项。 | `ICommand` | 内置命令 |
+
+## 路由事件
+| 名称 | 描述 | 事件参数 |
+| --- | --- | --- |
+| `TagAdded` | 标签成功添加后触发。 | `RoutedPropertyChangedEventArgs<object?>` |
+| `TagRemoved` | 标签成功删除后触发。 | `RoutedPropertyChangedEventArgs<object?>` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduTagBox` | 控件默认样式。包含标签列表、输入框和新增入口。 | `Style` | 默认启用 |
+| `AduTagItemTemplate` | 单个标签的数据模板。默认显示文本和关闭按钮。 | `DataTemplate` | 默认启用 |
+| `AduTagItemCloseButton` | 标签关闭按钮样式。默认使用 `Icon_SystemClose` 图标。 | `Style` | 默认启用 |
+| `AduTagAddButton` | 新增入口按钮样式。默认使用 `Icon_Add` 图标和 `AddButtonText` 文本。 | `Style` | 默认启用 |
+| `AduTagInputBox` | 标签输入框样式。基于 `AduTextBox`，用于输入新标签文本。 | `Style` | 默认启用 |
+
+## 使用说明
+- 将 `Tags` 绑定到可修改的集合，例如 `ObservableCollection<string>`，控件会自动响应集合增删。
+- 点击新增入口后，控件显示输入框并自动聚焦。
+- 输入文本后按 `Enter` 添加标签；输入为空时不会新增标签。
+- 输入框中按 `Esc` 会取消本次输入并隐藏输入框。
+- 输入框为空时按 `Backspace` 会删除最后一个标签。
+- 点击标签右侧关闭按钮会删除对应标签。
+- `DuplicateAllowed` 为 `False` 时，重复文本会被忽略。
+- `AddOnLostFocus` 为 `True` 时，输入框失焦会尝试提交当前文本。
+- `TagAdded` 和 `TagRemoved` 可用于监听标签集合变化后的业务处理。
+
+## 典型场景
+- 表单中维护关键词、技能、分类、备注等短文本集合。
+- 搜索或筛选面板中展示用户已选择的条件。
+- 编辑对象标签时提供快速新增和删除能力。
+- 需要 Ant Design 风格轻量标签输入交互的页面区域。

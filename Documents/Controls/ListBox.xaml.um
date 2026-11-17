@@ -1,0 +1,166 @@
+﻿<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <!--  Title Section  -->
+    <StackPanel Margin="20,20,20,10">
+        <TextBlock
+            Margin="0,0,0,10"
+            FontSize="28"
+            FontWeight="Bold"
+            Text="ListBox Demo" />
+
+        <TextBlock
+            Margin="0,0,0,20"
+            FontSize="14"
+            Text="Advanced list control with customizable container types, layouts, and scrolling behavior" />
+    </StackPanel>
+
+    <!--  Main Content with Scroll  -->
+    <AduSkin:AduScrollViewer
+        Grid.Row="1"
+        HorizontalScrollBarVisibility="Disabled"
+        VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20,0,20,20">
+            <!--  Configuration Panel  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Configuration Panel" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Customize the ListBox appearance and behavior using these settings"
+                        TextWrapping="Wrap" />
+
+                    <StackPanel HorizontalAlignment="Left">
+                        <AduSkin:AduFormBox Margin="5,2" Header="ContainerType">
+                            <AduSkin:AduComboBox ItemsSource="{Binding ContainerTypes}" SelectedItem="{Binding SelectedContainerType}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduFormBox Margin="5,2" Header="DirectionType">
+                            <AduSkin:AduComboBox ItemsSource="{Binding DirectionTypes}" SelectedItem="{Binding SelectedDirectionType}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduFormBox Margin="5,2" Header="ScrollPosition">
+                            <AduSkin:AduComboBox ItemsSource="{Binding ScrollPositionTypes}" SelectedItem="{Binding SelectedScrollPositionType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduFormBox Margin="5,2" Header="ColumnCount">
+                            <AduSkin:AduIntegerUpDown Value="{Binding ColumnCount}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduFormBox Margin="5,2" Header="SelectionMode">
+                            <AduSkin:AduComboBox ItemsSource="{Binding SelectionModes}" SelectedItem="{Binding SelectedSelectionMode}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduFormBox Margin="5,2" Header="RectangleSelection">
+                            <AduSkin:AduSwitch
+                                AduAttach:PathDataAttach.Margin="0"
+                                Content=""
+                                IsChecked="{Binding EnableRectangleSelection}" />
+                        </AduSkin:AduFormBox>
+                        <AduSkin:AduButton
+                            Margin="5,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Command="{Binding RefreshSelectedCommand}"
+                            Content="Refresh"
+                            Type="Primary" />
+                        <AduSkin:AduFormBox Margin="5,2" Header="Performance Testing">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="MaxRow" />
+                                <AduSkin:AduIntegerUpDown
+                                    Width="60"
+                                    Margin="4,0"
+                                    IsEnabled="{Binding IsTestFlight, Converter={StaticResource BooleanReverseConverter}}"
+                                    Maximum="9999"
+                                    Value="{Binding MaxRow}" />
+                                <TextBlock VerticalAlignment="Center" Text="Interval(ms)" />
+                                <AduSkin:AduIntegerUpDown
+                                    Width="60"
+                                    Margin="4,0"
+                                    IsEnabled="{Binding IsTestFlight, Converter={StaticResource BooleanReverseConverter}}"
+                                    Maximum="9999"
+                                    Value="{Binding Interval}" />
+                                <AduSkin:AduToggleButton
+                                    x:Name="btnTestFlight"
+                                    Width="Auto"
+                                    Margin="2"
+                                    Padding="8,0"
+                                    AduAttach:PathDataAttach.Visibility="Visible"
+                                    Content="TestFlight"
+                                    IsChecked="{Binding IsTestFlight}" />
+                            </StackPanel>
+                        </AduSkin:AduFormBox>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!--  ListBox Display  -->
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Item List" />
+
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="12"
+                    Text="Select items from the list below. Configuration changes above will update the layout in real-time"
+                    TextWrapping="Wrap" />
+
+                <AduSkin:AduListBox
+                    Height="300"
+                    Padding="2"
+                    AduAttach:BorderAttach.CornerRadius="6"
+                    AduAttach:ContainerAttach.ContainerType="{Binding SelectedContainerType}"
+                    AduAttach:LayoutAttach.Columns="{Binding ColumnCount}"
+                    AduAttach:LayoutAttach.DirectionType="{Binding SelectedDirectionType}"
+                    AduSkin:ListBoxExtend.ScrollPositionType="{Binding SelectedScrollPositionType}"
+                    BorderBrush="{DynamicResource NormalBorderBrush}"
+                    BorderThickness="1"
+                    EnableRectangleSelection="{Binding EnableRectangleSelection}"
+                    ItemsSource="{Binding ItemsSource}"
+                    SelectedItem="{Binding SelectedItem}"
+                    SelectionMode="{Binding SelectedSelectionMode}" />
+            </StackPanel>
+
+            <!--  Features Info  -->
+            <StackPanel Margin="0,20,0,0">
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource NormalBlue}"
+                    Text="💡 Features:" />
+
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource NormalBlue}"
+                    TextWrapping="Wrap">
+                    <Run Text="• Multiple container types for different visual styles" />
+                    <LineBreak />
+                    <Run Text="• Configurable layout direction (horizontal/vertical)" />
+                    <LineBreak />
+                    <Run Text="• Adjustable column count for grid layouts" />
+                    <LineBreak />
+                    <Run Text="• Multiple scroll position modes" />
+                    <LineBreak />
+                    <Run Text="• Real-time configuration updates" />
+                    <LineBreak />
+                    <Run Text="• Full data binding support" />
+                    <LineBreak />
+                    <Run Text="• Selection tracking and change handling" />
+                    <LineBreak />
+                    <Run Text="• Full MVVM support" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>
+</Grid>

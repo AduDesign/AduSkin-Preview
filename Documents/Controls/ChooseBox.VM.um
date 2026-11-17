@@ -1,0 +1,11 @@
+﻿[ObservableProperty]
+private string _filePath;
+
+[ObservableProperty]
+private string _folderPath;
+
+[ObservableProperty]
+private string _multiFile;
+
+[ObservableProperty]
+private string _multiFolder;

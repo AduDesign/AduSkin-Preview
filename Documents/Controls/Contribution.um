@@ -1,0 +1,82 @@
+AduContribution 是 GitHub 风格的贡献网格控件，用于按日期展示最近若干周的活跃度、提交次数或事件数量。控件支持月份标签、星期标签、年份标签、底部图例、今日高亮、悬浮提示、格子点击事件和点击命令。
+
+以下默认值以 `AduContribution` 的默认样式和源码默认值为准。控件适合用于提交记录、打卡记录、活跃度热力图、任务完成频次等按天统计的场景。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduContribution` | 贡献网格控件，按周列、星期行绘制日期格子。 | `Control` |
+| `ContributionDay` | 单日贡献数据模型。 | `NotifyPropertyBase` |
+| `ContributionWeek` | 单周贡献数据模型。 | `INotifyPropertyChanged` |
+
+## AduContribution 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Contributions` | 贡献数据集合。控件按 `ContributionDay.Date` 匹配到对应日期格子。 | `IEnumerable<ContributionDay>` | `null` |
+| `CellSize` | 每个日期格子的边长。 | `double` | `12` |
+| `CellSpacing` | 日期格子之间的间距。 | `double` | `2` |
+| `WeekCount` | 显示的周数。控件默认显示最近 53 周。 | `int` | `53` |
+| `ShowMonthLabels` | 是否显示月份标签。 | `bool` | `True` |
+| `ShowDayLabels` | 是否显示星期标签。 | `bool` | `True` |
+| `ShowYearLabel` | 是否显示右侧年份标签。 | `bool` | `True` |
+| `ShowLegend` | 是否显示底部颜色等级图例。 | `bool` | `True` |
+| `LessText` | 图例左侧低活跃度文案。 | `string` | `Less` |
+| `MoreText` | 图例右侧高活跃度文案。 | `string` | `More` |
+| `HighlightToday` | 是否高亮今天对应的格子。 | `bool` | `True` |
+| `ContributionBrush` | 贡献主题色，控件会按该颜色生成不同透明度等级。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `ContributionLevels` | 贡献颜色等级数量。 | `int` | `5` |
+| `CellClickCommand` | 格子点击命令，命令参数为被点击的 `ContributionDay`。 | `ICommand` | `null` |
+
+## 只读与辅助属性
+| 名称 | 描述 | 数据类型 |
+| --- | --- | --- |
+| `DayLabels` | 星期标签集合，默认包含 `Sun` 到 `Sat`。 | `ObservableCollection<string>` |
+| `MonthLabels` | 当前渲染范围内的月份标签位置集合。 | `ObservableCollection<MonthLabel>` |
+| `MonthLabelCount` | 月份标签数量。 | `int` |
+| `CurrentYear` | 当前显示年份。 | `int` |
+| `WeekData` | 控件内部生成的周数据集合。 | `ObservableCollection<ContributionWeek>` |
+| `RowData` | 按星期行组织的日期数据。 | `IEnumerable<IEnumerable<ContributionDay>>` |
+| `AllCells` | 扁平化后的日期格子数据集合。 | `ObservableCollection<CellData>` |
+
+## ContributionDay 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Date` | 日期。控件按日期匹配到对应格子。 | `DateTime` | 默认日期值 |
+| `Count` | 当天贡献数量。设置后会自动更新 `Level`。 | `int` | `0` |
+| `Level` | 贡献等级。 | `ContributionLevel` | `Level0` |
+| `Details` | 当天贡献详情集合，可保存消息、作者、时间、仓库等业务信息。 | `List<ContributionDetail>` | 空集合 |
+
+## ContributionLevel 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Level0` | 无贡献。 |
+| `Level1` | 1 到 3 次。 |
+| `Level2` | 4 到 6 次。 |
+| `Level3` | 7 到 9 次。 |
+| `Level4` | 10 次及以上。 |
+
+## 路由事件
+| 名称 | 描述 | 参数 |
+| --- | --- | --- |
+| `CellClicked` | 点击有效日期格子时触发。 | `ContributionCellClickedEventArgs` |
+
+## 公开方法
+| 名称 | 描述 |
+| --- | --- |
+| `RebuildGrid()` | 重新构建日期网格和布局缓存。 |
+| `GetWeekData()` | 获取当前生成的周数据集合；如果尚未构建，会先重建网格。 |
+
+## 使用说明
+- 控件默认以今天所在周为结束周，向前显示 `WeekCount` 周。
+- `Contributions` 中同一天如果存在多条数据，控件会使用该日期最后一条数据。
+- 没有匹配到数据的日期会自动生成 `Count=0` 的空格子。
+- 未来日期不会绘制贡献格子，也不会触发点击。
+- `Count` 会影响颜色等级；也可以直接设置 `ContributionBrush` 和 `ContributionLevels` 调整整体热力色阶。
+- `CellSize` 与 `CellSpacing` 会影响整体宽度，高度不足时可隐藏月份、星期、年份或图例标签。
+- 鼠标悬浮格子时会显示当天贡献数量；点击格子会先触发 `CellClicked`，再执行 `CellClickCommand`。
+
+## 典型场景
+- 代码提交、构建、部署等开发活动统计。
+- 用户签到、学习打卡、运动打卡记录。
+- 每日工单、告警、任务完成次数热力图。
+- 仪表盘中的年度活跃度概览。

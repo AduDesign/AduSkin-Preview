@@ -1,0 +1,7 @@
+﻿	public DelayLoadingViewModel()
+	{
+		foreach (var item in ResourceCtrl.Instance.GetImages())
+			ItemsSource.Add(item);
+	}
+	[ObservableProperty]
+	private ObservableCollection<string> _itemsSource = new ObservableCollection<string>();

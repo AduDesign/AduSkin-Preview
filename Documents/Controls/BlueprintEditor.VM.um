@@ -1,0 +1,389 @@
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Windows;
+using AduSkin.Controls;
+using AduSkin.Controls.BlueprintEditor;
+using AduSkin.Controls.BlueprintEditor.Assets;
+using AduSkin.Controls.BlueprintEditor.Functions;
+using AduSkin.Controls.BlueprintEditor.Models;
+using AduSkin.Controls.BlueprintEditor.Nodes;
+using AduSkin.Controls.BlueprintEditor.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
+
+public partial class BlueprintEditorViewModel : ObservableObject
+{
+    private const int MaximumRecoveryVersions = 5;
+    private readonly string _recoveryDirectory = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "AduSkin.Demo",
+        "BlueprintRecovery");
+    private long _lastRecoveryRevision = -1;
+    private BlueprintEditor _editor;
+
+    public string[] SampleNames { get; } =
+    {
+        "While 定时循环",
+        "For 有限循环",
+        "类蓝图：成员变量与事件",
+        "成绩集合统计",
+        "仓库字典汇总",
+        "商品查价结算"
+    };
+
+    private static readonly string[] SampleFiles =
+    {
+        "01-while.json",
+        "02-for.json",
+        "03-class.json",
+        "04-scores.json",
+        "05-inventory.json",
+        "06-checkout.json"
+    };
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoadSampleCommand))]
+    private int _selectedSampleIndex;
+
+    [ObservableProperty]
+    private string _sampleStatus = "选择示例后点击加载；会替换当前蓝图";
+
+    [ObservableProperty]
+    private BlueprintGraph _graph;
+
+    [ObservableProperty]
+    private BlueprintAsset _currentAsset;
+
+    [ObservableProperty]
+    private BlueprintFunctionAsset _functionBlueprint;
+
+    [ObservableProperty]
+    private BlueprintClassAsset _classBlueprint;
+
+    [ObservableProperty]
+    private IEnumerable<BlueprintClassAsset> _parentClassCandidates;
+
+    [ObservableProperty]
+    private BlueprintClassAsset _selectedParentClass;
+
+    [ObservableProperty]
+    private BlueprintEditorOptions _editorOptions = new BlueprintEditorOptions();
+
+    [ObservableProperty]
+    private bool _showDebugPanel = true;
+
+    [ObservableProperty]
+    private string _recoveryStatus = "0/5 个快照";
+
+    [ObservableProperty]
+    private List<RecoveryVersion> _recoveryVersions = new();
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(RestoreRecoveryCommand))]
+    private RecoveryVersion _selectedRecoveryVersion;
+
+    public BlueprintEditorViewModel()
+    {
+        FunctionRegistry.Initialize();
+        NodeRegistry.Initialize();
+        FunctionRegistry.ScanAssembly(Assembly.GetExecutingAssembly());
+        NodeRegistry.ScanAssembly(Assembly.GetExecutingAssembly());
+
+        FunctionBlueprint = CreateFunctionBlueprint();
+        ClassBlueprint = CreateClassBlueprint();
+        ParentClassCandidates = Array.Empty<BlueprintClassAsset>();
+        CurrentAsset = FunctionBlueprint;
+        Graph = FunctionBlueprint.Graph;
+    }
+
+    internal void AttachEditor(BlueprintEditor editor)
+    {
+        if (ReferenceEquals(_editor, editor)) return;
+        _editor = editor;
+        _editor.UnsavedChangesRequested += OnUnsavedChangesRequested;
+        _editor.EditabilityChanged += OnEditabilityChanged;
+        RefreshRecoveryStatus();
+        NotifyEditorCommands();
+    }
+
+    internal void DetachEditor(BlueprintEditor editor)
+    {
+        if (!ReferenceEquals(_editor, editor)) return;
+        SaveRecoverySnapshot();
+        _editor.CancelPendingImport();
+        _editor.UnsavedChangesRequested -= OnUnsavedChangesRequested;
+        _editor.EditabilityChanged -= OnEditabilityChanged;
+        _editor = null;
+        NotifyEditorCommands();
+    }
+
+    private bool CanUseEditor() => _editor != null && !_editor.IsNodeReadOnly;
+    private bool CanLoadSample() => CanUseEditor() && SelectedSampleIndex >= 0 && SelectedSampleIndex < SampleFiles.Length;
+    private bool CanRestoreRecovery() => CanUseEditor() && SelectedRecoveryVersion != null;
+
+    private void NotifyEditorCommands()
+    {
+        LoadSampleCommand.NotifyCanExecuteChanged();
+        ShowFunctionBlueprintCommand.NotifyCanExecuteChanged();
+        ShowClassBlueprintCommand.NotifyCanExecuteChanged();
+        ImportBlueprintCommand.NotifyCanExecuteChanged();
+        ExportBlueprintCommand.NotifyCanExecuteChanged();
+        RestoreRecoveryCommand.NotifyCanExecuteChanged();
+    }
+
+    private void OnEditabilityChanged(object sender, EventArgs e) => NotifyEditorCommands();
+
+    private void OnUnsavedChangesRequested(object sender, BlueprintUnsavedChangesEventArgs e)
+    {
+        var result = AduMessageBox.ShowYesNoCancel(
+            "当前蓝图包含未保存修改，是否先保存？",
+            "蓝图未保存",
+            yesButtonText: "保存",
+            noButtonText: "放弃",
+            cancelButtonText: "取消",
+            icon: MessageBoxImage.Warning);
+
+        if (result == MessageBoxResult.Yes)
+            e.Cancel = !TryExportBlueprint();
+        else if (result == MessageBoxResult.No)
+        {
+            _editor.MarkSaved();
+            DeleteRecoverySnapshot();
+            e.Cancel = false;
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanLoadSample))]
+    private async Task LoadSampleAsync()
+    {
+        var editor = _editor;
+        var index = SelectedSampleIndex;
+        var path = Path.Combine(AppContext.BaseDirectory, "Resources", "BlueprintSamples", SampleFiles[index]);
+        if (!File.Exists(path))
+        {
+            SampleStatus = $"示例文件不存在：{path}";
+            return;
+        }
+
+        if (!editor.RequestDiscardUnsavedChanges(
+            editor.Asset != null ? BlueprintUnsavedChangeReason.ReplaceAsset : BlueprintUnsavedChangeReason.ReplaceGraph))
+            return;
+
+        try
+        {
+            await editor.LoadFromFileAsync(path);
+            if (!ReferenceEquals(editor, _editor)) return;
+            if (editor.Asset is BlueprintClassAsset) editor.OpenEventGraphCommand.Execute(null);
+            SynchronizeFromEditor();
+            editor.FitAllNodesToView();
+            SampleStatus = $"已加载：{SampleNames[index]}";
+        }
+        catch (OperationCanceledException)
+        {
+            SampleStatus = "加载已取消";
+        }
+        catch (Exception exception)
+        {
+            SampleStatus = $"示例加载失败：{exception.Message}";
+        }
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUseEditor))]
+    private void ShowFunctionBlueprint()
+    {
+        if (_editor.TryReplaceAsset(FunctionBlueprint))
+            SynchronizeFromEditor();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUseEditor))]
+    private void ShowClassBlueprint()
+    {
+        if (_editor.TryReplaceAsset(ClassBlueprint))
+            SynchronizeFromEditor();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUseEditor))]
+    private async Task ImportBlueprintAsync()
+    {
+        var dialog = new OpenFileDialog
+        {
+            Filter = "蓝图文件 (*.json)|*.json|所有文件 (*.*)|*.*",
+            DefaultExt = ".json"
+        };
+        if (dialog.ShowDialog() != true) return;
+
+        if (!_editor.RequestDiscardUnsavedChanges(
+            _editor.Asset != null ? BlueprintUnsavedChangeReason.ReplaceAsset : BlueprintUnsavedChangeReason.ReplaceGraph))
+            return;
+
+        await _editor.LoadFromFileAsync(dialog.FileName);
+        SynchronizeFromEditor();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanUseEditor))]
+    private void ExportBlueprint() => TryExportBlueprint();
+
+    private bool TryExportBlueprint()
+    {
+        var dialog = new SaveFileDialog
+        {
+            Filter = "蓝图文件 (*.json)|*.json|所有文件 (*.*)|*.*",
+            DefaultExt = ".json",
+            FileName = $"{_editor.Asset?.Name ?? _editor.Graph?.Name ?? "Blueprint"}.json"
+        };
+        if (dialog.ShowDialog() != true) return false;
+
+        _editor.SaveToFile(dialog.FileName);
+        DeleteRecoverySnapshot();
+        RefreshRecoveryStatus();
+        return true;
+    }
+
+    private void SynchronizeFromEditor()
+    {
+        CurrentAsset = _editor.Asset;
+        Graph = _editor.Graph;
+        if (CurrentAsset is BlueprintFunctionAsset function)
+            FunctionBlueprint = function;
+        else if (CurrentAsset is BlueprintClassAsset classAsset)
+            ClassBlueprint = classAsset;
+    }
+
+    private void SaveRecoverySnapshot()
+    {
+        if (_editor?.IsDirty != true || _editor.Asset == null && _editor.Graph == null) return;
+        if (_lastRecoveryRevision == _editor.ChangeRevision) return;
+
+        Directory.CreateDirectory(_recoveryDirectory);
+        var file = Path.Combine(_recoveryDirectory, $"BlueprintRecovery_{DateTime.UtcNow.Ticks}.json");
+        BlueprintFileStore.WriteAllText(file, _editor.CreateRecoverySnapshot());
+        _lastRecoveryRevision = _editor.ChangeRevision;
+        TrimRecoveryHistory();
+        RefreshRecoveryStatus();
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRestoreRecovery))]
+    private void RestoreRecovery()
+    {
+        if (SelectedRecoveryVersion == null || !File.Exists(SelectedRecoveryVersion.Path)) return;
+        _editor.RestoreRecoverySnapshot(File.ReadAllText(SelectedRecoveryVersion.Path));
+        _lastRecoveryRevision = _editor.ChangeRevision;
+        SynchronizeFromEditor();
+        RecoveryStatus = "已恢复（尚未正式保存）";
+    }
+
+    [RelayCommand]
+    private void ClearRecovery()
+    {
+        DeleteRecoverySnapshot();
+        RefreshRecoveryStatus();
+    }
+
+    private void RefreshRecoveryStatus()
+    {
+        var versions = GetRecoveryVersions();
+        RecoveryVersions = versions;
+        SelectedRecoveryVersion = versions.FirstOrDefault();
+        RestoreRecoveryCommand.NotifyCanExecuteChanged();
+        RecoveryStatus = $"{versions.Count}/{MaximumRecoveryVersions} 个快照";
+    }
+
+    private void DeleteRecoverySnapshot()
+    {
+        if (Directory.Exists(_recoveryDirectory))
+            foreach (var file in Directory.GetFiles(_recoveryDirectory, "BlueprintRecovery_*.*"))
+                File.Delete(file);
+        _lastRecoveryRevision = -1;
+    }
+
+    private List<RecoveryVersion> GetRecoveryVersions()
+    {
+        if (!Directory.Exists(_recoveryDirectory)) return new List<RecoveryVersion>();
+        return Directory.GetFiles(_recoveryDirectory, "BlueprintRecovery_*.json")
+            .Select(CreateRecoveryVersion)
+            .Where(item => item != null)
+            .OrderByDescending(item => item.Timestamp)
+            .ToList();
+    }
+
+    private static RecoveryVersion CreateRecoveryVersion(string path)
+    {
+        try
+        {
+            var info = BlueprintRecoverySerializer.GetInfo(File.ReadAllText(path));
+            return new RecoveryVersion(path, info.Name, info.Kind, info.CreatedUtc.ToLocalTime());
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private void TrimRecoveryHistory()
+    {
+        foreach (var version in GetRecoveryVersions().Skip(MaximumRecoveryVersions))
+            File.Delete(version.Path);
+    }
+
+    private static BlueprintFunctionAsset CreateFunctionBlueprint()
+    {
+        var graph = new BlueprintGraph { Name = "快速开始函数" };
+        var entry = Add(graph, new BlueprintEntryNode { EntryName = "Invoke" }, 40, 120);
+        var text = Add(graph, new StringNode { Value = "Hello Blueprint" }, 40, 260);
+        var print = Add(graph, new PrintNode(), 300, 160);
+        var returned = Add(graph, new BlueprintReturnNode(), 560, 160);
+
+        Connect(graph, entry.OutputPins[0], print.InputPins[0]);
+        Connect(graph, text.OutputPins[0], print.InputPins[1]);
+        Connect(graph, print.OutputPins[0], returned.InputPins[0]);
+
+        return new BlueprintFunctionAsset(graph) { Name = graph.Name };
+    }
+
+    private static BlueprintClassAsset CreateClassBlueprint()
+    {
+        var asset = new BlueprintClassAsset { Name = "示例角色类" };
+        var health = new BlueprintVariableDefinition { Name = "Health", DataType = typeof(int), DefaultValue = 100 };
+        asset.Variables.Add(health);
+
+        var begin = Add(asset.EventGraph, new BeginPlayEventNode(), 40, 140);
+        var print = Add(asset.EventGraph, new PrintNode(), 300, 140);
+        print.InputPins[1].DefaultValue = "角色 Begin Play";
+        Connect(asset.EventGraph, begin.OutputPins[0], print.InputPins[0]);
+
+        return asset;
+    }
+
+    private static T Add<T>(BlueprintGraph graph, T node, double x, double y) where T : NodeBase
+    {
+        node.Position = new Point(x, y);
+        graph.AddNode(node);
+        return node;
+    }
+
+    private static void Connect(BlueprintGraph graph, NodePin from, NodePin to) =>
+        graph.AddConnection(new NodeConnection { SourcePin = from, TargetPin = to });
+
+    public sealed class RecoveryVersion
+    {
+        public RecoveryVersion(string path, string name, BlueprintRecoveryContentKind kind, DateTime timestamp)
+        {
+            Path = path;
+            Name = name;
+            Kind = kind;
+            Timestamp = timestamp;
+        }
+
+        public string Path { get; }
+        public string Name { get; }
+        public BlueprintRecoveryContentKind Kind { get; }
+        public DateTime Timestamp { get; }
+        public string DisplayName => $"{Name ?? "Blueprint"} · {Timestamp:HH:mm:ss}";
+    }
+}

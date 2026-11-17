@@ -1,0 +1,140 @@
+DatePicker 相关控件用于日期、时间和日期时间选择，包含 `AduDatePicker`、`AduTimePicker`、`AduTimeSelector` 和 `AduCalendar`。`AduDatePicker` 提供输入框和弹出日历，支持单日期、日期范围和日期时间；`AduTimePicker` 提供独立时间选择输入；`AduTimeSelector` 是小时、分钟、秒三列选择器；`AduCalendar` 是可单独使用的日历控件。
+
+以下默认值以对应控件源码和默认样式为准。其他内部子控件不在本文档中展开说明。
+
+## 控件类型
+| 名称 | 描述 |
+| --- | --- |
+| `AduDatePicker` | 日期选择输入控件，支持单日期、日期范围和日期时间选择。 |
+| `AduTimePicker` | 时间选择输入控件，弹出 `AduTimeSelector` 选择时间。 |
+| `AduTimeSelector` | 时间选择面板，按小时、分钟、秒三列选择时间。 |
+| `AduCalendar` | 日历控件，支持月份、年份、年代视图和日期选择。 |
+
+## AduDatePicker 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Type` | 日期选择类型。 | `DatePickerType` | `SingleDate` |
+| `IsShowShortCuts` | 是否显示快捷操作菜单。单日期模式显示今天、昨天、一周前；范围模式显示最近一周、最近一个月、最近三个月。 | `bool` | `False` |
+| `SelectedDate` | 单日期模式下选中的日期。 | `DateTime?` | `null` |
+| `SelectedDates` | 范围模式下选中的日期集合。 | `ObservableCollection<DateTime>` | 空集合 |
+| `SelectedDateStart` | 范围模式的开始日期，默认支持双向绑定。 | `DateTime?` | `null` |
+| `SelectedDateEnd` | 范围模式的结束日期，默认支持双向绑定。 | `DateTime?` | `null` |
+| `SelectedTime` | 日期时间模式下选中的时间。 | `TimeSpan?` | `null` |
+| `SelectedDateTime` | 日期时间模式下选中的日期和时间，默认支持双向绑定。 | `DateTime?` | `null` |
+| `DisplayDate` | 日历当前显示日期。 | `DateTime` | `DateTime` 默认值 |
+| `DateStringFormat` | 日期显示格式。 | `string` | `yyyy年MM月dd日` |
+| `TimeStringFormat` | 时间显示格式。 | `string` | `HH:mm:ss` |
+| `IsShowConfirm` | 是否显示清除和确认按钮。日期时间类型会自动启用确认区域。 | `bool` | `False` |
+| `IsDropDownOpen` | 弹出日历是否打开。 | `bool` | `False` |
+| `TextInternal` | 内部显示文本。 | `string` | 空字符串 |
+| `SelectedDateInternal` | 内部选中日期。 | `DateTime?` | `null` |
+| `DisplayDateInternal` | 内部显示日期。 | `DateTime` | `DateTime` 默认值 |
+
+## AduTimePicker 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedTime` | 当前选中的时间，默认支持双向绑定。 | `TimeSpan?` | `null` |
+| `TimeStringFormat` | 时间显示格式。 | `string` | `HH:mm:ss` |
+| `DropDownHeight` | 时间下拉面板高度。 | `double` | `168` |
+
+## AduTimeSelector 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedTime` | 当前选中的完整时间。 | `TimeSpan?` | `null` |
+| `SelectedHour` | 当前选中的小时。 | `int?` | `null` |
+| `SelectedMinute` | 当前选中的分钟。 | `int?` | `null` |
+| `SelectedSecond` | 当前选中的秒。 | `int?` | `null` |
+| `ItemHeight` | 时间项高度。 | `double` | `28.0` |
+
+## AduCalendar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `CalendarItemStyle` | 日历主体样式。 | `Style` | `null` |
+| `CalendarDayButtonStyle` | 日期按钮样式。 | `Style` | `null` |
+| `DayTitleTemplate` | 星期标题模板。 | `DataTemplate` | 默认显示星期文本 |
+| `DisplayDate` | 当前显示日期。改变后会刷新日历视图并触发显示日期变化事件。 | `DateTime` | `DateTime.Today`，模板应用后设为当前月 1 日 |
+| `DisplayDateStart` | 可显示日期范围的开始值。 | `DateTime` | `DateTime.MinValue` |
+| `DisplayDateEnd` | 可显示日期范围的结束值。 | `DateTime` | `DateTime.MaxValue` |
+| `DisplayMode` | 日历显示模式。 | `CalendarMode` | `Month` |
+| `SelectedDate` | 当前选中的日期。 | `DateTime?` | `null` |
+| `SelectedDates` | 当前选中的日期集合。 | `ObservableCollection<DateTime>` | 空集合 |
+| `FirstDayOfWeek` | 一周起始日。 | `DayOfWeek` | `Monday` |
+| `SelectionMode` | 日期选择模式。 | `CalendarSelectionMode` | `SingleDate` |
+| `IsShowExtraDays` | 是否显示上个月和下个月的补位日期。 | `bool` | `True` |
+| `Type` | 日历类型，用于区分单日历和范围模式的第二个日历。 | `CalendarType` | `One` |
+
+## 路由事件
+| 名称 | 所属控件 | 描述 | 事件参数 |
+| --- | --- | --- | --- |
+| `SelectedTimeChanged` | `AduTimeSelector` | `SelectedTime` 改变时触发。 | `RoutedPropertyChangedEventArgs<TimeSpan?>` |
+| `SelectedDateChanged` | `AduCalendar` | 单日期选择改变时触发。 | `RoutedPropertyChangedEventArgs<TimeSpan?>` |
+| `DateClick` | `AduCalendar` | 点击日期单元格时触发。 | `RoutedPropertyChangedEventArgs<TimeSpan?>` |
+| `DisplayDateChanged` | `AduCalendar` | 当前显示日期改变时触发。 | `RoutedPropertyChangedEventArgs<DateTime>` |
+| `DisplayModeChanged` | `AduCalendar` | 日历显示模式改变时触发。 | `RoutedPropertyChangedEventArgs<CalendarMode>` |
+
+## DatePickerType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `SingleDate` | 选择单个日期。 |
+| `SingleDateRange` | 选择连续日期范围。 |
+| `Year` | 年份类型，当前控件逻辑中未完整展开。 |
+| `Month` | 月份类型，当前控件逻辑中未完整展开。 |
+| `DateTime` | 选择一个日期和时间。 |
+| `DateTimeRange` | 日期时间范围类型，当前控件逻辑中未完整展开。 |
+
+## CalendarType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `One` | 默认日历。 |
+| `Second` | 范围选择中的第二个日历。 |
+
+## 常用继承属性
+| 名称 | 适用控件 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- | --- |
+| `Height` | `AduDatePicker` / `AduTimePicker` | 输入框高度。 | `double` | `30` |
+| `Foreground` | 全部 | 文本前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 全部 | 控件背景。 | `Brush` | 按控件默认样式决定 |
+| `BorderBrush` | 全部 | 交互边框或日历边框颜色。 | `Brush` | `PrimaryBrush` 或 `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 全部 | 边框厚度。 | `Thickness` | `1` 或 `0` |
+| `Padding` | `AduDatePicker` / `AduTimePicker` | 输入框内边距。 | `Thickness` | 日期为 `4,0,0,0`，时间为 `5,0` |
+| `HorizontalContentAlignment` | `AduDatePicker` / `AduTimePicker` | 内容水平对齐方式。 | `HorizontalAlignment` | 日期为 `Stretch`，时间为 `Left` |
+| `VerticalContentAlignment` | `AduDatePicker` / `AduTimePicker` | 内容垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `SnapsToDevicePixels` | 全部 | 是否启用设备像素对齐。 | `bool` | `True` |
+| `UseLayoutRounding` | `AduTimePicker` / `AduTimeSelector` / `AduCalendar` | 是否启用布局取整。 | `bool` | `True` |
+
+## 样式说明
+| 名称 | 适用控件 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- | --- |
+| `AduAttach:InputAttach.InputHint` | `AduDatePicker` | 日期输入提示文本。 | `string` | `请选择日期` |
+| `AduAttach:InputAttach.InputHint` | `AduTimePicker` | 时间输入提示文本。 | `string` | `请选择时间` |
+| `AduAttach:BorderAttach.CornerRadius` | 日期和时间控件 | 输入框、弹出面板或日历圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.PanelBackground` | 日期和时间控件 | 弹出面板背景。 | `Brush` | `PanelBackground` 或 `NormalTransparentBrush` 动态资源 |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | `AduDatePicker` / `AduCalendar` | 日期项或快捷按钮鼠标悬停背景。 | `Brush` | `MouseOverBackground` 动态资源 |
+| `AduAttach:BackgroundAttach.SelectedBackground` | `AduDatePicker` / `AduCalendar` | 选中日期背景。 | `Brush` | `SelectedBackground` 动态资源 |
+| `AduAttach:BackgroundAttach.HighlightBackground` | `AduDatePicker` / `AduCalendar` | 高亮日期背景。 | `Brush` | `HighlightBackground` 动态资源 |
+| `AduAttach:ForegroundAttach.SelectedForeground` | `AduDatePicker` / `AduCalendar` / `AduTimeSelector` | 选中项前景色。 | `Brush` | `SelectedForeground` 动态资源 |
+| `AduAttach:ForegroundAttach.MouseOverForeground` | `AduDatePicker` / `AduCalendar` | 鼠标悬停前景色。 | `Brush` | `MouseOverForeground` 动态资源 |
+| `AduAttach:ForegroundAttach.HighlightForeground` | `AduDatePicker` / `AduCalendar` | 高亮项前景色。 | `Brush` | `HighlightForeground` 或 `HighlightBackground` 动态资源 |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | `AduDatePicker` / `AduTimePicker` | 右侧图标默认颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | `AduDatePicker` / `AduTimePicker` | 右侧图标宽度。 | `double` | 日期为 `14`，时间为 `15` |
+| `AduAttach:PathDataAttach.Margin` | `AduDatePicker` / `AduTimePicker` | 右侧图标外边距。 | `Thickness` | `0,0,6,0` |
+
+## 使用说明
+- 只选择日期时使用 `AduDatePicker` 的 `Type=SingleDate`，通过 `SelectedDate` 读取或绑定结果。
+- 选择日期范围时使用 `Type=SingleDateRange`，通过 `SelectedDateStart` 和 `SelectedDateEnd` 读取或绑定范围两端。
+- 选择日期时间时使用 `Type=DateTime`，通过 `SelectedDateTime` 读取或绑定完整日期时间。
+- `DateStringFormat` 和 `TimeStringFormat` 只影响输入框显示文本，不改变实际绑定值类型。
+- `IsShowShortCuts=True` 时会按模式显示快捷菜单；单日期和范围模式的快捷项不同。
+- `IsShowConfirm=True` 时弹出层底部显示清除和确认按钮；日期时间模式会默认启用确认区域。
+- 点击清除按钮会清空当前选择，包括单日期、范围日期和日期时间。
+- `AduTimePicker` 适合单独选择时间，`SelectedTime` 会随 `AduTimeSelector` 的小时、分钟、秒选择更新。
+- `AduTimeSelector` 可单独作为时间选择面板使用，`SelectedHour`、`SelectedMinute`、`SelectedSecond` 变化后会组合成 `TimeSpan` 类型的 `SelectedTime`。
+- `AduCalendar` 可单独使用，`DisplayMode` 可切换月、年、年代视图，`SelectionMode` 控制单选或范围选择。
+- `AduCalendar` 的 `DisplayDateStart`、`DisplayDateEnd` 保存可显示日期范围边界；具体禁用和显示效果以日历模板实现为准。
+
+## 典型场景
+- 表单中选择生日、开始日期、截止日期等单个日期。
+- 报表、日志和统计页面选择日期范围。
+- 预约、计划任务和提醒功能中选择日期时间。
+- 单独选择时分秒的时间输入。
+- 自定义弹出层或筛选面板中直接使用日历控件。

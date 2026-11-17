@@ -1,0 +1,57 @@
+AduNumericUpDown 是一组数字输入控件，包含 `AduIntegerUpDown` 和 `AduDoubleUpDown`。`AduIntegerUpDown` 用于整数输入，`AduDoubleUpDown` 用于小数输入；两者都支持最小值、最大值、步进增减、上下按钮、键盘方向键和双向绑定。
+
+以下默认值以 `AduIntegerUpDown`、`AduDoubleUpDown` 的默认样式为准。控件适合用于数量、页码、比例、阈值、坐标、尺寸等需要精确数字输入的场景。
+
+## 控件类型
+| 名称 | 描述 | 值类型 |
+| --- | --- | --- |
+| `AduIntegerUpDown` | 整数数字输入控件。 | `int` |
+| `AduDoubleUpDown` | 双精度浮点数字输入控件，可设置显示小数位数。 | `double` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前数值，默认支持双向绑定。`AduIntegerUpDown` 为 `int`，`AduDoubleUpDown` 为 `double`。 | `int` / `double` | `0` / `0.0` |
+| `Minimum` | 最小值。启用最小值限制时，提交后的值不能小于该值。 | `int` / `double` | `0` / `0.0` |
+| `Maximum` | 最大值。启用最大值限制时，提交后的值不能大于该值。 | `int` / `double` | `100` / `100.0` |
+| `LimitMode` | 数值边界限制模式，可选择同时限制、只限制最大值、只限制最小值或不限制。 | `NumericLimitMode` | `Both` |
+| `Increment` | 点击增减按钮或使用键盘调值时的步进值。 | `int` / `double` | `1` / `1.0` |
+| `AllowSpin` | 是否允许通过按钮、方向键、PageUp、PageDown 调整数值。 | `bool` | `True` |
+| `IndicatorButtonVisible` | 是否显示右侧增减按钮。 | `bool` | `True` |
+| `TextAlignment` | 输入框文本对齐方式。 | `TextAlignment` | `Center` |
+| `DecimalPlaces` | 小数显示位数，仅 `AduDoubleUpDown` 支持。 | `int` | `2` |
+| `CaretBrush` | 输入光标颜色。 | `Brush` | `Black` |
+| `SelectionBrush` | 选中文本背景色。 | `Brush` | `DodgerBlue` |
+| `SelectionOpacity` | 选中文本背景透明度。 | `double` | `0.5` |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `Both` | 同时限制 `Minimum` 和 `Maximum`。 |
+| `MaximumOnly` | 只限制最大值。 |
+| `MinimumOnly` | 只限制最小值。 |
+| `None` | 不限制最小值和最大值。 |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:LayoutAttach.DirectionType` | 控制增减按钮的排列方向，常用值为 `Horizontal` 和 `Vertical`。 | `DirectionType` | `Horizontal` |
+| `FlowDirection` | 控制内容流向，可配合垂直按钮布局调整按钮位置。 | `FlowDirection` | `LeftToRight` |
+| `AduAttach:BorderAttach.CornerRadius` | 控件边框圆角。 | `CornerRadius` | `3` |
+
+## 使用说明
+- 使用 `AduIntegerUpDown` 输入整数，使用 `AduDoubleUpDown` 输入小数。
+- `Value` 支持双向绑定，适合直接绑定到 ViewModel 中的数值属性。
+- `Minimum`、`Maximum` 与 `LimitMode` 一起决定边界限制规则。
+- 点击上下按钮、按 `Up` / `Down` 会按 `Increment` 增减；按 `PageUp` / `PageDown` 会按 10 倍步进增减。
+- `AllowSpin` 为 `False` 时，禁止通过按钮和键盘快捷键调值，但仍可手动输入。
+- `IndicatorButtonVisible` 为 `False` 时隐藏增减按钮，控件可作为纯数字输入框使用。
+- `AduDoubleUpDown` 会按 `DecimalPlaces` 格式化显示数值，例如 `DecimalPlaces="2"` 时显示为 `2.50`。
+- 手动输入超出范围的值时，控件会在提交时按限制范围修正；提交通常发生在失焦、按回车或使用增减操作时。
+ 
+## 典型场景
+- 表单中输入数量、次数、页码、排序权重等整数值。
+- 输入比例、金额、阈值、坐标、尺寸等小数值。
+- 数据表格编辑单元格中的数字字段。
+- 配置面板中用增减按钮快速调整参数。
+- 需要隐藏按钮、仅保留数字输入能力的紧凑表单。

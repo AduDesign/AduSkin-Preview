@@ -1,0 +1,375 @@
+`WorkflowEditor` 是 AduSkin 的可视化工作流设计器控件，用于在 WPF 应用中创建、编辑、保存、加载和运行有向业务流程。控件包含节点面板、属性面板、正交箭头连线、网格、注释框、迷你地图、自动布局、撤销重做、运行控制、断点、监视值、执行历史和调试输出。
+
+工作流模块位于独立程序集 `Workflow`。项目需要引用 `AduSkin` 和 `Workflow`，并在 XAML 中声明：
+
+```xml
+<ItemGroup>
+  <ProjectReference Include="..\AduSkin\AduSkin.csproj" />
+  <ProjectReference Include="..\Extensions\Workflow\Workflow.csproj" />
+</ItemGroup>
+```
+
+```xml
+xmlns:wf="clr-namespace:AduSkin.Extensions.Workflow;assembly=Workflow"
+```
+
+工作流只有执行引脚，连线负责控制执行顺序，不直接传递业务数据。节点数据通过工作流输入、共享变量、常量和节点输出绑定进行流转。
+
+## 控件类型
+
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `WorkflowEditor` | 完整工作流设计器，包含工具栏、节点画布、浮动面板、属性检查器和调试输出。 | `Control` |
+| `WorkflowDesigner` | `WorkflowEditor` 的兼容派生类型。 | `WorkflowEditor` |
+| `NodeCanvas` | 底层工作流画布，负责节点、连线、选择、拖拽、缩放、注释和小地图。 | `Control` |
+| `WorkflowInspector` | 节点属性与输入绑定检查器。 | `UserControl` |
+
+业务页面通常只需要使用 `WorkflowEditor`，不需要单独放置 `NodeCanvas` 或 `WorkflowInspector`。
+
+## 主要模型
+
+| 名称 | 描述 |
+| --- | --- |
+| `WorkflowGraph` | 工作流定义，包含 `Nodes`、`Edges`、`Comments`、布局方向和撤销重做管理器。 |
+| `WorkflowNode` | 所有节点的抽象基类，自定义节点需要继承该类型。 |
+| `WorkflowPort` | 执行引脚。普通流程节点通常使用上、下、左、右四个中性引脚。 |
+| `WorkflowEdge` | 节点间的有向执行连接。 |
+| `WorkflowComment` | 可调整大小、颜色、透明度和锁定状态的注释框。 |
+| `WorkflowValueBinding` | 节点输入绑定，指定输入值来自常量、工作流输入、变量或其他节点输出。 |
+| `WorkflowExecutionContext` | 一次工作流运行共享的上下文，保存启动输入、变量、节点输出和执行历史。 |
+| `WorkflowNodeExecutionContext` | 单个节点的执行上下文，包含已经解析和转换过的当前节点输入。 |
+| `WorkflowNodeResult` | 节点执行结果，包含成功状态、业务输出和需要激活的执行出口。 |
+
+## WorkflowEditor 依赖属性
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Graph` | 当前编辑和运行的工作流图。 | `WorkflowGraph` | `null` |
+| `Options` | 设计器界面和交互选项。 | `WorkflowDesignerOptions` | 新建默认实例 |
+| `StatusText` | 当前运行、校验、加载或保存状态文字。 | `string` | 空字符串 |
+| `OutputText` | 调试输出栏内容。 | `string` | 空字符串 |
+| `ExecutionHistory` | 执行历史数据源。 | `IEnumerable` | `null` |
+| `ResultPreviewNode` | 底部输入/输出下拉框独立选择的节点，与画布选择互不影响。 | `WorkflowNode` | `null` |
+| `ResultPreviewExecution` | 下拉框所选节点最近一次执行记录，只读。 | `WorkflowNodeExecutionRecord` | `null` |
+| `DebugSnapshot` | 当前断点对应的输入、输出和变量快照。 | `WorkflowDebugSnapshot` | `null` |
+| `IsRunning` | 工作流是否正在运行，只读。 | `bool` | `False` |
+| `IsPaused` | 调试器是否暂停，只读。 | `bool` | `False` |
+| `RunCommand` | 运行命令，可由宿主替换。 | `ICommand` | 内置命令 |
+| `StopCommand` | 停止命令，可由宿主替换。 | `ICommand` | 内置命令 |
+| `PauseCommand` | 请求在下一个节点前暂停。 | `ICommand` | 内置命令 |
+| `ResumeCommand` | 继续执行命令。 | `ICommand` | 内置命令 |
+| `StepCommand` | 单步执行命令。 | `ICommand` | 内置命令 |
+| `StepOutCommand` | 运行到最近的循环结束、合并、汇聚或结束边界。 | `ICommand` | 内置命令 |
+| `SkipCommand` | 跳过当前暂停节点。 | `ICommand` | 内置命令 |
+| `RunToCommand` | 运行到指定节点。 | `ICommand` | 内置命令 |
+| `ValidateCommand` | 校验当前工作流。 | `ICommand` | 内置命令 |
+| `ResetCommand` | 重置节点、连线和调试状态。 | `ICommand` | 内置命令 |
+| `SaveCommand` | 通过文件对话框保存工作流 JSON。 | `ICommand` | 内置命令 |
+| `LoadCommand` | 通过文件对话框加载工作流 JSON。 | `ICommand` | 内置命令 |
+
+`ExecutionInputs` 不是依赖属性，可在运行前通过代码设置工作流启动参数：
+
+```csharp
+WorkflowCanvas.ExecutionInputs = new Dictionary<string, object?>
+{
+    ["OrderId"] = "ADU-1001",
+    ["Operator"] = "Admin"
+};
+
+var result = await WorkflowCanvas.RunAsync();
+```
+
+## WorkflowDesignerOptions
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsNodePanelPinned` | 是否固定左侧节点面板；未固定时以半透明浮层自动隐藏。 | `bool` | `False` |
+| `IsPropertyPanelPinned` | 是否固定右侧属性面板；未固定时以半透明浮层显示。 | `bool` | `False` |
+| `ShowMiniMap` | 是否显示小地图。 | `bool` | `True` |
+| `ShowGrid` | 是否显示画布网格。 | `bool` | `True` |
+| `SnapToGrid` | 拖动节点时是否吸附到网格。 | `bool` | `True` |
+
+选项可以由宿主持久化：
+
+```csharp
+var json = WorkflowCanvas.SaveLayout();
+WorkflowCanvas.LoadLayout(json);
+```
+
+## 节点与执行引脚
+
+普通业务节点调用 `AddFlowPorts()` 后会获得位于四个方向中点的中性引脚。中性引脚的方向由第一次连接决定：
+
+- 第一次作为输入连接后，该引脚只能继续作为输入使用。
+- 第一次作为输出连接后，该引脚只能继续作为输出使用。
+- 同一个引脚不能同时承担输入和输出。
+- 开始、结束、分支、循环、并行、汇聚等控制节点使用固定语义的输入和输出引脚。
+
+工作流支持两种布局方向：
+
+| 枚举值 | 描述 |
+| --- | --- |
+| `WorkflowLayoutDirection.TopToBottom` | 从上到下排列，控制节点通常由顶部输入、底部输出。 |
+| `WorkflowLayoutDirection.LeftToRight` | 从左到右排列，控制节点的显示引脚会随布局方向旋转。 |
+
+```csharp
+Graph.LayoutDirection = WorkflowLayoutDirection.LeftToRight;
+```
+
+工具栏的自动布局会按照当前 `LayoutDirection` 重新排布节点。
+
+## 数据流转与输入绑定
+
+执行连线只决定节点何时执行。运行器在节点执行前读取 `InputBindings`，将值解析为当前节点的 `WorkflowNodeExecutionContext.Inputs`。
+
+`WorkflowValueSourceKind` 支持四种数据来源：
+
+| 类型 | 描述 |
+| --- | --- |
+| `Constant` | 固定常量，例如超时时间、模板名称或开关值。 |
+| `WorkflowInput` | 宿主启动工作流时传入的只读参数。 |
+| `WorkflowVariable` | 当前运行上下文中的共享变量，可由节点动态修改。 |
+| `NodeOutput` | 指定节点的指定输出，是读取上游节点结果的推荐方式。 |
+
+绑定上游节点输出：
+
+```csharp
+target.InputBindings["OrderNo"] = new WorkflowValueBinding
+{
+    SourceKind = WorkflowValueSourceKind.NodeOutput,
+    SourceNodeId = source.Id,
+    OutputName = "OrderNo",
+    Required = true
+};
+```
+
+节点执行时读取已经解析的数据：
+
+```csharp
+var orderNo = context.Get<string>("OrderNo");
+```
+
+节点通过 `WorkflowNodeResult` 输出数据：
+
+```csharp
+return WorkflowNodeResult.Success(
+    new Dictionary<string, object?>
+    {
+        ["OrderNo"] = orderNo,
+        ["Amount"] = 299m
+    });
+```
+
+运行器会按照节点声明的输入、输出类型执行转换。必填绑定没有值时，节点会在执行前失败。校验器还会检查引用节点是否存在、是否位于当前节点上游，以及已声明的输入输出类型是否兼容。
+
+也可以直接访问共享上下文：
+
+```csharp
+context.Execution.SetVariable("CurrentOrderNo", orderNo);
+var value = context.Execution.GetVariable("CurrentOrderNo");
+var amount = context.Execution.GetOutput<decimal>(sourceNodeId, "Amount");
+```
+
+普通业务数据建议使用 `InputBindings`，这样属性面板、校验器和序列化文件都能看到完整依赖关系。
+
+## 自定义节点
+
+自定义节点需要继承 `WorkflowNode`，使用 `WorkflowNodeAttribute` 注册显示名称、分类、排序和图标：
+
+```csharp
+[WorkflowNode("demo.create-order", "创建订单", "订单", 10, "Icon_CreateOrder")]
+public sealed class CreateOrderWorkflowNode : WorkflowNode
+{
+    public CreateOrderWorkflowNode()
+    {
+        Title = "创建订单";
+        AddFlowPorts();
+        DefineInput("CustomerId", typeof(string), true, "客户编号");
+        DefineOutput("OrderNo", typeof(string), "订单号");
+    }
+
+    public override string TypeId => "demo.create-order";
+
+    public override async Task<WorkflowNodeResult> ExecuteAsync(
+        WorkflowNodeExecutionContext context,
+        CancellationToken cancellationToken)
+    {
+        var customerId = context.Get<string>("CustomerId")
+            ?? throw new InvalidOperationException("缺少客户编号。");
+
+        await Task.Delay(300, cancellationToken);
+        return WorkflowNodeResult.Success(
+            new Dictionary<string, object?>
+            {
+                ["OrderNo"] = $"{customerId}-{DateTime.Now:HHmmss}"
+            });
+    }
+}
+```
+
+应用启动或创建 ViewModel 时扫描宿主程序集：
+
+```csharp
+WorkflowNodeRegistry.ScanAssembly(Assembly.GetExecutingAssembly());
+```
+
+扫描后，自定义节点会自动出现在节点面板和画布右键菜单。图标键应指向宿主资源中的 `Geometry`；未提供时使用分类默认图标。
+
+需要保存节点业务属性时，重写 `SaveState()` 和 `LoadState()`：
+
+```csharp
+public string ServiceName { get; set; } = "OrderService";
+
+public override IDictionary<string, string> SaveState() =>
+    new Dictionary<string, string>
+    {
+        [nameof(ServiceName)] = ServiceName
+    };
+
+public override void LoadState(IReadOnlyDictionary<string, string> state)
+{
+    if (state.TryGetValue(nameof(ServiceName), out var value))
+        ServiceName = value;
+}
+```
+
+## 内置节点
+
+| 节点 | TypeId | 用途 |
+| --- | --- | --- |
+| 开始 | `builtin.start` | 工作流入口。 |
+| 结束 | `builtin.end` | 工作流结束。 |
+| 操作 | `builtin.action` | 通过委托执行通用异步任务。 |
+| 条件 | `builtin.condition` | 按表达式激活 `True` 或 `False` 出口。 |
+| 多路分支 | `builtin.switch` | 按输入值选择 Case 或 Default。 |
+| 延迟 | `builtin.delay` | 等待指定毫秒数。 |
+| 定时等待 | `builtin.timer` | 等待到目标时间。 |
+| 遍历 | `builtin.foreach` | 遍历集合，并设置当前项与索引变量。 |
+| 条件循环 | `builtin.while` | 按表达式循环，带最大循环次数保护。 |
+| 子工作流 | `builtin.subworkflow` | 调用宿主提供的子工作流执行器。 |
+| 人工审批 | `builtin.approval` | 调用宿主审批处理器并选择通过或拒绝分支。 |
+| 等待外部事件 | `builtin.wait-event` | 等待宿主提供的外部事件载荷。 |
+| 合并 | `builtin.merge` | 合并互斥分支，不等待全部来源。 |
+| 异常处理 | `builtin.try` | 提供 Try、Catch、Finally 和 Completed 路径。 |
+| 终止工作流 | `builtin.terminate` | 立即终止当前工作流。 |
+| 执行补偿 | `builtin.compensation` | 调用宿主补偿处理器。 |
+| 并行 | `builtin.parallel-split` | 并行启动多个分支，可等待全部或首个完成。 |
+| 汇聚 | `builtin.join` | 按 All、Any 或 Count 策略等待并行分支。 |
+
+## 并行与汇聚
+
+并行分支共享同一个 `WorkflowExecutionContext`：
+
+- 每个节点的输出按节点 ID 独立保存，不会因输出名称相同而覆盖。
+- 工作流变量为共享字典；多个并行节点写同名变量时，最后写入值生效。
+- `JoinWorkflowNode` 只负责等待，不会自动合并业务数据。
+- 汇聚后的节点应分别绑定各分支节点的输出。
+- `Any` 策略下其他分支可能尚未产生输出，不应把未完成分支数据声明为必填。
+
+## 运行、调试与状态重置
+
+`WorkflowEditor` 提供以下常用方法：
+
+| 方法 | 描述 |
+| --- | --- |
+| `RunAsync()` | 校验并运行当前工作流，返回 `WorkflowRunResult`。每次运行前会清理上一次的节点和连线状态。 |
+| `Stop()` | 请求取消当前运行。 |
+| `Pause()` | 请求在下一个节点边界暂停。 |
+| `Resume()` | 从暂停状态继续。 |
+| `Step()` | 放行一个暂停节点，并在下一个节点边界再次暂停。 |
+| `StepOut()` | 运行到最近的循环结束、合并、汇聚或结束节点。 |
+| `Skip()` | 跳过当前暂停节点。 |
+| `RunTo(WorkflowNode node)` | 运行到指定节点。 |
+| `Reset()` | 清理运行状态、输出、历史和调试快照。 |
+| `Validate()` | 校验节点、连接、表达式和数据绑定。 |
+| `Save()` / `Load()` | 使用系统文件对话框保存或加载工作流。 |
+| `RefreshPalette()` | 宿主注册新节点后刷新节点面板。 |
+
+节点支持普通断点和条件断点。断点条件可以引用工作流输入、共享变量以及当前节点已解析的输入。命中断点后，底部调试面板可以查看 Inputs、Outputs、Variables 和 Watch 表达式。
+
+```csharp
+WorkflowCanvas.ExecutionCompleted += result =>
+{
+    if (!result.Succeeded)
+        Debug.WriteLine(result.Exception);
+};
+```
+
+底部“输入”和第二个“输出”页通过下拉框选择当前画布节点，两个页面共享 `ResultPreviewNode`，分别显示 `ResultPreviewExecution.Inputs` 和 `ResultPreviewExecution.Outputs`。运行完成后仍可查看缓存数据。画布选中节点不会改变下拉框选择。
+
+执行记录保存在编辑器内部缓存中，不写入工作流 JSON。开始新一轮运行、重置或切换工作流时清空，运行结束后保留供下拉选择查看。敏感字段使用运行器现有的脱敏值。
+
+## 无界面运行
+
+服务端逻辑、单元测试或后台任务不需要创建 `WorkflowEditor`，可以直接使用 `WorkflowRunner`：
+
+```csharp
+var graph = WorkflowSerializer.Deserialize(json);
+var runner = new WorkflowRunner
+{
+    MaxExecutionSteps = 10000,
+    MaxConcurrency = 4
+};
+
+var result = await runner.RunAsync(
+    graph,
+    new Dictionary<string, object?>
+    {
+        ["OrderId"] = "ADU-1001"
+    },
+    cancellationToken);
+```
+
+`WorkflowRunner` 提供 `NodeStateChanged`、`EdgeStateChanged`、`DebugPaused`、`DebugSnapshotAvailable`、`NodeExecutionCompleted` 和 `PersistenceFailed` 事件。宿主还可以配置审批、外部事件、子工作流、补偿处理器及 `IWorkflowInstanceStore`。
+
+## 保存、加载与恢复
+
+正式工作流定义使用 `WorkflowSerializer`：
+
+```csharp
+var json = WorkflowSerializer.Serialize(graph);
+var checkedJson = WorkflowSerializer.SerializeValidated(graph);
+var restored = WorkflowSerializer.Deserialize(json);
+```
+
+序列化内容包括：
+
+- 图 ID、名称和布局方向。
+- 节点类型、位置、大小、启用状态、重试、超时和失败策略。
+- 节点业务状态、输入绑定、断点和补偿标识。
+- 引脚、连线、手工路由点和注释框。
+
+反序列化前必须先注册宿主自定义节点。找不到节点类型时会创建 `UnknownWorkflowNode` 保留原始数据，但该节点不能正常执行。
+
+运行实例持久化与工作流定义 JSON 是两种不同用途：
+
+- `WorkflowSerializer` 保存可编辑的工作流定义。
+- `IWorkflowInstanceStore` 保存运行实例、当前位置、变量和节点输出，用于恢复被中断的流程。
+
+## 注释与画布操作
+
+- 框选多个节点后创建注释，注释会包围选中节点。
+- 拖动注释时可以同时移动完全位于框内的节点。
+- 注释支持标题、正文、颜色、透明度、边框粗细和锁定。
+- 注释选中时只高亮外边框，标题栏保持注释本身颜色。
+- 画布支持复制、粘贴、删除、全选、自动布局、对齐、分布和适配视图。
+- 清空画布后会保留新的开始与结束节点，并默认连接两者。
+
+## 使用说明
+
+- 一个可运行工作流至少需要一个开始节点。
+- 自定义节点的 `TypeId` 必须长期稳定且全局唯一；它会写入 JSON 并用于反序列化。
+- 执行连线与数据绑定相互独立。连接了上游节点并不意味着下游节点会自动得到全部输出。
+- 输入输出应通过 `DefineInput` 和 `DefineOutput` 声明，以获得属性面板展示、必填校验和类型转换。
+- 普通节点优先使用 `AddFlowPorts()`；控制节点按语义定义固定输入和输出。
+- 节点实现必须响应 `CancellationToken`，避免停止工作流后仍长时间占用线程。
+- 并行节点写共享变量时应避免同名写入，或由宿主自行实现同步策略。
+- 运行前会重置上一次的视觉状态，但不会删除断点、图结构或业务配置。
+- 动态加载文件时，应先扫描自定义节点程序集，再调用 `WorkflowSerializer.Deserialize`。
+
+## 典型场景
+
+- 审批流、订单流、任务编排和自动化处理。
+- 可视化 ETL、设备控制和工业流程设计。
+- 带条件、循环、并行、汇聚、补偿和人工节点的长流程。
+- 需要 JSON 定义、断点调试、实例恢复及宿主服务集成的 WPF 工作流设计器。

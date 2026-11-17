@@ -1,0 +1,40 @@
+AduWaterfallFlow 是一个瀑布流布局面板，继承自 WPF `Panel`。它会根据可用宽度、最小列宽和间距计算列数，并把子元素依次放入当前高度最小的列中。
+
+以下默认值以 `AduWaterfallFlow` 的源码和默认样式为准。控件适合图片墙、卡片流、统计块和高度不一致的内容列表。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MinColumnWidth` | 每列最小宽度。控件会基于可用宽度和该值计算列数。 | `double` | `150.0` |
+| `HorizontalSpacing` | 列之间的水平间距。 | `double` | `8.0` |
+| `VerticalSpacing` | 同一列中子元素之间的垂直间距。 | `double` | `8.0` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Children` | 面板中的子元素集合。 | `UIElementCollection` | 空集合 |
+| `HorizontalAlignment` | 水平对齐方式。 | `HorizontalAlignment` | `Stretch` |
+| `VerticalAlignment` | 垂直对齐方式。 | `VerticalAlignment` | `Top` |
+| `Margin` | 面板外边距。 | `Thickness` | `5` |
+| `SnapsToDevicePixels` | 是否启用设备像素对齐。 | `bool` | `True` |
+
+## 布局规则
+| 规则 | 描述 |
+| --- | --- |
+| 列数计算 | 根据可用宽度、`MinColumnWidth` 和 `HorizontalSpacing` 计算，至少为 `1` 列。 |
+| 列宽计算 | 使用可用宽度平均分配列宽，并扣除列间距。 |
+| 子元素测量 | 每个子元素按当前列宽测量，高度由子元素自身决定。 |
+| 子元素排列 | 每次把下一个子元素放入当前高度最小的列。 |
+
+## 使用说明
+- 将 `AduWaterfallFlow` 作为普通面板使用，直接放置子元素。
+- 子元素高度可以不同，面板会自动选择最短列进行排列。
+- `MinColumnWidth` 越大，同一宽度下列数越少；越小则列数越多。
+- `HorizontalSpacing` 和 `VerticalSpacing` 会影响整体测量高度和子元素位置。
+- 当可用宽度无效或为无限值时，控件会按单列排列。
+
+## 典型场景
+- 图片、作品、相册和素材墙。
+- 高度不一致的卡片列表。
+- 看板中的统计块和信息块排列。
+- 响应式面板中的紧凑内容流。

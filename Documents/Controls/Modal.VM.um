@@ -1,0 +1,62 @@
+[RelayCommand]
+public void CloseAll()
+{
+    IsCenterModal = false;
+    IsFullWidthModal = false;
+    IsProgressModal = false;
+}
+
+[RelayCommand]
+public void OpenCenter()
+{
+    CloseAll();
+    IsCenterModal = true;
+}
+[ObservableProperty]
+private bool _isCenterModal;
+
+[RelayCommand]
+public void OpenFullWidth()
+{
+    CloseAll();
+    IsFullWidthModal = true;
+}
+[ObservableProperty]
+private bool _isFullWidthModal;
+
+[RelayCommand]
+public void OpenLoading()
+{
+    CloseAll();
+    ProgressTitle = "Loading resources";
+    ProgressMessage = "Please wait while AduSkin prepares the current view.";
+    ProgressDetail = "Waiting for the operation to report progress...";
+    ProgressValue = 0;
+    IsProgressIndeterminate = true;
+    IsProgressModal = true;
+}
+
+[RelayCommand]
+public void OpenProgress()
+{
+    CloseAll();
+    ProgressTitle = "Preparing files";
+    ProgressMessage = "Please wait while AduSkin completes the current operation.";
+    ProgressDetail = "Checking resources and loading theme dictionaries...";
+    ProgressValue = 42;
+    IsProgressIndeterminate = false;
+    IsProgressModal = true;
+}
+[ObservableProperty]
+private bool _isProgressModal;
+
+[ObservableProperty]
+private string _progressTitle = "Preparing files";
+[ObservableProperty]
+private string _progressMessage = "Please wait while AduSkin completes the current operation.";
+[ObservableProperty]
+private string _progressDetail = "Checking resources and loading theme dictionaries...";
+[ObservableProperty]
+private double _progressValue = 42;
+[ObservableProperty]
+private bool _isProgressIndeterminate;

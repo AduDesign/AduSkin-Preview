@@ -1,0 +1,148 @@
+<!--  Example 1: Layout declared directly in XAML  -->
+<Border
+	Height="420"
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<AduSkin:DockWorkspace
+		AutoHideTabMaxHeight="160"
+		BorderThickness="0"
+		SplitterThickness="3">
+		<AduSkin:DockWorkspace.Layout>
+			<AduSkin:DockLayout>
+				<AduSkin:DockSplitNode Id="Root" Orientation="Horizontal">
+					<AduSkin:DockPane
+						Id="LeftTools"
+						Kind="Tool"
+						Length="1"
+						MinLength="180"
+						Side="Left">
+						<AduSkin:DockItem
+							Id="toolbox"
+							Title="Toolbox"
+							CanClose="False">
+							<TextBlock Margin="12" Text="Toolbox content" />
+						</AduSkin:DockItem>
+						<AduSkin:DockItem
+							Id="outline"
+							Title="Outline"
+							CanClose="False">
+							<TreeView Margin="8">
+								<TreeViewItem Header="Application" IsExpanded="True">
+									<TreeViewItem Header="MainWindow" />
+								</TreeViewItem>
+							</TreeView>
+						</AduSkin:DockItem>
+					</AduSkin:DockPane>
+
+					<AduSkin:DockPane
+						Id="Documents"
+						Kind="Document"
+						Length="3"
+						MinLength="320">
+						<AduSkin:DockItem Id="welcome" Title="Welcome">
+							<TextBlock
+								Margin="16"
+								FontSize="18"
+								Text="Welcome to DockWorkspace" />
+						</AduSkin:DockItem>
+						<AduSkin:DockItem Id="editor" Title="Editor">
+							<AduSkin:AduTextBox
+								Margin="8"
+								AcceptsReturn="True"
+								Text="Document content" />
+						</AduSkin:DockItem>
+					</AduSkin:DockPane>
+
+					<AduSkin:DockPane
+						Id="RightTools"
+						Kind="Tool"
+						Length="1"
+						MinLength="200"
+						Side="Right">
+						<AduSkin:DockItem
+							Id="properties"
+							Title="Properties"
+							CanClose="False">
+							<StackPanel Margin="12">
+								<TextBlock Margin="0,0,0,8" Text="Name" />
+								<AduSkin:AduTextBox Text="MainWindow" />
+							</StackPanel>
+						</AduSkin:DockItem>
+					</AduSkin:DockPane>
+				</AduSkin:DockSplitNode>
+			</AduSkin:DockLayout>
+		</AduSkin:DockWorkspace.Layout>
+	</AduSkin:DockWorkspace>
+</Border>
+
+<!--  Example 2: Layout created and controlled by a ViewModel  -->
+<StackPanel>
+	<WrapPanel Margin="0,0,0,10">
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding AddDocumentCommand}"
+			Content="Add document" />
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding FloatActiveItemCommand}"
+			Content="Float active" />
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding AutoHideLeftToolsCommand}"
+			Content="Auto-hide left" />
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding PinAutoHiddenPanesCommand}"
+			Content="Pin hidden panes" />
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding SaveLayoutCommand}"
+			Content="Save layout" />
+		<AduSkin:AduButton
+			Margin="0,0,8,8"
+			Command="{Binding RestoreLayoutCommand}"
+			Content="Restore layout" />
+		<AduSkin:AduCheckBox
+			Margin="8,4,12,8"
+			Content="Lock layout"
+			IsChecked="{Binding IsLayoutLocked, Mode=TwoWay}" />
+		<TextBlock
+			Margin="4,5,0,8"
+			Text="{Binding StatusText}" />
+	</WrapPanel>
+
+	<Border Height="500" BorderThickness="1" CornerRadius="8">
+		<AduSkin:DockWorkspace
+			AutoHideAffectsActiveItemOnly="{Binding AutoHideAffectsActiveItemOnly}"
+			AutoHideCloseDelay="700"
+			AutoHideOpenDelay="100"
+			BorderThickness="0"
+			DockIndicatorSize="38"
+			FloatingWindowOwnerMode="ToolWindows"
+			IsLayoutLocked="{Binding IsLayoutLocked}"
+			Layout="{Binding WorkspaceLayout}"
+			SplitterThickness="3">
+			<Interactivity:Interaction.Triggers>
+				<Interactivity:EventTrigger EventName="Loaded">
+					<Interactivity:EventToCommand
+						Command="{Binding WorkspaceLoadedCommand}"
+						PassEventArgsToCommand="True" />
+				</Interactivity:EventTrigger>
+				<Interactivity:EventTrigger EventName="Unloaded">
+					<Interactivity:EventToCommand
+						Command="{Binding WorkspaceUnloadedCommand}"
+						PassEventArgsToCommand="True" />
+				</Interactivity:EventTrigger>
+				<Interactivity:EventTrigger EventName="ActiveItemChanged">
+					<Interactivity:EventToCommand Command="{Binding ActiveItemChangedCommand}" />
+				</Interactivity:EventTrigger>
+				<Interactivity:EventTrigger EventName="ItemClosing">
+					<Interactivity:EventToCommand
+						Command="{Binding ItemClosingCommand}"
+						PassEventArgsToCommand="True" />
+				</Interactivity:EventTrigger>
+			</Interactivity:Interaction.Triggers>
+		</AduSkin:DockWorkspace>
+	</Border>
+</StackPanel>

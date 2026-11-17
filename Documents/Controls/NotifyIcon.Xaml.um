@@ -1,0 +1,53 @@
+﻿<!-- Basic Usage -->
+<AduSkin:AduNotifyIcon
+    x:Name="notifyIcon"
+    IconUri="pack://application:,,,/AduSkin;component/Resources/logo.ico"
+    ToolTipText="AduSkin NotifyIcon" />
+
+<!-- With Context Menu -->
+<AduSkin:AduNotifyIcon
+    IconUri="pack://application:,,,/AduSkin;component/Resources/logo.ico"
+    ToolTipText="With Context Menu">
+    <AduSkin:AduNotifyIcon.ContextMenu>
+        <AduSkin:AduContextMenu>
+            <AduSkin:AduMenuItem Header="Open" Command="{Binding OpenCommand}" />
+            <AduSkin:AduMenuItem Header="Settings" />
+            <Separator />
+            <AduSkin:AduMenuItem Header="Exit" Command="{Binding ExitCommand}" />
+        </AduSkin:AduContextMenu>
+    </AduSkin:AduNotifyIcon.ContextMenu>
+</AduSkin:AduNotifyIcon>
+
+<!-- With Popup -->
+<AduSkin:AduNotifyIcon
+    IconUri="pack://application:,,,/AduSkin;component/Resources/logo.ico"
+    ToolTipText="With Popup"
+    ShowPopupDelay="500">
+    <AduSkin:AduNotifyIcon.Popup>
+        <Popup StaysOpen="False">
+            <Border Background="White" Padding="15" CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                </Border.Effect>
+                <StackPanel Width="200">
+                    <TextBlock Text="Welcome!" FontWeight="Bold" FontSize="16"/>
+                    <TextBlock Text="This is a popup window" Margin="0,5,0,0" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+    </AduSkin:AduNotifyIcon.Popup>
+</AduSkin:AduNotifyIcon>
+
+<!-- Blinking Icon -->
+<AduSkin:AduNotifyIcon
+    IconUri="pack://application:,,,/AduSkin;component/Resources/logo.ico"
+    BlinkIconUri="pack://application:,,,/AduSkin;component/Resources/alert.ico"
+    IsBlinking="True"
+    BlinkInterval="500" />
+
+<!-- Interactive Control -->
+<StackPanel>
+    <AduSkin:AduCheckBox Content="Enable Blinking" IsChecked="{Binding IsBlinking}" />
+    <AduSkin:AduSlider Maximum="2000" Minimum="100" Value="{Binding BlinkInterval}" />
+    <AduSkin:AduCheckBox Content="Visible" IsChecked="{Binding IsVisible}" />
+</StackPanel>

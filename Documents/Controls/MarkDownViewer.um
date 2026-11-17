@@ -1,0 +1,42 @@
+AduMarkDownViewer 是 Markdown 查看控件，用于把 Markdown 文本或本地 Markdown 文件渲染为只读富文本内容。控件内部使用 `AduRichTextBox` 展示渲染结果，支持异步解析、取消过期渲染任务和图片尺寸限制。
+
+以下默认值以 `AduMarkDownViewer` 的默认样式和源码默认值为准。控件适合用于帮助文档、说明页、日志说明、发布说明和只读 Markdown 内容展示。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduMarkDownViewer` | Markdown 只读查看控件。 | `Control` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MarkdownText` | Markdown 文本内容。变化后会触发异步渲染。 | `string` | 空字符串 |
+| `Source` | Markdown 文件路径。文件存在时优先读取文件内容。 | `string` | 空字符串 |
+| `MaxImageHeight` | 渲染图片的最大高度。`NaN` 表示不限制。 | `double` | `NaN` |
+| `MaxImageWidth` | 渲染图片的最大宽度。`NaN` 表示不限制。 | `double` | `NaN` |
+| `MinImageHeight` | 渲染图片的最小高度。`NaN` 表示不限制。 | `double` | `NaN` |
+| `MinImageWidth` | 渲染图片的最小宽度。`NaN` 表示不限制。 | `double` | `NaN` |
+| `Padding` | 内容内边距。 | `Thickness` | `6` |
+| `Background` | 控件背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 正文前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 控件边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `1` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 控件外框圆角。 | `6` |
+
+## 使用说明
+- `Source` 不为空且文件存在时，控件会读取文件内容渲染；否则使用 `MarkdownText`。
+- `MarkdownText` 或 `Source` 变化后会触发异步解析，旧的未完成渲染任务会被取消。
+- 如果内容为空、文件不存在或解析失败，控件会显示空文档。
+- 控件内部展示区域为只读，并启用文档内链接、图片等文档元素交互。
+- 图片尺寸限制会在渲染前传递给渲染器，适合控制文档中大图的显示范围。
+- `Padding` 会影响空文档和外层展示区域的留白。
+
+## 典型场景
+- 软件帮助文档、操作说明、常见问题。
+- 插件说明、组件说明、更新日志。
+- 从本地文件读取并展示 Markdown 文档。
+- 在应用内展示只读富文本说明内容。

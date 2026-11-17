@@ -1,0 +1,26 @@
+<!-- 水平布局（默认） -->
+<AduSkin:AduStepBar
+	ItemsSource="{Binding ItemsSource}"
+	Progress="{Binding SelectedIndex, Mode=TwoWay}" />
+
+<StackPanel
+	HorizontalAlignment="Center"
+	Orientation="Horizontal">
+	<AduSkin:AduButton
+		Margin="0,0,10,0"
+		Command="{Binding UpCommand}"
+		Content="Previous"
+		FontSize="12"
+		FontWeight="Normal" />
+	<AduSkin:AduButton
+		Command="{Binding NextCommand}"
+		Content="Next"
+		FontSize="12"
+		FontWeight="Normal" />
+</StackPanel>
+<!-- 垂直布局：与上方示例共用数据源和当前进度 -->
+<AduSkin:AduStepBar
+    Height="260"
+    Orientation="Vertical"
+    ItemsSource="{Binding ItemsSource}"
+    Progress="{Binding SelectedIndex, Mode=TwoWay}" />

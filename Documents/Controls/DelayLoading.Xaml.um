@@ -1,0 +1,140 @@
+﻿		<!--  Example 1: Basic Skeleton Placeholder  -->
+		<Border
+			Margin="0,0,0,20"
+			BorderThickness="1"
+			CornerRadius="8">
+			<StackPanel>
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="18"
+					FontWeight="SemiBold"
+					Text="Example 1: Profile Skeleton" />
+
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="12"
+					Text="Toggle loading state to switch between skeleton placeholders and actual content"
+					TextWrapping="Wrap" />
+
+				<StackPanel Margin="0,0,0,20" Orientation="Horizontal">
+					<AduSkin:AduSwitch
+						x:Name="BtnSwitch"
+						Margin="0,0,10,0"
+						Padding="15,5"
+						Content="Loading"
+						IsChecked="True" />
+					<TextBlock VerticalAlignment="Center" Text="Current state: " />
+					<TextBlock
+						x:Name="StatusText"
+						VerticalAlignment="Center"
+						FontWeight="Bold">
+						<TextBlock.Style>
+							<Style TargetType="TextBlock">
+								<Setter Property="Text" Value="Content Visible" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ElementName=BtnSwitch, Path=IsChecked}" Value="True">
+										<Setter Property="Text" Value="Loading" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</TextBlock.Style>
+					</TextBlock>
+				</StackPanel>
+
+				<StackPanel Orientation="Horizontal">
+					<AduSkin:AduDelayLoading
+						x:Name="AvatarLoading"
+						Width="60"
+						Height="60"
+						Margin="10"
+						IsLoading="{Binding ElementName=BtnSwitch, Path=IsChecked}">
+						<Border
+							Width="60"
+							Height="60"
+							BorderBrush="{DynamicResource NormalBorderBrush}"
+							BorderThickness="1"
+							ClipToBounds="True"
+							CornerRadius="10">
+							<Border.Background>
+								<ImageBrush ImageSource="/Resources/Cover/1.png" Stretch="Fill" />
+							</Border.Background>
+						</Border>
+					</AduSkin:AduDelayLoading>
+
+					<StackPanel Width="230" VerticalAlignment="Center">
+						<AduSkin:AduDelayLoading
+							x:Name="TitleLoading"
+							Height="20"
+							MinWidth="120"
+							Margin="0,0,0,8"
+							HorizontalAlignment="Left"
+							AduAttach:BorderAttach.CornerRadius="4"
+							IsLoading="{Binding ElementName=BtnSwitch, Path=IsChecked}">
+							<TextBlock
+								FontSize="16"
+								FontWeight="Bold"
+								Text="AduSkin Design" />
+						</AduSkin:AduDelayLoading>
+
+						<AduSkin:AduDelayLoading
+							x:Name="DescLoading"
+							Width="200"
+							Height="14"
+							HorizontalAlignment="Left"
+							AduAttach:BorderAttach.CornerRadius="4"
+							IsLoading="{Binding ElementName=BtnSwitch, Path=IsChecked}">
+							<TextBlock FontSize="12" Text="High performance WPF control library" />
+						</AduSkin:AduDelayLoading>
+					</StackPanel>
+				</StackPanel>
+			</StackPanel>
+		</Border>
+
+		<!--  Example 2: Card Grid Skeletons  -->
+		<Border
+			Margin="0,0,0,20"
+			BorderThickness="1"
+			CornerRadius="8">
+			<StackPanel>
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="18"
+					FontWeight="SemiBold"
+					Text="Example 2: Grid Skeletons" />
+
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="12"
+					Text="Use DelayLoading in an item template to show repeated loading placeholders"
+					TextWrapping="Wrap" />
+
+				<ItemsControl
+					Margin="0,0,0,5"
+					ItemsSource="{Binding ItemsSource}"
+					Tag="{Binding ElementName=BtnSwitch, Path=IsChecked}">
+					<ItemsControl.ItemsPanel>
+						<ItemsPanelTemplate>
+							<UniformGrid Columns="3" />
+						</ItemsPanelTemplate>
+					</ItemsControl.ItemsPanel>
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<AduSkin:AduDelayLoading
+								Height="120"
+								Margin="10"
+								IsLoading="{Binding Tag, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+								<Border
+									BorderBrush="{DynamicResource NormalBorderBrush}"
+									BorderThickness="1"
+									ClipToBounds="True"
+									CornerRadius="10">
+									<Border.Background>
+										<ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
+									</Border.Background>
+								</Border>
+							</AduSkin:AduDelayLoading>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+		</Border>

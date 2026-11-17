@@ -1,0 +1,70 @@
+AduDataGrid 是基于 `DataGrid` 的增强控件，支持多选同步、列筛选、批量编辑、空状态占位、加载蒙层和冻结列阴影刷新。
+
+以下默认值以 `AduDataGrid` 默认样式为准；继承自 WPF `DataGrid` 的属性只列出页面示例和模板中常用的部分。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 数据源集合。 | `IEnumerable` | `null` |
+| `AutoGenerateColumns` | 是否根据数据源自动生成列。 | `bool` | `False` |
+| `HeadersVisibility` | 行头和列头的显示方式。 | `DataGridHeadersVisibility` | `Column` |
+| `FrozenColumnCount` | 左侧冻结列数量。 | `int` | `0` |
+| `GridLinesVisibility` | 网格线显示方式。 | `DataGridGridLinesVisibility` | `All` |
+| `RowHeaderWidth` | 行头宽度，设置大于 0 时可显示行选择复选框区域。 | `double` | `0` |
+| `RowHeight` | 数据行高度。 | `double` | `30` |
+| `SelectionMode` | 选择模式。 | `DataGridSelectionMode` | `Extended` |
+| `SelectionUnit` | 选择单位。 | `DataGridSelectionUnit` | `FullRow` |
+| `SelectedItem` | 当前单选项。 | `object` | `null` |
+| `CanUserAddRows` | 是否允许用户新增行。 | `bool` | `False` |
+| `CanUserDeleteRows` | 是否允许用户删除行。 | `bool` | `False` |
+| `EnableRowVirtualization` | 是否启用行虚拟化。 | `bool` | `True` |
+| `EnableColumnVirtualization` | 是否启用列虚拟化。 | `bool` | `True` |
+| `AlternationCount` | 交替行样式计数。 | `int` | `2` |
+| `RowDetailsVisibilityMode` | 行详情显示方式。 | `DataGridRowDetailsVisibilityMode` | `VisibleWhenSelected` |
+| `Background` | 控件背景色。 | `Brush` | `NormalTransparentBrush` |
+| `Foreground` | 控件前景色。 | `Brush` | `NormalForeground` |
+| `BorderBrush` | 控件边框色。 | `Brush` | `NormalBorderBrush` |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `1` |
+| `Padding` | 控件内边距。 | `Thickness` | `0` |
+| `FrozenColumnWidthTrigger` | 冻结列阴影刷新触发器，用于强制重新计算冻结区域位置。 | `double` | `0` |
+| `IsMultiselectEnabled` | 是否启用多选以及表头全选能力。 | `bool` | `True` |
+| `CanSelectAllRows` | 是否允许使用表头复选框全选，运行时由 `IsMultiselectEnabled` 和 `SelectionMode` 自动计算。 | `bool` | `自动计算` |
+| `IsScrollViewerEnabled` | 是否启用控件内置的滚动视图模板。 | `bool` | `True` |
+| `AduSelectedItems` | 与当前选中项同步的集合，支持双向绑定。 | `IList` | `null` |
+
+## 附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:DataGridFilterAttach.EnableColumnFilter` | 是否启用整表列筛选功能。 | `bool` | `False` |
+| `AduAttach:DataGridFilterAttach.IsFilterEnabled` | 是否启用当前列的筛选按钮。 | `bool` | `False` |
+| `AduAttach:DataGridBatchEditAttach.EnableBatchColumnEdit` | 是否启用整表批量编辑按钮。 | `bool` | `False` |
+| `AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled` | 是否启用当前列的批量编辑按钮。 | `bool` | `False` |
+| `AduAttach:DataGridBatchEditAttach.BatchEditTemplate` | 批量编辑弹窗中使用的自定义编辑模板。 | `DataTemplate` | `null` |
+| `AduAttach:DataGridBatchEditAttach.BatchPropertyName` | 模板列参与批量编辑时对应的数据属性名。 | `string` | `null` |
+| `AduAttach:DataGridHeaderAttach.HorizontalContentAlignment` | 列头内容的水平对齐方式。 | `HorizontalAlignment` | `Center` |
+| `AduAttach:DataGridHeaderAttach.Padding` | 列头内容的内边距。 | `Thickness` | `5` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 行和头部按钮悬浮时的背景色。 | `Brush` | `MouseOverBackground / NormalTransparentBrush` |
+| `AduAttach:BackgroundAttach.PressedBackground` | 行和头部按钮按下时的背景色。 | `Brush` | `PressedBackground / NormalTransparentBrush` |
+| `AduAttach:BackgroundAttach.SelectedBackground` | 行和头部按钮选中时的背景色。 | `Brush` | `SelectedBackground / NormalTransparentBrush` |
+| `AduAttach:ForegroundAttach.SelectedForeground` | 选中状态前景色。 | `Brush` | `SelectedForeground` |
+| `AduAttach:BorderAttach.CornerRadius` | 控件整体圆角。 | `CornerRadius` | `10` |
+| `AduAttach:BorderAttach.SelectedBorderThickness` | 筛选/批量编辑按钮选中时的边框厚度。 | `Thickness` | `0` |
+| `AduAttach:PathDataAttach.PathData` | 筛选按钮、批量编辑按钮和空状态图标路径。 | `Geometry` | `按模板设置` |
+| `AduAttach:PathDataAttach.SelectedPathData` | 按钮选中状态使用的图标路径。 | `Geometry` | `同 PathData` |
+| `AduAttach:PathDataAttach.Visibility` | 图标可见性。 | `Visibility` | `Visible` |
+| `AduAttach:PathDataAttach.Width` | 图标宽度。 | `double` | `10` |
+| `AduAttach:PathDataAttach.Margin` | 图标边距。 | `Thickness` | `0` |
+| `AduAttach:PlaceHolderAttach.PlaceHolderVisible` | 空数据占位层的可见性。 | `Visibility` | `Collapsed` |
+| `AduAttach:PlaceHolderAttach.PathData` | 空数据时显示的占位图标。 | `Geometry` | `Icon_Empty` |
+| `AduAttach:PlaceHolderAttach.Message` | 空数据时显示的提示文本。 | `string` | `PlaceHolderMessage` |
+| `AduAttach:PlaceHolderAttach.IsLoading` | 是否显示占位加载状态。 | `bool` | `False` |
+| `AduAttach:PlaceHolderAttach.PlaceHolderBrush` | 占位图标与文本颜色。 | `Brush` | `PrimaryBrush30` |
+| `AduAttach:LoadingAttach.IsActive` | 是否显示加载蒙层。 | `bool` | `False` |
+| `AduAttach:LoadingAttach.Message` | 加载蒙层提示文本。 | `string` | `Loading...` |
+| `AduAttach:LoadingAttach.Foreground` | 加载蒙层文字颜色。 | `Brush` | `NormalForeground` |
+| `ScrollViewer.CanContentScroll` | 是否按项目滚动内容。 | `bool` | `True` |
+| `ScrollViewer.PanningMode` | 触控平移方向。 | `PanningMode` | `Both` |
+| `ScrollViewer.IsDeferredScrollingEnabled` | 是否启用延迟滚动。 | `bool` | `False` |
+| `VirtualizingStackPanel.IsVirtualizing` | 是否使用 `VirtualizingStackPanel` 虚拟化。 | `bool` | `False` |
+| `VirtualizingStackPanel.VirtualizationMode` | 虚拟化模式。 | `VirtualizationMode` | `Standard` |
+| `Stylus.IsFlicksEnabled` | 是否启用触笔 Flick 手势。 | `bool` | `False` |

@@ -1,0 +1,241 @@
+﻿	<!--  Example 1: Default ComboBox  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 1: Default ComboBox" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="Standard ComboBox with item binding and selection support"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Select Item">
+						<AduSkin:AduComboBox
+							Height="30"
+							ItemsSource="{Binding ItemsSource}"
+							SelectedItem="{Binding SelectedItem}" />
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>
+
+			<!--  Example 2: ComboBox with Filter Box  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 2: ComboBox with Filter Box" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="ComboBox with built-in filter for searching items"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Searchable ComboBox">
+						<UniformGrid Columns="2">
+							<AduSkin:AduComboBox
+								Height="30"
+								IsShowFilterBox="True"
+								ItemsSource="{Binding ItemsSource}"
+								SelectedItem="{Binding SelectedItem}" />
+							<AduSkin:AduComboBox
+								Height="30"
+								Margin="10,0,0,0"
+								IsShowFilterBox="True"
+								ItemsSource="{Binding ItemsSource}"
+								SelectedItem="{Binding SelectedItem2}" />
+						</UniformGrid>
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>
+
+			<!--  Example 3: Editable ComboBox  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 3: Editable ComboBox" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="ComboBox that allows typing custom values in addition to selection"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Editable Item">
+						<AduSkin:AduComboBox
+							Height="30"
+							IsEditable="True"
+							ItemsSource="{Binding ItemsSource}"
+							SelectedItem="{Binding SelectedItem}" />
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>
+
+			<!--  Example 4: Disabled ComboBox  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 4: Disabled ComboBox" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="ComboBox in disabled state for read-only display"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Disabled State">
+						<AduSkin:AduComboBox
+							Height="30"
+							IsEnabled="False"
+							ItemsSource="{Binding ItemsSource}"
+							SelectedItem="{Binding SelectedItem}" />
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>
+
+			<!--  Example 5: Multi-Select ComboBox  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 5: Multi-Select ComboBox" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="ComboBox that supports selecting multiple items at once"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Multiple Items">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+							<UniformGrid Columns="2">
+								<AduSkin:AduMultiSelectComboBox
+									Height="30"
+									ItemsSource="{Binding ItemsSource}"
+									SelectedItems="{Binding SelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+								<AduSkin:AduMultiSelectComboBox
+									Height="30"
+									Margin="5,0,0,0"
+									ItemsSource="{Binding ItemsSource}"
+									SelectedItems="{Binding SelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+							</UniformGrid>
+							<AduSkin:AduButton
+								Grid.Column="1"
+								Width="Auto"
+								Margin="4,0,0,0"
+								Padding="4"
+								Command="{Binding ShowSelectedItemsCommand}"
+								Content="显示选择项" />
+						</Grid>
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>
+
+			<!--  Example 6: Disabled Multi-Select ComboBox  -->
+			<StackPanel Margin="0,0,0,20">
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="18"
+					FontWeight="SemiBold"
+					Text="Example 6: Disabled Multi-Select ComboBox" />
+
+				<TextBlock
+					Margin="0,0,0,15"
+					FontSize="12"
+					Text="Multi-select ComboBox in disabled state for display purposes"
+					TextWrapping="Wrap" />
+
+				<AduSkin:AduFormBox Header="Disabled Multi-Select">
+					<AduSkin:AduMultiSelectComboBox
+						Height="30"
+						IsEnabled="False"
+						ItemsSource="{Binding ItemsSource}"
+						SelectedItems="{Binding SelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				</AduSkin:AduFormBox>
+			</StackPanel>
+
+			<!--  Example 7: Tree ComboBox  -->
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Example 7: Tree ComboBox" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="ComboBox with tree view dropdown for hierarchical data selection"
+						TextWrapping="Wrap" />
+
+					<AduSkin:AduFormBox Header="Select Category">
+						<AduSkin:AduTreeComboBox
+							Height="32"
+							ChildrenPath="Children"
+							DisplayPath="Name"
+							IsShowFullPath="True"
+							ItemsSource="{Binding TreeItemsSource}"
+							SelectedNode="{Binding SelectedTreeNode}"
+							TreeMaxHeight="300" />
+					</AduSkin:AduFormBox>
+
+					<AduSkin:AduFormBox Margin="0,10" Header="Select Category (Single Text)">
+						<AduSkin:AduTreeComboBox
+							Height="32"
+							ChildrenPath="Children"
+							DisplayPath="Name"
+							IsShowFullPath="False"
+							ItemsSource="{Binding TreeItemsSource}"
+							SelectedNode="{Binding SelectedTreeNode}"
+							TreeMaxHeight="300" />
+					</AduSkin:AduFormBox>
+
+					<AduSkin:AduFormBox Header="Disabled">
+						<AduSkin:AduTreeComboBox
+							Height="32"
+							ChildrenPath="Children"
+							DisplayPath="Name"
+							IsEnabled="False"
+							ItemsSource="{Binding TreeItemsSource}"
+							SelectedNode="{Binding SelectedTreeNode}"
+							TreeMaxHeight="300" />
+					</AduSkin:AduFormBox>
+				</StackPanel>
+			</Border>

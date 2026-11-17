@@ -1,0 +1,45 @@
+﻿public SplitButtonViewModel()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        TempModels.Add(new TempModel() { String1 = $"Menu{i + 1}" });
+    }
+
+    foreach (var item in TempModels)
+    {
+        Menus.Add(new AduMenuItem()
+        {
+            Header = item.String1,
+            Icon = new Path() { Width = 14, Height = 14, Stretch = Stretch.Uniform, Fill = new SolidColorBrush(Colors.Black), Data = Geometry.Parse("M832.256 133.176889l60.330667 60.359111a128 128 0 0 1 0 180.992l-108.145778 108.202667 119.751111 119.751111a128 128 0 0 1 0 181.048889l-120.661333 120.661333a128 128 0 0 1-181.020445 0l-119.779555-119.751111-93.866667 93.866667a42.666667 42.666667 0 0 1-21.788444 11.633777L140.743111 935.253333a42.666667 42.666667 0 0 1-50.176-50.232889l45.226667-226.247111a42.666667 42.666667 0 0 1 11.719111-21.76L651.235556 133.12a128 128 0 0 1 181.020444 0v0.056889zM739.157333 527.928889l-211.2 211.2 36.807111 36.807111 45.283556-45.226667a32 32 0 0 1 48.355556 41.642667l-3.072 3.612444-45.226667 45.226667 37.660444 37.745778a64 64 0 0 0 85.617778 4.380444l4.864-4.380444 120.718222-120.718222a64 64 0 0 0 4.380445-85.617778l-4.380445-4.864-119.808-119.808z m-155.818666-236.373333L197.290667 677.632l-37.660445 188.586667 188.529778-37.774223 386.048-386.048-150.869333-150.812444zM415.374222 114.062222l6.144 5.745778 121.543111 121.543111-45.226666 45.226667-121.6-121.543111a64 64 0 0 0-85.617778-4.380445l-4.864 4.380445-120.718222 120.718222a64 64 0 0 0-4.380445 85.617778l4.380445 4.864 37.717333 37.717333 75.434667-75.434667a32 32 0 0 1 48.355555 41.699556l-3.100444 3.555555-75.434667 75.434667 38.627556 38.599111-45.283556 45.226667-121.6-121.543111a128 128 0 0 1-5.688889-174.876445l5.745778-6.144 120.661333-120.661333a128 128 0 0 1 174.876445-5.745778z m281.173334 64.369778L628.593778 246.328889l150.897778 150.840889 67.811555-67.868445a64 64 0 0 0 0-90.538666l-60.302222-60.330667a64 64 0 0 0-90.453333 0z") },
+            Command = MenuItemExecuteCommand,
+            CommandParameter = item
+        });
+    }
+    CurrentTempModel = TempModels.FirstOrDefault();
+}
+
+[RelayCommand]
+public void MenuExecute(object obj)
+{
+    AduMessageBox.Show($"Execute {CurrentTempModel.String1}");
+}
+/// <summary>
+/// 所有项
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _tempModels = new ObservableCollection<TempModel>();
+/// <summary>
+/// 当前选中项
+/// </summary>
+[ObservableProperty]
+private TempModel _currentTempModel;
+
+[ObservableProperty]
+private ObservableCollection<AduMenuItem> _menus = new ObservableCollection<AduMenuItem>();
+
+[RelayCommand]
+public void MenuItemExecute(TempModel obj)
+{
+    CurrentTempModel = obj;
+    AduMessageBox.Show($"Execute {CurrentTempModel.String1}");
+}

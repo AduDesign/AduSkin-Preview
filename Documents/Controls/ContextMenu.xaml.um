@@ -1,0 +1,78 @@
+﻿<Border>
+    <Border.ContextMenu>
+        <AduSkin:AduContextMenu> 
+            <AduSkin:AduMenuItem Header="Back" InputGestureText="Ctrl+C">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Back}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Open" InputGestureText="Ctrl+O">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_OpenFile}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Save As" InputGestureText="Ctrl+S">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Save}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Refresh" InputGestureText="Ctrl+F5">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Refresh}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Copy" InputGestureText="Ctrl+C">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Copy}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Cut">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Cut}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Paste">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Paste}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Print">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Print}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="Screenshot">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Screenshot}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <Separator />
+            <AduSkin:AduMenuItem Header="Options">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Check}" />
+                </AduSkin:AduMenuItem.Icon>
+                <AduSkin:AduMenuItem Header="Sub Option 1" IsCheckable="True" />
+                <AduSkin:AduMenuItem Header="Sub Option 2" IsCheckable="True" />
+                <Separator />
+                <AduSkin:AduMenuItem Header="Sub Option 3" IsCheckable="True" />
+                <AduSkin:AduMenuItem Header="More Options">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Data="{StaticResource Icon_Link}" />
+                    </AduSkin:AduMenuItem.Icon>
+                    <AduSkin:AduMenuItem Header="Nested Option 1" IsCheckable="True" />
+                    <AduSkin:AduMenuItem Header="Nested Option 2" IsCheckable="True" />
+                    <AduSkin:AduMenuItem Header="Nested Option 3" IsCheckable="True" />
+                    <Separator />
+                    <AduSkin:AduMenuItem Header="Nested Option 4" IsCheckable="True" />
+                    <AduSkin:AduMenuItem Header="Nested Option 5" IsCheckable="True" />
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduMenuItem>
+            <Separator />
+            <AduSkin:AduMenuItem Header="Exit">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Exit}" />
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+        </AduSkin:AduContextMenu>
+    </Border.ContextMenu>
+</Border>

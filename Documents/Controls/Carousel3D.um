@@ -1,0 +1,71 @@
+AduCarousel3D 是基于 WPF `Viewport3D` 的 3D 轮播控件，用于把多个内容项排布在圆柱环上并通过拖动、滚轮或选中索引旋转展示。控件支持 3D 纹理渲染、反射、底部光晕、惯性、吸附到最近项、双向绑定选中项索引和旋转角度。
+
+以下默认值以 `AduCarousel3D` 的默认样式和源码默认值为准。控件适合用于图片轮播、封面浏览、作品展示、媒体库和需要 3D 视觉切换的内容展示。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduCarousel3D` | 3D 轮播控件。 | `Control` |
+| `AduCarousel3DItem` | 3D 轮播项，承载图片、画刷、普通文本或界面元素内容。 | `ContentControl` |
+
+## AduCarousel3D 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Items` | 轮播项集合。集合变化后会重建 3D 模型。 | `ObservableCollection<AduCarousel3DItem>` | `null` |
+| `SelectedIndex` | 当前正面项索引，默认支持双向绑定。 | `int` | `0` |
+| `ItemWidth` | 每个轮播项在 3D 空间中的宽度。 | `double` | `120.0` |
+| `ItemHeight` | 每个轮播项在 3D 空间中的高度。 | `double` | `180.0` |
+| `TextureScale` | 内容渲染为 3D 纹理时的缩放倍数。有效范围会限制在 `1.0` 到 `6.0`。 | `double` | `3.0` |
+| `CircleRadius` | 轮播圆柱半径。 | `double` | `350.0` |
+| `CameraDistance` | 相机到场景中心的 Z 轴距离。 | `double` | `800.0` |
+| `IsDragEnabled` | 是否允许鼠标左键拖动旋转。 | `bool` | `True` |
+| `MouseRotationAxes` | 鼠标拖动可控制的旋转轴。 | `AduCarousel3DInteractionAxes` | `XY` |
+| `IsMouseWheelEnabled` | 是否允许鼠标滚轮旋转。 | `bool` | `True` |
+| `MouseWheelRotationStep` | 每次滚轮刻度对应的 Y 轴旋转角度。 | `double` | `15.0` |
+| `MouseWheelAnimationDuration` | 滚轮旋转动画时长，单位为毫秒，有效范围会限制在 `0` 到 `1000`。 | `double` | `180.0` |
+| `IsSnapToItemEnabled` | 交互结束后是否吸附到最近轮播项。 | `bool` | `True` |
+| `SnapAnimationDuration` | 吸附动画时长，单位为毫秒，有效范围会限制在 `0` 到 `1000`。 | `double` | `160.0` |
+| `ShowReflection` | 是否显示轮播项下方反射。 | `bool` | `True` |
+| `ShadowCircleDiameter` | 底部光晕平面直径。 | `double` | `1200.0` |
+| `ShadowCircleColor` | 底部光晕中心颜色。 | `Color` | `#F417EA` |
+| `RotationY` | 当前 Y 轴旋转角度，默认支持双向绑定。 | `double` | `0.0` |
+| `RotationX` | 当前 X 轴倾斜角度，默认支持双向绑定。 | `double` | `-10.0` |
+| `Background` | 控件背景。 | `Brush` | `#000000` |
+| `MinWidth` | 默认最小宽度。 | `double` | `600` |
+| `MinHeight` | 默认最小高度。 | `double` | `400` |
+
+## AduCarousel3DItem 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Index` | 当前项索引，由控件在重建模型时写入。 | `int` | `0` |
+| `Content` | 轮播项内容。可使用界面元素、图片、画刷或普通文本。 | `object` | `null` |
+| `Tag` | 当 `Content` 为空时，控件会尝试使用 `Tag` 作为渲染内容。 | `object` | `null` |
+
+## AduCarousel3DInteractionAxes 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `None` | 禁止鼠标拖动改变旋转。 |
+| `X` | 允许鼠标垂直拖动控制 X 轴倾斜。 |
+| `Y` | 允许鼠标水平拖动控制 Y 轴旋转。 |
+| `XY` | 同时允许 X 轴倾斜和 Y 轴旋转。 |
+
+## 事件
+| 名称 | 描述 | 参数 |
+| --- | --- | --- |
+| `SelectedIndexChanged` | 当前正面项索引变化时触发。 | `int` |
+
+## 使用说明
+- `Items` 为空时不会绘制轮播项，只保留场景和旋转状态。
+- `SelectedIndex` 会归一化到集合范围内，设置后控件会旋转到对应项。
+- 鼠标左键拖动会根据 `MouseRotationAxes` 改变旋转角度，并在释放后产生惯性。
+- `IsSnapToItemEnabled=True` 时，拖动、惯性或滚轮结束后会吸附到最近项。
+- 鼠标滚轮默认绕 Y 轴旋转；启用吸附时，如果滚轮步长小于单项角度，控件会按单项角度前进。
+- `TextureScale` 越高，内容纹理越清晰，但渲染缓存开销也越大。
+- 当轮播项内容变化较频繁时，集合变化会清理纹理缓存并重新生成模型。
+- `RotationX` 和 `RotationY` 可用于外部同步或保存当前 3D 视角。
+
+## 典型场景
+- 图片、封面、海报的 3D 浏览。
+- 产品、作品、模板库展示。
+- 媒体播放器或相册中的封面流。
+- 需要鼠标拖动和滚轮切换的沉浸式内容选择器。

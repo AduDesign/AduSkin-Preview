@@ -1,0 +1,43 @@
+public partial class AvatarViewModel : DemoBase 
+{
+	public ObservableCollection<AvatarItem> Avatars { get; } = new();
+
+	public ObservableCollection<AvatarItem> GroupAvatars { get; } = new();
+
+	public AvatarItem MissingAvatar { get; } = new("Missing", null);
+
+	[RelayCommand]
+	private void Avatar()
+	{
+		AduMessageBox.Show("AA");
+	} 
+
+	public AvatarViewModel()
+	{ 
+
+		var index = 1;
+		foreach (var item in ResourceCtrl.Instance.GetImages())
+		{
+			Avatars.Add(new AvatarItem($"Avatar {index}", item));
+			index++;
+		}
+
+		for (var i = 0; i < Avatars.Count; i++)
+		{
+			GroupAvatars.Add(Avatars[i]);
+		}
+	}
+}
+
+public class AvatarItem
+{
+	public AvatarItem(string name, string? image)
+	{
+		Name = name;
+		Image = image;
+	}
+
+	public string Name { get; }
+
+	public string? Image { get; }
+}

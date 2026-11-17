@@ -1,0 +1,20 @@
+[RelayCommand]
+public void Refresh()
+{
+    SelectedTime = SelectedTime.Add(TimeSpan.FromMinutes(1));
+    SelectedDateTime = SelectedDateTime.AddDays(1).AddMinutes(1);
+    SelectedDateStart = SelectedDateStart.AddDays(1);
+    SelectedDateEnd = SelectedDateEnd.AddDays(1);
+}
+
+[ObservableProperty]
+private TimeSpan _selectedTime = DateTime.Now.TimeOfDay;
+
+[ObservableProperty]
+private DateTime _selectedDateTime = DateTime.Now;
+
+[ObservableProperty]
+private DateTime _selectedDateStart = DateTime.Now;
+
+[ObservableProperty]
+private DateTime _selectedDateEnd = DateTime.Now.AddDays(1);

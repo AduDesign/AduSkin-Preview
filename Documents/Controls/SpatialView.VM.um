@@ -1,0 +1,52 @@
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using AduSkin.Demo.Attributes;
+using AduSkin.Demo.Ctrl;
+using AduSkin.Demo.Models;
+using AduSkin.Demo.Views.Example;
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace AduSkin.Demo.Views.Demo
+{
+    public partial class UCSpatialView : UserControl
+    {
+        public UCSpatialView()
+        {
+            InitializeComponent();
+            // Explicit source avoids dependence on the demo host's namescope/DataContext.
+            QualitySlider.SetBinding(System.Windows.Controls.Primitives.RangeBase.ValueProperty,
+                SettingBinding(nameof(Space.RenderScale)));
+            DistanceSlider.SetBinding(System.Windows.Controls.Primitives.RangeBase.ValueProperty,
+                SettingBinding(nameof(Space.CameraDistance)));
+            WheelZoomCheckBox.SetBinding(System.Windows.Controls.Primitives.ToggleButton.IsCheckedProperty,
+                SettingBinding(nameof(Space.IsMouseWheelZoomEnabled)));
+            QualityValue.SetBinding(TextBlock.TextProperty, new Binding(nameof(Space.RenderScale))
+                { Source = Space, StringFormat = "{0:F0} 倍" });
+            DistanceValue.SetBinding(TextBlock.TextProperty, new Binding(nameof(Space.CameraDistance))
+                { Source = Space, StringFormat = "{0:F2}" });
+        }
+        private Binding SettingBinding(string property) => new Binding(property)
+        {
+            Source = Space,
+            Mode = BindingMode.TwoWay,
+            UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged
+        };
+        private void LookLeft(object sender, RoutedEventArgs e) => Space.SetCurrentValue(AduSkin.Controls.AduSpatialView.YawProperty, -44d);
+        private void LookRight(object sender, RoutedEventArgs e) => Space.SetCurrentValue(AduSkin.Controls.AduSpatialView.YawProperty, 44d);
+        private void ResetView(object sender, RoutedEventArgs e) => Space.ResetView();
+    }
+
+    [ViewMapping(typeof(UCSpatialView), Category.Other, "SpatialView", "空间视图容器", DemoType.Demo, ControlState.Unknow, "")]
+    public partial class SpatialViewModel : DemoBase, IDemoItem
+    {
+        [ObservableProperty]
+        private TrafficchannelsVM _trafficchannels=new TrafficchannelsVM();
+
+        [ObservableProperty]
+        private MusicPlayerVM _musicPlayer = new MusicPlayerVM();
+
+        [ObservableProperty]
+        private LoginVM _login=new LoginVM();
+    }
+}

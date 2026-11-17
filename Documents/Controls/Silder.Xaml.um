@@ -1,0 +1,16 @@
+﻿<StackPanel VerticalAlignment="Center">
+    <StackPanel.Resources>
+        <Style TargetType="AduSkin:AduIntegerUpDown" BasedOn="{StaticResource AduIntegerUpDown}">
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+        <Style TargetType="AduSkin:AduDoubleUpDown" BasedOn="{StaticResource AduDoubleUpDown}">
+            <Setter Property="Margin" Value="4"/>
+        </Style>
+    </StackPanel.Resources>
+    <AduSkin:AduButton Command="{Binding RefreshCommand}" Content="Refresh" Width="Auto" Margin="4"/>
+    <AduSkin:AduIntegerUpDown AduAttach:LayoutAttach.DirectionType="Horizontal" FlowDirection="LeftToRight" Maximum="{Binding IntMax}" Minimum="{Binding IntMin}" Value="{Binding IntValue}"/>
+    <AduSkin:AduIntegerUpDown AduAttach:LayoutAttach.DirectionType="Vertical" FlowDirection="LeftToRight" Maximum="{Binding IntMax}" Minimum="{Binding IntMin}" Value="{Binding  IntValue}"/>
+    <AduSkin:AduIntegerUpDown AduAttach:LayoutAttach.DirectionType="Vertical" FlowDirection="RightToLeft" Maximum="{Binding IntMax}" Minimum="{Binding IntMin}" Value="{Binding  IntValue}"/> 
+    <AduSkin:AduDoubleUpDown AduAttach:LayoutAttach.DirectionType="Horizontal" FlowDirection="LeftToRight" Maximum="{Binding DoubleMax}" Minimum="{Binding DoubleMin}" Value="{Binding DoubleValue}"/>
+    <AduSkin:AduDoubleUpDown AduAttach:LayoutAttach.DirectionType="Vertical" FlowDirection="LeftToRight" Maximum="{Binding DoubleMax}" Minimum="{Binding DoubleMin}" Value="{Binding DoubleValue}"/>
+</StackPanel>

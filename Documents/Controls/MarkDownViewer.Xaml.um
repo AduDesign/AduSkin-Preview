@@ -1,0 +1,12 @@
+﻿ <!--  File Selection  -->
+ <AduSkin:AduFormBox Header="选择 MD 文件">
+     <AduSkin:AduChooseBox Filter="All File (*.*)|*.*|Markdown File (*.md)|*.md" Text="{Binding SelectedFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+ </AduSkin:AduFormBox>
+
+ <!--  MarkDown Viewer  -->
+ <Border
+     Margin="0,20"
+     BorderThickness="1"
+     CornerRadius="8">
+     <AduSkin:AduMarkDownViewer MarkdownText="{Binding MarkDownContent}" />
+ </Border>

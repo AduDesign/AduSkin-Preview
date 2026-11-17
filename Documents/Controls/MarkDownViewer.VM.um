@@ -1,0 +1,97 @@
+﻿        private CancellationTokenSource _loadCancellationTokenSource;
+        private int _loadVersion;
+
+        private const string DefaultMarkdown = @"# 标题1
+## 标题2
+这是一个段落，包含**粗体**、*斜体*和`代码`。
+
+- 无序列表项1
+- 无序列表项2
+  - 嵌套列表项
+1. 有序列表1
+2. 有序列表2
+
+### 😍 Preview
+  
+![image](https://github.com/AduDesign/AduSkin-Preview/raw/main/Screenshot/ControlLibrary.png?raw=true =500x300)
+
+### 表格示例
+
+| 列名特征 | 类型 | 说明 |
+|----------|------|------|
+| 包含""时间"" | 时间型 | 支持 `yyyy/MM/dd-HH:mm:ss` 等格式 |
+| 包含""帧号"" | 整型 | 解析为整数进行范围筛选 |
+| 包含""结果"" | 结果型 | 值需为 OK、NG、WARN 其一 |
+| 其他数值列 | 数值型(Double) | 支持普通数字和 ∞ 符号 |
+
+### 💎 Using Reference ""AduSkin.Demo""
+```c
+<Application x:Class=""Your project""
+    xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation""
+    xmlns:AduSkin=""https://github.com/aduskin"">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <AduSkin:AduSkinTheme ThemeType=""Light""/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
+```";
+
+        [ObservableProperty]
+        private string _selectedFilePath = string.Empty;
+        partial void OnSelectedFilePathChanged(string? oldValue, string newValue)
+        {
+            _ = LoadMarkdownContentAsync(newValue);
+        }
+
+        [ObservableProperty]
+        private string _markDownContent = DefaultMarkdown; 
+
+        private async Task LoadMarkdownContentAsync(string filePath)
+        {
+            var version = Interlocked.Increment(ref _loadVersion);
+            _loadCancellationTokenSource?.Cancel();
+            _loadCancellationTokenSource?.Dispose();
+            _loadCancellationTokenSource = new CancellationTokenSource();
+
+            var token = _loadCancellationTokenSource.Token;
+
+            try
+            {
+                if (string.IsNullOrWhiteSpace(filePath))
+                {
+                    if (version == _loadVersion)
+                    {
+                        MarkDownContent = string.Empty;
+                    }
+                    return;
+                }
+
+                await Task.Delay(150, token);
+
+                var content = await Task.Run(() =>
+                {
+                    token.ThrowIfCancellationRequested();
+                    return File.ReadAllText(filePath);
+                }, token);
+
+                if (token.IsCancellationRequested || version != _loadVersion)
+                {
+                    return;
+                }
+
+                MarkDownContent = content;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch
+            {
+                if (version == _loadVersion)
+                {
+                    MarkDownContent = $"# Error\n\nFailed to read file: {filePath}";
+                }
+            }
+        }

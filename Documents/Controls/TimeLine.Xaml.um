@@ -1,0 +1,44 @@
+<!--  Example 1: Custom Timeline with Item Templates  -->
+<Border BorderThickness="1" CornerRadius="8">
+	<StackPanel>
+		<StackPanel.Resources>
+			<Style TargetType="TextBlock">
+				<Setter Property="Foreground" Value="{DynamicResource NormalForeground}" />
+			</Style>
+		</StackPanel.Resources>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Custom Timeline with Item Templates" />
+
+		<TextBlock
+			Margin="0,0,0,20"
+			FontSize="12"
+			Text="Timeline with custom item template and slot styling based on state"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduTimeLine Height="400" ItemsSource="{Binding ItemsSource}">
+			<AduSkin:AduTimeLine.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Margin="0,-5,0,0">
+						<TextBlock
+							x:Name="timePart"
+							FontSize="30"
+							FontWeight="Bold"
+							Foreground="{DynamicResource NormalForeground}"
+							Text="{Binding Item2}" />
+						<TextBlock
+							MaxWidth="230"
+							Margin="0,8,0,0"
+							FontSize="14"
+							Foreground="{DynamicResource NormalForeground}"
+							LineHeight="23"
+							Text="{Binding Item3}"
+							TextWrapping="Wrap" />
+					</StackPanel>
+				</DataTemplate>
+			</AduSkin:AduTimeLine.ItemTemplate>
+		</AduSkin:AduTimeLine>
+	</StackPanel>
+</Border>

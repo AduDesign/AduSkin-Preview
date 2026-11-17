@@ -1,0 +1,401 @@
+﻿    <AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <!--  Title  -->
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="ToggleButton Demo" />
+
+            <TextBlock
+                Margin="0,0,0,30"
+                FontSize="14"
+                Text="Toggle buttons with icon support and various layout options" />
+
+            <!--  Example 1: Icon Layout Variations  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: Icon Layouts - Left, Top, Right" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Toggle buttons with different icon positions relative to content"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        Margin="10"
+                        Columns="3"
+                        Rows="1">
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Icon Left" />
+                            <AduSkin:AduToggleButton
+                                Margin="4"
+                                AduAttach:BorderAttach.CornerRadius="8"
+                                AduAttach:BorderAttach.SelectedBorderBrush="{DynamicResource SelectedBorderBrush}"
+                                AduAttach:BorderAttach.SelectedBorderThickness="3"
+                                AduAttach:LayoutAttach.IconLayout="Left"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Bluetooth}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Bluetooth}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="10"
+                                Content="Left"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Icon Top" />
+                            <AduSkin:AduToggleButton
+                                Height="60"
+                                Margin="4"
+                                Padding="4"
+                                AduAttach:BorderAttach.CornerRadius="8"
+                                AduAttach:LayoutAttach.IconLayout="Top"
+                                AduAttach:PathDataAttach.Margin="0,0,0,4"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_FlyMode}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_FlyMode}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="14"
+                                Content="Top"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Icon Right" />
+                            <AduSkin:AduToggleButton
+                                Margin="4"
+                                AduAttach:BorderAttach.CornerRadius="8"
+                                AduAttach:LayoutAttach.IconLayout="Right"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Link}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Link}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="14"
+                                Content="Right"
+                                IsChecked="True" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 2: Icon-Only Toggle Buttons  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 2: Icon-Only Toggle Buttons" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Compact toggle buttons displaying only icons"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        Margin="10"
+                        Columns="5"
+                        Rows="1">
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Ring" />
+                            <AduSkin:AduToggleButton
+                                Width="34"
+                                Height="34"
+                                AduAttach:BorderAttach.CornerRadius="18"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_RingTone}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_RingTone}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="12"
+                                Background="{DynamicResource PanelBackground}"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Signal" />
+                            <AduSkin:AduToggleButton
+                                Width="34"
+                                Height="34"
+                                AduAttach:BorderAttach.CornerRadius="18"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Signal}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Signal}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="15"
+                                Background="{DynamicResource PanelBackground}"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Torch" />
+                            <AduSkin:AduToggleButton
+                                Width="34"
+                                Height="34"
+                                AduAttach:BorderAttach.CornerRadius="18"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Torch}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Torch}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="10"
+                                Background="{DynamicResource PanelBackground}"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Translate (1)" />
+                            <AduSkin:AduToggleButton
+                                Width="34"
+                                Height="34"
+                                AduAttach:BorderAttach.CornerRadius="18"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="16"
+                                Background="{DynamicResource PanelBackground}"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                HorizontalAlignment="Center"
+                                FontSize="11"
+                                Text="Translate (2)" />
+                            <AduSkin:AduToggleButton
+                                Width="34"
+                                Height="34"
+                                AduAttach:BorderAttach.CornerRadius="18"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="16"
+                                Background="{DynamicResource PanelBackground}"
+                                IsChecked="True" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 3: Text-Only and Text+Icon Buttons  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 3: Text-Based Toggle Buttons" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Toggle buttons with text content and optional icons"
+                        TextWrapping="Wrap" />
+
+                    <UniformGrid
+                        Margin="10"
+                        Columns="3"
+                        Rows="2">
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Text Only (1)" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4"
+                                AduAttach:PathDataAttach.Visibility="Collapsed"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="AduSkin"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Text + Icon" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="16"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="Skin"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Text Only (2)" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4"
+                                AduAttach:PathDataAttach.Visibility="Collapsed"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="AduSkin"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Text + Icon (2)" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4,0"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                AduAttach:PathDataAttach.Width="16"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="Skin"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Text Only (3)" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4,0"
+                                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Translate}"
+                                AduAttach:PathDataAttach.Width="16"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="Skin"
+                                IsChecked="True" />
+                        </StackPanel>
+
+                        <StackPanel Margin="5,10">
+                            <TextBlock
+                                Margin="0,0,0,8"
+                                FontSize="11"
+                                Text="Disabled State" />
+                            <AduSkin:AduToggleButton
+                                Width="auto"
+                                Height="34"
+                                Margin="4,0"
+                                AduAttach:PathDataAttach.Visibility="Visible"
+                                Background="{DynamicResource PanelBackground}"
+                                Content="Disabled"
+                                IsChecked="False"
+                                IsEnabled="False" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 4: MVVM Binding  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel Margin="16">
+                    <TextBlock
+                        Margin="0,0,0,8"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 4: MVVM Binding" />
+
+                    <TextBlock
+                        Margin="0,0,0,12"
+                        FontSize="12"
+                        Text="Bind IsChecked to a Boolean or nullable Boolean property."
+                        TextWrapping="Wrap" />
+
+                    <StackPanel Orientation="Horizontal">
+                        <AduSkin:AduToggleButton
+                            Margin="0,0,12,0"
+                            Content="Notifications"
+                            IsChecked="{Binding IsNotificationsEnabled}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Text="{Binding NotificationsStateText}" />
+                    </StackPanel>
+
+                    <AduSkin:AduToggleButton
+                        Margin="0,12,0,0"
+                        Content="Approval (three-state)"
+                        IsChecked="{Binding ApprovalState}"
+                        IsThreeState="True" />
+                </StackPanel>
+            </Border>
+
+            <!--  Features Info  -->
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource NormalBlue}"
+                    Text="💡 Features:" />
+
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource NormalBlue}"
+                    TextWrapping="Wrap">
+                    <Run Text="• Toggle on/off states with visual feedback" />
+                    <LineBreak />
+                    <Run Text="• Flexible icon layouts (Left, Right, Top, Bottom)" />
+                    <LineBreak />
+                    <Run Text="• Support for icon-only, text-only, or combined layouts" />
+                    <LineBreak />
+                    <Run Text="• Different path data for selected and normal states" />
+                    <LineBreak />
+                    <Run Text="• Customizable corner radius and appearance" />
+                    <LineBreak />
+                    <Run Text="• Enable/disable support and keyboard navigation" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>

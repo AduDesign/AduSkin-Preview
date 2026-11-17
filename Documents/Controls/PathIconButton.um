@@ -1,0 +1,72 @@
+AduPathIconButton 是一个带路径图标的按钮控件，继承自 WPF `Button`。默认模板通过 `PathDataAttach` 显示 `Geometry` 图标，通过 `LayoutAttach.IconLayout` 控制图标与内容的相对位置，并在点击时支持打开 `MenuAttach.DropDownMenu` 指定的下拉菜单。
+
+以下默认值以 `AduPathIconButton` 的默认样式为准。控件适合工具栏按钮、图标按钮、图标加文字按钮和带菜单的更多操作按钮。
+
+## 依赖属性
+AduPathIconButton 本身没有新增依赖属性，常用功能来自 WPF `Button` 的继承属性和 AduSkin 的附加属性。
+
+## 常用 Button 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 按钮文字或任意内容。为空时模板会移除图标外边距。 | `object` | `null` |
+| `Command` | 点击按钮时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 命令参数。 | `object` | `null` |
+| `Click` | 点击按钮时触发的路由事件。 | `RoutedEventHandler` | - |
+| `IsEnabled` | 是否启用按钮。禁用时默认降低整体透明度。 | `bool` | `True` |
+
+## 图标附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 按钮图标路径数据。 | `Geometry` | `Icon_Preview` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 图标宽度。 | `double` | `13` |
+| `AduAttach:PathDataAttach.Visibility` | 图标可见性。 | `Visibility` | `Visible` |
+| `AduAttach:PathDataAttach.Margin` | 图标外边距。模板会根据图标布局自动设置。 | `Thickness` | 随布局变化 |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 默认图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathBrushAttach.MouseOverPathBrush` | 鼠标悬浮图标颜色。 | `Brush` | `PrimaryBrush90` 动态资源 |
+| `AduAttach:PathBrushAttach.PressedPathBrush` | 鼠标按下图标颜色。 | `Brush` | `PrimaryBrush70` 动态资源 |
+| `AduAttach:LayoutAttach.IconLayout` | 图标相对内容的位置。 | `Direction` | `Left` |
+
+## 下拉菜单附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:MenuAttach.DropDownMenu` | 点击按钮时打开的下拉菜单。为空时只执行普通按钮点击逻辑。 | `ContextMenu` | `null` |
+| `AduAttach:MenuAttach.IsDropDownOpen` | 菜单打开状态参考值。点击时控件会按该值切换菜单 `IsOpen`。 | `bool` | `False` |
+| `AduAttach:MenuAttach.Placement` | 菜单相对按钮的弹出位置。 | `PlacementMode` | `Bottom` |
+| `AduAttach:MenuAttach.HorizontalOffset` | 菜单水平偏移。 | `double` | `-20` |
+| `AduAttach:MenuAttach.VerticalOffset` | 菜单垂直偏移。 | `double` | `-20` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Width` | 默认按钮宽度。 | `double` | `30` |
+| `Height` | 默认按钮高度。 | `double` | `30` |
+| `Background` | 默认背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 默认边框色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 默认边框厚度。 | `Thickness` | `0` |
+| `AduAttach:BorderAttach.CornerRadius` | 按钮圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 鼠标悬浮背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:BackgroundAttach.PressedBackground` | 鼠标按下背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Cursor` | 鼠标指针。 | `Cursor` | `Hand` |
+
+## 枚举说明
+### `Direction`
+| 名称 | 描述 |
+| --- | --- |
+| `Left` | 图标在内容左侧。 |
+| `Right` | 图标在内容右侧。 |
+| `Top` | 图标在内容上方。 |
+| `Bottom` | 图标在内容下方。 |
+
+## 使用说明
+- 只需要图标按钮时，可以不设置 `Content`，保留默认 `30 x 30` 尺寸。
+- 需要图文按钮时，设置 `Content` 并用 `IconLayout` 调整图标位置。
+- 图标来自 `Geometry`，可绑定到 `GeometryLibrary.xaml` 中的静态资源，也可以提供自定义路径数据。
+- 点击时会先执行标准 `Button.OnClick` 行为，再检查 `MenuAttach.DropDownMenu` 并打开菜单。
+- 下拉菜单的 `PlacementTarget` 会自动设置为按钮自身。
+ 
+## 典型场景
+- 搜索、刷新、保存、删除等工具栏操作。
+- 左图标右文字的操作按钮。
+- 只显示图标的紧凑按钮。
+- 点击后展开更多操作项的菜单按钮。

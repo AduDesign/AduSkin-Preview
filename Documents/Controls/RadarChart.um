@@ -1,0 +1,66 @@
+AduRadar 是雷达图控件，用于在多个维度上对一组或多组数据进行对比展示。控件支持维度轴标签、多系列闭合区域、网格线、坐标轴、数值标签、数据点、图例、悬浮高亮和提示。
+
+以下默认值以 `AduRadar` 的默认样式和源码默认值为准。控件适合用于能力评估、指标对比、评分分析和多维画像。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduRadar` | 雷达图控件。 | `Control` |
+| `AduRaderSeries` | 雷达图数据系列。类型名按源码命名为 `Rader`。 | `AduSeriesBase` |
+
+## AduRadar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AxisLabels` | 雷达图维度名称集合，决定轴线数量。支持双向绑定。 | `IEnumerable<string>` | `null` |
+| `Series` | 数据系列集合。每个系列使用一个 `AduRaderSeries` 表示。 | `IEnumerable<AduRaderSeries>` | `null` |
+| `MaxValue` | 每个维度的最大值。小于等于 `0` 时按 `1` 处理。 | `double` | `100.0` |
+| `GridLineCount` | 从中心到外圈的网格层数。小于 `1` 时按 `1` 处理。 | `int` | `5` |
+
+## AduRaderSeries 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Values` | 当前系列在各维度上的数值集合。数量必须与 `AxisLabels` 数量一致才会绘制。 | `List<double>` | `null` |
+| `Name` | 系列名称，显示在图例和悬浮提示中。 | `string` | `null` |
+| `Stroke` | 系列边线颜色。 | `Brush` | `DarkCyan` |
+| `StrokeThickness` | 系列边线粗细。 | `double` | `2.0` |
+| `Fill` | 系列区域填充颜色。 | `Brush` | `Transparent` |
+| `FillOpacity` | 填充透明度。 | `double` | `0.3` |
+| `PointBrush` | 数据点颜色。 | `Brush` | `DarkRed` |
+| `ShowPoints` | 当前系列是否显示数据点。还会受 `ChartAttach.ShowPoints` 控制。 | `bool` | `True` |
+| `MouseOverPointSize` | 鼠标悬浮时的数据点尺寸。 | `double` | `10.0` |
+| `IsVisible` | 当前系列是否参与绘制。图例点击会切换该值。 | `bool` | `True` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 图表标题内容。 | `Radar Chart` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题区域。 | `Visible` |
+| `AduAttach:LegendAttach.Visible` | 是否显示图例区域。 | `Visible` |
+| `AduAttach:ChartAttach.IsDrawingAxes` | 是否绘制维度轴线和轴标签。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingGrid` | 是否绘制雷达网格。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingLegend` | 是否绘制图例内容。 | `True` |
+| `AduAttach:ChartAttach.ShowLabels` | 是否显示每个维度上的数值标签。 | `True` |
+| `AduAttach:ChartAttach.ShowPoints` | 是否显示数据点。 | `True` |
+| `AduAttach:ChartAttach.PointSize` | 数据点显示尺寸。 | `5` |
+| `AduAttach:ChartAttach.AxesBrush` | 坐标轴颜色。 | `NormalBorderBrush30` 动态资源 |
+| `AduAttach:ChartAttach.GridBrush` | 网格线颜色。 | `NormalBorderBrush50` 动态资源 |
+| `AduAttach:TooltipAttach.IsShowHoverTooltip` | 是否显示数据点悬浮提示。 | `True` |
+| `AduAttach:TooltipAttach.Background` | 悬浮提示背景色。 | `TooltipBackground` 动态资源 |
+| `AduAttach:TooltipAttach.Foreground` | 悬浮提示文字颜色。 | `TooltipForeground` 动态资源 |
+| `AduAttach:BorderAttach.CornerRadius` | 图表外框圆角。 | `10` |
+
+## 使用说明
+- `AxisLabels` 的数量决定雷达图维度数量。
+- 每个 `AduRaderSeries.Values` 的数量必须与 `AxisLabels` 数量一致；数量不一致的系列不会绘制。
+- 每个值会按 `0` 到 `MaxValue` 映射到中心与外圈之间，负数会按 `0` 处理，超过 `MaxValue` 的值会按最大值处理。
+- `GridLineCount` 控制雷达网格层数，适合根据指标粒度调整读数参考。
+- `ChartAttach.ShowLabels` 为 `True` 时会在数据点外侧绘制数值标签。
+- `ChartAttach.ShowPoints` 与系列自身的 `ShowPoints` 同时为 `True` 时才显示数据点。
+- 图例项可点击，用于切换对应系列的 `IsVisible`。
+- 鼠标悬浮到数据点附近时会高亮该点，并显示系列名称和数值。
+
+## 典型场景
+- 人员能力、产品能力、服务质量等多维评分。
+- 多个对象在相同指标体系下的对比。
+- 质量、性能、安全、成本等综合画像。
+- 问卷、测评、评价模型的结果展示。

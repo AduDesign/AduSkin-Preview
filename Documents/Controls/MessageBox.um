@@ -1,0 +1,68 @@
+AduMessageBox 是一个静态消息框服务，使用 AduSkin 风格窗口显示提示、确认、选择、自定义内容和输入消息框。它的调用结果返回 WPF `MessageBoxResult`，可根据用户点击的按钮继续业务处理。
+
+以下说明以 `AduMessageBox` 和内部消息框窗口的默认行为为准。该服务适合替代系统 `MessageBox`，用于统一应用弹窗样式。
+
+## 静态方法
+| 名称 | 描述 | 返回值 |
+| --- | --- | --- |
+| `Show(messageBoxText)` | 显示只有消息内容和确定按钮的消息框。 | `MessageBoxResult` |
+| `Show(messageBoxText, caption)` | 显示消息内容和标题。 | `MessageBoxResult` |
+| `Show(owner, messageBoxText)` | 指定所属窗口显示消息框。 | `MessageBoxResult` |
+| `Show(owner, messageBoxText, caption)` | 指定所属窗口、消息内容和标题。 | `MessageBoxResult` |
+| `Show(messageBoxText, caption, button)` | 指定按钮组合。 | `MessageBoxResult` |
+| `Show(messageBoxText, caption, button, icon)` | 指定按钮组合和图标。 | `MessageBoxResult` |
+| `ShowOK(...)` | 显示确定按钮消息框，可自定义确定按钮文本和图标。 | `MessageBoxResult` |
+| `ShowOKCancel(...)` | 显示确定和取消按钮，可自定义按钮文本和图标。 | `MessageBoxResult` |
+| `ShowYesNo(...)` | 显示是和否按钮，可自定义按钮文本和图标。 | `MessageBoxResult` |
+| `ShowYesNoCancel(...)` | 显示是、否、取消按钮，可自定义按钮文本和图标。 | `MessageBoxResult` |
+| `Show(view, ...)` | 显示任意内容视图，可指定标题、按钮、尺寸和所属窗口。 | `MessageBoxResult` |
+| `Show(out result, ...)` | 显示带输入框的消息框，关闭后通过输出参数返回输入文本。 | `MessageBoxResult` |
+
+## 参数说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `messageBoxText` | 消息正文。 | `string` | 必填 |
+| `caption` | 标题栏文本。 | `string` | `提示` |
+| `button` | 按钮组合。 | `MessageBoxButton` | `OK` 或按方法决定 |
+| `icon` | 消息图标。 | `MessageBoxImage` | `Information` 或按方法决定 |
+| `owner` | 所属窗口。设置后消息框显示在该窗口前。 | `Window` | `null` |
+| `okButtonText` | 确定按钮文本。 | `string` | `好的` |
+| `cancelButtonText` | 取消按钮文本。 | `string` | `取消` |
+| `yesButtonText` | 是按钮文本。 | `string` | `好的` |
+| `noButtonText` | 否按钮文本。 | `string` | `不` |
+| `view` | 自定义弹窗内容。 | `object` | 必填 |
+| `width` | 自定义内容弹窗宽度。 | `double` | `500` |
+| `height` | 自定义内容弹窗高度。 | `double` | `300` |
+| `defaultText` | 输入框默认文本。 | `string` | 空字符串 |
+| `inputHint` | 输入框提示文本。 | `string` | 空字符串 |
+
+## 返回值
+| 名称 | 描述 |
+| --- | --- |
+| `OK` | 用户点击确定按钮。 |
+| `Cancel` | 用户点击取消按钮或关闭窗口。 |
+| `Yes` | 用户点击是按钮。 |
+| `No` | 用户点击否按钮。 |
+
+## 图标说明
+| 名称 | 描述 |
+| --- | --- |
+| `Information` | 信息提示图标。 |
+| `Question` | 问题确认图标。 |
+| `Exclamation` / `Warning` | 警告提示图标。 |
+| `Error` / `Hand` / `Stop` | 错误提示图标。 |
+| `None` | 不显示图标。 |
+
+## 使用说明
+- 简单提示使用 `Show` 或 `ShowOK`。
+- 需要用户确认时使用 `ShowOKCancel`、`ShowYesNo` 或 `ShowYesNoCancel`。
+- 需要自定义按钮文字时，使用对应的便捷方法参数。
+- 需要输入文本时，使用带输出文本结果的方法；只有返回 `OK` 时输入文本才有效。
+- 需要显示复杂内容时，使用自定义内容重载，并指定合适的宽度和高度。
+- 消息框会根据文本、标题、图标和按钮自动测量尺寸；自定义内容弹窗使用固定尺寸。
+
+## 典型场景
+- 操作成功、失败和警告提示。
+- 删除、提交、退出等确认操作。
+- 简短文本输入。
+- 显示自定义确认视图或表单内容。

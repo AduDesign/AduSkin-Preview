@@ -1,0 +1,41 @@
+AduRadioButton 是一个带 AduSkin 默认样式的单选按钮控件，继承自 WPF `RadioButton`。它本身不新增行为，主要通过模板和附加属性提供统一的图标、选中态和悬浮态表现。
+
+以下默认值以 `AduRadioButton` 的默认样式为准。控件适合用于互斥选项、模式切换和单选列表。
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 单选项文本或任意内容。 | `object` | `RadioButtonContent` 动态资源 |
+| `IsChecked` | 是否选中。 | `bool?` | `False` |
+| `GroupName` | 单选分组名。 | `string` | `null` |
+| `IsEnabled` | 是否启用控件。 | `bool` | `True` |
+| `HorizontalContentAlignment` | 内容水平对齐方式。 | `HorizontalAlignment` | `Stretch` |
+| `FontSize` | 文字字号。 | `double` | `12` |
+| `Cursor` | 鼠标指针。 | `Cursor` | `Hand` |
+
+## 样式附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 未选中时的图标路径。 | `Geometry` | `Icon_SingleNoChecked` |
+| `AduAttach:PathDataAttach.SelectedPathData` | 选中时的图标路径。 | `Geometry` | `Icon_SingleChecked` |
+| `AduAttach:PathDataAttach.SelectNullPathData` | 空态图标路径。模板保留。 | `Geometry` | `Icon_NullChecked` |
+| `AduAttach:PathDataAttach.Width` | 图标宽度。 | `double` | `16` |
+| `AduAttach:PathDataAttach.Margin` | 图标与内容间距。 | `Thickness` | `4,0` |
+| `AduAttach:PathDataAttach.Visibility` | 图标可见性。 | `Visibility` | `Visible` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 未选中图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 选中图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:BackgroundAttach.SelectedBackground` | 选中背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:BorderAttach.SelectedBorderBrush` | 选中边框。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.CornerRadius` | 圆角。 | `CornerRadius` | `0` |
+
+## 使用说明
+- `AduRadioButton` 直接继承自 `RadioButton`，互斥关系仍由 `GroupName` 控制。
+- 选中态会切换图标、图标颜色、背景和边框。
+- 文字内容来自 `Content`，图标与内容之间的距离由 `AduAttach:PathDataAttach.Margin` 控制。
+- 未启用时模板会降低整体透明度。
+
+## 典型场景
+- 表单中的互斥选项。
+- 左侧图标加右侧说明的单选列表。
+- 设置页中的模式切换。
+- 需要统一单选外观的选项组。

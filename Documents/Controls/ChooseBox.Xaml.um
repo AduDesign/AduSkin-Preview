@@ -1,0 +1,93 @@
+﻿<!--  Example 1: Single File Selection  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Single File Selection" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select a single file with filtered file types"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Single File">
+			<AduSkin:AduChooseBox
+				ChooseType="SingleFile"
+				Filter="All File (*.*)|*.*|Txt File (*.txt)|*.txt|Image File (*.png;*.jpg;*.jpeg;*.bmp;*.gif)|*.png;*.jpg;*.jpeg;*.bmp;*.gif|Document File (*.pdf;*.doc;*.docx)|*.pdf;*.doc;*.docx"
+				Text="{Binding FilePath, UpdateSourceTrigger=PropertyChanged}" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Folder Selection  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Folder Selection" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select a single folder for directory operations"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Folder">
+			<AduSkin:AduChooseBox ChooseType="Folder" Text="{Binding FolderPath, UpdateSourceTrigger=PropertyChanged}" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Multiple File Selection  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: Multiple File Selection" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select multiple files at once for batch operations"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Multi File">
+			<AduSkin:AduChooseBox ChooseType="MultiFile" Text="{Binding MultiFile, UpdateSourceTrigger=PropertyChanged}" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Multiple Folder Selection  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 4: Multiple Folder Selection" />
+
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="12"
+		Text="Select multiple folders for bulk directory operations"
+		TextWrapping="Wrap" />
+
+	<AduSkin:AduFormBox Header="Multi Folder">
+		<AduSkin:AduChooseBox ChooseType="MultiFolder" Text="{Binding MultiFolder, UpdateSourceTrigger=PropertyChanged}" />
+	</AduSkin:AduFormBox>
+</StackPanel>

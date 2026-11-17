@@ -1,0 +1,11 @@
+﻿<UniformGrid Columns="3" Rows="3"> 
+    <AduSkin:AduLoading Type="Apple"/>
+    <AduSkin:AduLoading Type="Cogs"/>
+    <AduSkin:AduLoading Type="Grids" />
+    <AduSkin:AduLoading Type="DoubleRound"/>
+    <AduSkin:AduLoading Type="SingleRound"/>
+    <AduSkin:AduLoading Type="Lines" Height="20"/> 
+    <AduSkin:AduLoading Type="Normal"/>
+    <AduSkin:AduLoading Type="PathAnimation"/> 
+    <AduSkin:AduLoading Type="Rotate" />
+</UniformGrid>

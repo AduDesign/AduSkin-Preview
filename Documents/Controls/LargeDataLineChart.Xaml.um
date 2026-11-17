@@ -1,0 +1,86 @@
+﻿    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <WrapPanel Margin="0,10" Orientation="Horizontal">
+            <AduSkin:AduButton
+                Margin="0,0,10,10"
+                Command="{Binding GenerateCommand}"
+                Content="生成随机数据" />
+            <AduSkin:AduButton
+                Margin="0,0,10,10"
+                Command="{Binding ClearCommand}"
+                Content="清除数据" />
+            <AduSkin:AduFormBox Margin="0,0,10,10" Header="Maximum Count">
+                <AduSkin:AduIntegerUpDown
+                    Maximum="150000"
+                    Minimum="5"
+                    Value="{Binding MaxCount}" />
+            </AduSkin:AduFormBox>
+            <AduSkin:AduFormBox Margin="0,0,10,10" Header="Maximum Display Count">
+                <AduSkin:AduIntegerUpDown
+                    Maximum="150000"
+                    Minimum="5"
+                    Value="{Binding MaxDisplayCount}" />
+            </AduSkin:AduFormBox>
+            <AduSkin:AduCheckBox
+                Margin="0,0,10,10"
+                Content="IsDrawingGrid"
+                IsChecked="{Binding IsDrawingGrid}" />
+            <AduSkin:AduCheckBox
+                Margin="0,0,10,10"
+                Content="IsDragEnable"
+                IsChecked="{Binding IsDragEnable}" />
+            <AduSkin:AduCheckBox
+                Margin="0,0,10,10"
+                Content="IsZoomEnable"
+                IsChecked="{Binding IsZoomEnable}" />
+        </WrapPanel>
+
+        <AduSkin:AduLargeDataLineChart
+            Grid.Row="1"
+            Height="300"
+            Padding="0"
+            AduAttach:HeaderAttach.Background="Transparent"
+            AduAttach:HeaderAttach.FontSize="14"
+            AduAttach:HeaderAttach.Foreground="{DynamicResource PrimaryBrush}"
+            AduAttach:HeaderAttach.Header="LargeData LineChart"
+            AduAttach:HeaderAttach.Height="30"
+            AduAttach:HeaderAttach.Margin="0,4"
+            AduAttach:HeaderAttach.VerticalAlignment="Center"
+            AduAttach:HeaderAttach.Visible="Visible"
+            AduAttach:StatusAttach.Background="Transparent"
+            AduAttach:StatusAttach.FontSize="14"
+            AduAttach:StatusAttach.Foreground="{DynamicResource PrimaryBrush}"
+            AduAttach:StatusAttach.Height="30"
+            AduAttach:StatusAttach.Margin="0,4"
+            AduAttach:StatusAttach.VerticalAlignment="Center"
+            AduAttach:StatusAttach.Visible="Visible"
+            AutoScaleY="True"
+            Background="Transparent"
+            DataPoints="{Binding ItemsSource}"
+            Foreground="{DynamicResource PrimaryBrush}"
+            IsDragEnable="{Binding IsDragEnable}"
+            IsDrawingGrid="{Binding IsDrawingGrid}"
+            IsZoomEnable="{Binding IsZoomEnable}"
+            LineThickness="1"
+            MaxRenderedPoints="{Binding MaxDisplayCount}">
+            <AduSkin:AduLargeDataLineChart.LineBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Offset="0.0" Color="DarkCyan" />
+                    <GradientStop Offset="1" Color="Yellow" />
+                </LinearGradientBrush>
+            </AduSkin:AduLargeDataLineChart.LineBrush>
+        </AduSkin:AduLargeDataLineChart>
+        <AduSkin:AduRangeSlider
+            Grid.Row="1"
+            Margin="0,30,-8,30"
+            HorizontalAlignment="Right"
+            AduAttach:TooltipAttach.Visibility="Visible"
+            Maximum="100"
+            Orientation="Vertical"
+            TickFrequency="10"
+            ValueEnd="60" />
+    </Grid>

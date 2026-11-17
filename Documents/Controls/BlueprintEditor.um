@@ -1,0 +1,226 @@
+`BlueprintEditor` 是可视化节点蓝图编辑器控件，用于在 WPF 应用中搭建、编辑、保存和运行节点图逻辑。控件集成可搜索节点面板、节点画布、类/函数资产面板、属性检查器、编译诊断、调试面板、断点、监视值、注释框、迷你地图、导入导出和宿主调用能力。
+
+以下默认值以 `BlueprintEditor` 当前源码默认值为准。业务页面应优先使用 `BlueprintEditor` 作为主入口；`NodeCanvas` 是更底层的画布控件，适合内部扩展或兼容旧示例。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `BlueprintEditor` | 完整蓝图编辑器，包含工具栏、资产面板、画布、检查器和调试输出。 | `Control` |
+| `NodeCanvas` | 节点画布，负责节点、连线、选择、拖拽、缩放、右键菜单和撤销重做。 | `Control` |
+
+## 常用模型
+| 名称 | 描述 |
+| --- | --- |
+| `BlueprintGraph` | 节点图模型，包含 `Nodes`、`Connections`、`CommentBoxes` 和 `UndoRedoManager`。 |
+| `BlueprintAsset` | 蓝图资产基类。正式保存、导入、恢复和宿主调用推荐以资产为单位。 |
+| `BlueprintFunctionAsset` | 独立函数蓝图，包含函数图、输入输出、局部变量、访问级别、纯函数和异步标记。 |
+| `BlueprintClassAsset` | 类蓝图，包含事件图、成员变量、成员函数、父类和实例状态。 |
+| `BlueprintEditorOptions` | 编辑器视图和交互选项，可由宿主持久化。 |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Graph` | 当前正在编辑的图。绑定 `Asset` 时会随当前事件图或成员函数图同步。 | `BlueprintGraph` | `null` |
+| `Asset` | 当前蓝图资产。可以是 `BlueprintFunctionAsset` 或 `BlueprintClassAsset`。 | `BlueprintAsset` | `null` |
+| `ParentClassCandidates` | 类蓝图可选择的父类集合。 | `IEnumerable<BlueprintClassAsset>` | `null` |
+| `SelectedParentClass` | 当前选中的父类。 | `BlueprintClassAsset` | `null` |
+| `IsNodeReadOnly` | 是否禁止编辑节点和资产结构。运行、暂停、停止和异步导入提交期间会被控件强制为只读。 | `bool` | `False` |
+| `ShowDebugPanel` | 是否显示调试面板。 | `bool` | `True` |
+| `Options` | 编辑器选项。未提供时控件会创建默认实例。 | `BlueprintEditorOptions` | 新建默认选项 |
+| `AutoWatchValues` | 运行时是否自动把经过的数据 Pin 加入监视列表。 | `bool` | `False` |
+| `IsClassAsset` | 当前 `Asset` 是否为类蓝图，只读。 | `bool` | `False` |
+| `ActiveFunction` | 类蓝图中当前打开的成员函数；事件图时为 `null`，只读。 | `BlueprintFunctionAsset` | `null` |
+| `SelectedVariable` | 资产面板中当前选中的成员变量，只读。 | `BlueprintVariableDefinition` | `null` |
+| `InspectedFunction` | 当前检查器正在查看的函数资产，只读。 | `BlueprintFunctionAsset` | `null` |
+| `SelectedNodeDetails` | 当前选中节点的检查器数据，只读。 | `BlueprintNodeDetails` | `null` |
+| `HasSelectedNode` | 当前是否有选中节点，只读。 | `bool` | `False` |
+| `CanEditSelectedMember` | 当前成员是否允许编辑，只读。 | `bool` | `False` |
+| `ActiveNodeVisualCount` | 当前视口内激活的节点视觉数量，只读。 | `int` | `0` |
+| `ActiveConnectionVisualCount` | 当前视口内激活的连线视觉数量，只读。 | `int` | `0` |
+| `DebugStatus` | 调试器状态文字，只读。 | `string` | `Ready` |
+| `IsDirty` | 当前资产或图是否有未保存修改，只读。 | `bool` | `False` |
+
+## BlueprintEditorOptions
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SnapToGrid` | 拖动节点时是否吸附到网格。 | `bool` | `True` |
+| `GridSize` | 网格大小，范围 `4` 到 `1024`。 | `double` | `16` |
+| `ShowNodePalette` | 是否在画布左侧覆盖显示可搜索、可拖拽的节点面板。 | `bool` | `True` |
+| `ShowMiniMap` | 是否显示迷你地图。 | `bool` | `True` |
+| `EnableExecutionPulse` | 执行时是否显示节点和连线流动高亮。 | `bool` | `True` |
+| `EnableViewportCulling` | 是否对视口外节点和连线降低交互/渲染负担。 | `bool` | `True` |
+| `ViewportPreloadMargin` | 视口外预加载边距，范围 `0` 到 `2000`。 | `double` | `240` |
+| `VisualBuildBatchSize` | 大图重建时每批创建的视觉元素数量，范围 `8` 到 `512`。 | `int` | `64` |
+
+## 节点面板与节点创建
+
+节点面板默认覆盖显示在画布左侧，不参与编辑器的列宽计算，因此显示或隐藏面板不会改变画布尺寸和视口。可在标题栏右侧的设置菜单中切换“显示节点面板”，也可以由宿主配置：
+
+```xml
+<blueprint:BlueprintEditor Asset="{Binding CurrentAsset}"
+                           Graph="{Binding Graph, Mode=TwoWay}">
+    <blueprint:BlueprintEditor.Options>
+        <blueprint:BlueprintEditorOptions ShowNodePalette="True" />
+    </blueprint:BlueprintEditor.Options>
+</blueprint:BlueprintEditor>
+```
+
+```csharp
+BlueprintEditor.Options.ShowNodePalette = false;
+// 等价的便捷属性：
+BlueprintEditor.ShowNodePalette = true;
+```
+
+节点面板的使用方式：
+
+1. 在顶部搜索框输入节点名称、分类、描述或关键字。
+2. 展开下方分类树，按住具体节点并拖到画布目标位置。
+3. 松开鼠标后创建节点；如果启用了网格吸附，落点会自动吸附到当前网格。
+4. 该操作进入当前图的撤销栈，可通过撤销和重做恢复。
+
+节点面板与画布右键新增菜单读取相同的 `NodeRegistry`、`FunctionRegistry` 和动态函数库，不需要维护第二份节点清单。函数图会隐藏事件入口节点，纯函数会过滤有副作用的节点；Entry 仅在当前函数缺少入口时显示，Return 可用于建立多个返回分支。类成员变量、成员函数、函数参数和局部变量依赖当前资产定义，仍从“我的蓝图”成员面板拖入画布。
+
+运行期间编辑器进入只读状态，节点面板仍可浏览和搜索，但不能开始拖拽创建节点。
+
+## 调试面板
+蓝图编辑器底部包含“断点”“监视”“调用栈”“诊断”和“输出”五个页签。可通过 `ShowDebugPanel="False"` 隐藏整个调试面板。
+
+### 断点
+
+断点列表汇总当前蓝图文档中的全部节点断点。类蓝图会同时列出 Event Graph 和各成员函数图，格式为“图表 / 节点 [条件]”；未设置条件时显示“普通断点”。
+
+1. 在画布中选择一个或多个节点。
+2. 打开“断点”页签。条件输入框留空时，点击切换断点按钮可添加或取消普通断点；填写如 `Value > 10` 后点击按钮可设置条件断点。
+3. 双击列表项可在停止状态切换到对应图表、选中节点并将其居中。
+4. 删除按钮移除列表中选中的断点；清空按钮移除当前文档全部断点。
+
+蓝图运行时不允许修改断点；命中断点暂停后可以修改。断点状态随节点一起序列化，保存并重新打开蓝图后仍会出现在列表中。
+
+也可以直接右键具有执行流引脚的节点，选择“添加断点”“删除断点”或“编辑断点条件”。只有会进入执行流程的节点才有稳定的暂停位置，因此纯数据节点不会显示断点菜单，也不能通过工具栏、F9 或代码接口添加断点。
+
+### 监视
+监视用于查看数据引脚在本次运行中最近一次计算出的值，显示格式为“节点名称.引脚名称 = 当前值”。
+
+使用步骤：
+1. 在画布中选择一个或多个节点。
+2. 打开“监视”页签，点击顶部的添加按钮。控件会添加所选节点的数据引脚，执行流引脚不会加入。
+3. 运行蓝图。执行器计算到被监视的输出引脚时，列表中的值会自动更新。
+4. 点击删除按钮可清空全部监视项。
+
+也可以右键任意带数据引脚的节点，打开“监视”子菜单：选择“监视所有数据引脚”可一次添加或取消该节点的全部监视，也可以在“输入”“输出”子菜单中逐个勾选引脚。菜单勾选状态与底部监视列表实时对应。
+
+监视项只能在蓝图停止或断点暂停时修改。输入引脚显示节点本次执行实际收到的值；未连接的输入显示其默认值，已连接的输入显示上游传入值。
+
+默认 `AutoWatchValues="False"`，只更新手动添加的监视项，适合节点较多的蓝图。设置为 `True` 后，运行中经过的数据引脚会自动加入监视列表，但大型蓝图可能产生更多界面更新。
+
+```csharp
+BlueprintEditor.AutoWatchValues = false;
+BlueprintEditor.AddWatch(node.OutputPins[0]);
+BlueprintEditor.AddSelectedNodeWatches();
+BlueprintEditor.ClearWatches();
+```
+
+### 调用栈
+调用栈用于查看当前蓝图执行到哪一层函数或自定义事件。通常在命中断点或单步暂停后查看：
+
+- 每行显示调用深度和函数/事件名称。
+- 列表末尾是当前最内层调用。
+- 在顶层事件图中执行、尚未进入函数或自定义事件时，调用栈可能为空。
+- 函数返回、停止运行或执行完成后，相应内容会自动移除。
+
+配合工具栏的暂停、步入、步过、步出和继续按钮，可以逐层检查复杂函数调用。蓝图未暂停时调用栈会快速变化，不适合作为历史调用记录。
+
+暂停后双击调用栈项可以切换到对应的事件图或函数图，并选中、居中相应节点。双击最深层栈帧会定位到实际暂停的当前节点；双击上层栈帧会定位到该层的入口或调用节点。调试定位只切换只读画布，不会重建正在运行的执行器。
+
+### 诊断
+诊断显示编译器发现的问题，每项包含严重程度、诊断代码、节点名称和问题说明：
+
+- `Info`：提示信息，不阻止运行。
+- `Warning`：可能存在问题，但通常不阻止运行。
+- `Error`：必须修复；存在编译错误时蓝图不会开始执行。
+
+点击工具栏的编译按钮会刷新诊断；点击运行时也会先编译。双击带节点信息的诊断可以选中并居中对应节点；如果问题关联到具体引脚，该引脚也会高亮。没有对应节点的图级诊断不能双击定位。
+
+常见问题包括必填输入未连接、引脚类型不兼容、无效执行连接、缺少入口或返回节点，以及函数签名不一致。
+
+### 输出
+输出显示当前运行的文本过程，可用于了解蓝图实际经过了哪些节点。内容包括：
+
+- 编译信息和错误。
+- 入口节点及执行节点。
+- 数据节点求值结果。
+- 条件分支、循环次数和延迟过程。
+- `Print` 节点输出。
+- 函数进入和退出。
+- 执行完成、用户取消或运行异常。
+
+每次点击运行或调用 `RunEventAsync` 前会清空上一次输出。列表最多保留最近 200 条，新内容加入后会自动滚动到底部。
+
+```csharp
+var completeLog = await BlueprintEditor.RunAsync();
+
+// ExecutionLog 是调试面板当前保留的输出行。
+foreach (var line in BlueprintEditor.ExecutionLog)
+{
+    Debug.WriteLine(line);
+}
+```
+
+使用无界面的 `BlueprintRunner.InvokeAsync` 时不会更新某个编辑器控件的调试面板，应从 `BlueprintInvocationResult` 中读取 `Diagnostics`、`Exception` 和 `ExecutionLog`。
+
+## 常用方法与事件
+| 名称 | 描述 |
+| --- | --- |
+| `Compile()` | 编译当前资产或图并刷新诊断列表。 |
+| `RunAsync()` | 从默认入口运行当前蓝图，并返回执行日志文本。 |
+| `RunEventAsync(string eventName, BlueprintHostContext host = null)` | 按事件名运行类蓝图事件。 |
+| `Stop()` | 取消当前运行。 |
+| `InvokeAsync(BlueprintInvocationRequest request)` | 以宿主请求方式调用当前资产，返回结构化 `BlueprintInvocationResult`。 |
+| `LoadFromJsonAsync(string json, CancellationToken token = default, BlueprintLoadOptions options = null)` | 异步导入 JSON。解析在后台完成，应用到 UI 时会避免覆盖更新后的图。 |
+| `LoadFromFileAsync(string path, CancellationToken token = default, BlueprintLoadOptions options = null)` | 异步从文件导入蓝图。 |
+| `SaveToJson()` / `SaveToFile(string path)` | 序列化并保存当前资产或图。成功后会移动保存基线，清除脏状态。 |
+| `TryReplaceAsset(BlueprintAsset asset)` / `TryReplaceGraph(BlueprintGraph graph)` | 替换当前资产或图；如果有未保存修改会触发确认事件。 |
+| `CreateRecoverySnapshot()` / `RestoreRecoverySnapshot(string json)` | 创建和恢复自动恢复快照。快照格式不等同于正式导出 JSON。 |
+| `RequestDiscardUnsavedChanges(BlueprintUnsavedChangeReason reason)` | 请求放弃未保存修改，宿主可通过事件决定保存、放弃或取消。 |
+| `MarkSaved()` | 将当前状态标记为已保存。 |
+| `FitAllNodesToView()` / `FocusSelectedNodes()` | 调整视口到全部节点或选中节点。 |
+| `UnsavedChangesRequested` | 需要处理未保存修改时触发。 |
+| `EditabilityChanged` | 编辑器只读状态变化时触发，常用于刷新外部命令可用性。 |
+
+## 使用说明
+- 在页面初始化时调用 `FunctionRegistry.Initialize()` 和 `NodeRegistry.Initialize()`，让右键菜单和函数节点能发现内置节点与函数。宿主程序集中的自定义节点/函数可通过 `NodeRegistry.ScanAssembly(...)` 和 `FunctionRegistry.ScanAssembly(...)` 注册。
+- 节点右键菜单与画布空白处的新增节点菜单相互独立。右键未选中的节点会将其作为主选择；右键已有多选中的节点会保留多选。Pin 和节点输入控件继续使用自己的右键交互。高级宿主可向 `NodeCanvas.NodeMenuProviders` 添加 `IBlueprintNodeMenuProvider`，按需提供节点命令；提供器仅在菜单打开时执行，不应长期持有 `BlueprintNodeMenuContext`。
+- 选中节点会临时显示在其他未选中节点之上；多选节点作为一组置顶并保持原有相对顺序。该效果只改变 `Panel.ZIndex`，不会重排节点集合、改变保存结果或影响执行顺序。`Ctrl+F` 根据当前选择切换操作：只选中一个由“折叠为函数”生成的函数节点时取消折叠，其他节点选择则折叠为函数；也可使用节点右键菜单的“取消折叠函数”。内部节点、内部连线和函数边界两侧的连线会恢复到当前画布，操作支持撤销和重做，并且保存后重新加载仍然可用。函数图的 Entry 和 Return 属于图表边界，不能参与折叠。
+- 自定义节点可以在实例方法上标记 `[BlueprintNodeMenu("菜单名称", Group = "分组", Order = 100, CanExecute = nameof(CanRun))]`，控件会自动把方法加入该节点的右键菜单。菜单方法必须无参或只接收一个 `BlueprintNodeMenuContext`，返回 `void`、`Task` 或 `Task<T>`；可用性方法必须以相同参数规则返回 `bool`。无效方法会被忽略，开发时可调用 `BlueprintNodeMenuRegistry.GetDiagnostics(typeof(MyNode))` 查看原因。反射和委托编译按节点类型并发缓存，只在首次使用该类型时执行。
+- 菜单特性和菜单方法是节点类型的行为元数据，不会写入蓝图 JSON。需要持久化的数据仍应定义为节点属性，并遵循节点属性序列化规则。Demo 的 `Do Once` 节点提供了“重置执行状态”示例：节点执行过后该命令才可用。
+- 自定义节点可重写 `OnSaving(BlueprintNodeSavingContext)`、`OnSaved(BlueprintNodeSavedContext)` 和 `OnLoaded(BlueprintNodeLoadedContext)`。`OnSaving` 只在用户调用控件的 `SaveToJson` 或 `SaveToFile` 时执行，适合把编辑态缓存整理到可序列化属性；写入成功后执行 `OnSaved`。`OnLoaded` 在节点、引脚、连接和注释全部恢复后执行一次，适合重建不参与序列化的缓存。脏状态比较、恢复快照和普通 `BlueprintSerializer.Serialize` 不触发保存钩子，节点构造函数仍负责新建节点的首次初始化。生命周期方法应保持快速、同步且无外部副作用，保存钩子不得修改节点、引脚或连接结构。
+- 推荐绑定 `Asset`，同时双向绑定 `Graph`。独立函数使用 `BlueprintFunctionAsset`；类蓝图使用 `BlueprintClassAsset`，控件会在 Event Graph 和成员函数图之间切换。
+- 节点创建、连线、变量、函数、注释、编译、运行、暂停、单步、断点和监视值都已包含在控件内置 UI 中。普通 Demo 页面不需要另外实现节点库；使用内置覆盖式节点面板或画布右键菜单即可。
+- 开始连线后，鼠标经过兼容的目标引脚时会显示与普通悬浮相同的放大和描边动画；方向、类型或连接规则不兼容的引脚不会高亮。完成、取消连线或移出目标后视觉状态会自动恢复。
+- 替换蓝图、导入文件或关闭窗口前，建议调用 `RequestDiscardUnsavedChanges` 或订阅 `UnsavedChangesRequested`，避免覆盖未保存编辑。
+- 正式保存使用 `SaveToFile` 或 `SaveToJson`；自动恢复使用 `CreateRecoverySnapshot`，两者格式用途不同，不应混用。
+- 从外部文件导入时可提供 `BlueprintLoadOptions.TypePolicy`，限制允许解析的 CLR 类型。类型策略是导入信任边界，不是运行沙箱。
+- 运行时控件会进入只读状态，避免执行过程中的结构修改。需要停止时调用 `Stop()`，异步节点会通过取消令牌协作退出。
+- 无 UI 调用推荐使用 `BlueprintRunner` 或 `BlueprintEditor.InvokeAsync`，并设置步数、函数深度、事件深度和超时预算。
+- 类蓝图实例使用 `BlueprintClassAsset.CreateInstance()` 创建，每个 `BlueprintInstance` 拥有独立成员状态；可用于验证集合和自定义对象默认值不会在实例间共享。
+
+## 自动布局
+
+顶部工具栏的“自动布局”按钮将当前图表从左向右整理，并缩放显示全部节点。多选节点后，可在右键菜单中选择“布局所选节点”；其他节点保持不动。
+
+```csharp
+editor.AutoLayout();       // 整理当前图表
+editor.AutoLayout(true);   // 仅整理所选节点
+```
+
+- 执行关系和数据依赖参与分层，执行线在同层排序中优先；按实际节点尺寸留出间距，减少连线交叉。
+- 未固定注释框内的节点先按依赖关系重新排列，注释框自动调整范围，再作为整体参与外层布局。相交或嵌套的注释区域会合并处理；固定注释区域及内部节点保持原位，其他子图避让。
+- 仅布局选区时，注释组必须全部选中才会移动，避免拆散分组。
+- 整次布局支持一次撤销/重做，不修改节点内容、引脚或连线。只读及执行期间不可布局。
+- 第一版仅支持左到右；环路保留回连线，不保证所有连线无交叉。不相连子图分别排列。
+
+## 典型场景
+- 业务规则、流程编排、低代码逻辑编辑器。
+- 游戏、仿真、脚本工具中的事件图和函数图编辑。
+- 自动化平台中的可视化条件、循环、分支、变量和宿主服务调用。
+- 需要保存为 JSON、支持恢复快照、调试断点和宿主无画布调用的 WPF 设计器。

@@ -1,0 +1,25 @@
+﻿ public ObservableCollection<string> BasicTags { get; } = new()
+ {
+     "Unremovable",
+     "Tag 2"
+ };
+
+ public ObservableCollection<string> ReadOnlyTags { get; } = new()
+ {
+     "Display",
+     "Readonly",
+     "Fixed"
+ };
+
+ public ObservableCollection<string> SkillTags { get; } = new()
+ {
+     "C#",
+     "WPF",
+     "AduSkin"
+ };
+
+ public ObservableCollection<string> DuplicateTags { get; } = new()
+ {
+     "Label",
+     "Label"
+ };

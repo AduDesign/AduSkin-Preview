@@ -1,0 +1,62 @@
+AduDelayLoading 是一个基于 `ContentControl` 的延迟加载骨架控件。`IsLoading` 为 `True` 时显示骨架占位和扫光动画，`IsLoading` 为 `False` 时显示真实内容。适合用于列表项、卡片、图片和文本块的加载占位。
+
+以下默认值以 `AduDelayLoading` 的默认样式为准；控件内部直接承载任意 WPF 内容。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsLoading` | 是否显示骨架。`True` 时隐藏内容并显示占位层，`False` 时显示真实内容。 | `bool` | `True` |
+| `Duration` | 骨架扫光动画时长。可用标准 `Duration` 语法设置，例如 `0:0:1.2`。 | `Duration` | `1.5s` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 骨架区域圆角。默认样式使用该附加属性控制占位层边角。 | `CornerRadius` | `10` |
+
+## 使用说明
+- 真实内容直接写在 `AduDelayLoading` 内部即可。
+- `IsLoading` 为 `True` 时，默认样式显示骨架层并播放斜向扫光动画。
+- `IsLoading` 为 `False` 时，骨架层隐藏，内容层显示。
+- 如果需要更圆润或更贴近内容形状的占位效果，可以调整 `AduAttach:BorderAttach.CornerRadius`。
+
+## 使用示例
+```xml
+<StackPanel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"
+    xmlns:AduAttach="clr-namespace:AduSkin.AdditionalAttributes;assembly=AduSkin"
+    Margin="20">
+
+    <!-- 文本占位 -->
+    <AduSkin:AduDelayLoading
+        Height="18"
+        IsLoading="{Binding IsLoading}"
+        AduAttach:BorderAttach.CornerRadius="4">
+        <TextBlock FontSize="14" Text="High performance WPF control library" />
+    </AduSkin:AduDelayLoading>
+
+    <!-- 图片 / 卡片占位 -->
+    <AduSkin:AduDelayLoading
+        Width="120"
+        Height="120"
+        Margin="0,12,0,0"
+        IsLoading="True"
+        AduAttach:BorderAttach.CornerRadius="10">
+        <Border
+            BorderBrush="{DynamicResource NormalBorderBrush}"
+            BorderThickness="1"
+            ClipToBounds="True"
+            CornerRadius="10">
+            <Border.Background>
+                <ImageBrush ImageSource="/Resources/Cover/1.png" Stretch="UniformToFill" />
+            </Border.Background>
+        </Border>
+    </AduSkin:AduDelayLoading>
+</StackPanel>
+```
+
+## 典型场景
+- 页面首屏数据未返回时，先用骨架占位。
+- 列表或卡片加载时，避免界面空白。
+- 图片、头像、摘要文本等内容切换时，提升过渡感。

@@ -1,0 +1,65 @@
+﻿private Random random = new Random();
+
+[ObservableProperty]
+private ObservableCollection<AduLineSeries> _itemsSource = new ObservableCollection<AduLineSeries>();
+
+[ObservableProperty]
+private bool _isDrawingGrid = true;
+
+[ObservableProperty]
+private bool _isDrawingAxes = true;
+
+[ObservableProperty]
+private bool _isDrawingLegend = true;
+
+public LineChartViewModel()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Generate()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Clear()
+{
+    ItemsSource.Clear();
+}
+
+private void GenerateSampleData()
+{
+    Clear();
+
+    var points1 = new ObservableCollection<Point>();
+    var points2 = new ObservableCollection<Point>();
+    var points3 = new ObservableCollection<Point>();
+
+    for (int i = 0; i < 30; i++)
+    {
+        points1.Add(new Point(i, random.Next(10, 100)));
+        points2.Add(new Point(i, random.Next(10, 100)));
+        points3.Add(new Point(i, random.Next(10, 100)));
+    }
+    ItemsSource.Add(new AduLineSeries()
+    {
+        Name = "Item1",
+        Stroke = new SolidColorBrush(Color.FromRgb(70, 210, 210)),
+        PointBrush = new SolidColorBrush(Color.FromRgb(70, 210, 210)),
+        DataPoints = points1
+    });
+    ItemsSource.Add(new AduLineSeries()
+    {
+        Name = "Item2",
+        Stroke = new SolidColorBrush(Color.FromRgb(255, 153, 0)),
+        PointBrush = new SolidColorBrush(Color.FromRgb(255, 153, 0)),
+        DataPoints = points2
+    });
+    ItemsSource.Add(new AduLineSeries()
+    {
+        Name = "Item3",
+        Stroke = new SolidColorBrush(Color.FromRgb(238, 121, 111)),
+        PointBrush = new SolidColorBrush(Color.FromRgb(238, 121, 111)),
+        DataPoints = points3
+    });
+} 

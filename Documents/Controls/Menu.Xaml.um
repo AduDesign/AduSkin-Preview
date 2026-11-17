@@ -1,0 +1,78 @@
+﻿<Grid Background="{DynamicResource NormalTransparentBrush}">
+    <Grid.ContextMenu>
+        <AduSkin:AduContextMenu> 
+            <AduSkin:AduMenuItem Header="返回" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Back}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="打开" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_OpenFile}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="另存为" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Save}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="刷新">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Refresh}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="复制">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Copy}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="剪切">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Cut}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="粘贴">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Paste}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="打印文件">
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Print}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuItem Header="截图" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Screenshot}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuSeparator Background="{DynamicResource SeparatorBrush}"/>
+            <AduSkin:AduMenuItem Header="检查选项" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Check}"/>
+                </AduSkin:AduMenuItem.Icon>
+                <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                <AduSkin:AduMenuSeparator Background="{DynamicResource SeparatorBrush}"/>
+                <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                <AduSkin:AduMenuItem Header="更多选项">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Data="{StaticResource Icon_Link}"/>
+                    </AduSkin:AduMenuItem.Icon>
+                    <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                    <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True" />
+                    <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                    <AduSkin:AduMenuSeparator  Background="{DynamicResource SeparatorBrush}"/>
+                    <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                    <AduSkin:AduMenuItem Header="三级菜单" IsCheckable="True"/>
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduMenuItem>
+            <AduSkin:AduMenuSeparator Background="{DynamicResource SeparatorBrush}"/>
+            <AduSkin:AduMenuItem Header="退出程序" >
+                <AduSkin:AduMenuItem.Icon>
+                    <Path Data="{StaticResource Icon_Exit}"/>
+                </AduSkin:AduMenuItem.Icon>
+            </AduSkin:AduMenuItem>
+        </AduSkin:AduContextMenu>
+    </Grid.ContextMenu>
+</Grid>

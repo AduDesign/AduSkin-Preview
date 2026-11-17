@@ -1,0 +1,8 @@
+﻿<UniformGrid Columns="2" Rows="3" Margin="10,0">
+    <AduSkin:AduRadiobutton/>
+    <AduSkin:AduRadiobutton IsChecked="True"/>
+    <AduSkin:AduRadiobutton/>
+    <AduSkin:AduRadiobutton IsEnabled="False"/>
+    <AduSkin:AduRadiobutton/>
+    <AduSkin:AduRadiobutton IsEnabled="False"/> 
+</UniformGrid>

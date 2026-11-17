@@ -1,0 +1,46 @@
+AduSplitButton 是一个拆分按钮控件，继承自 WPF `ContentControl`。控件左侧用于执行主操作，右侧下拉区域用于展开 `ContextMenu`，适合“默认操作 + 更多操作”的组合场景。
+
+以下默认值以 `AduSplitButton` 的默认样式为准。控件内部主按钮使用 `AduPathIconButton` 承载内容和命令，下拉按钮点击后会打开 `DropDownMenu`。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `DropDownMenu` | 点击右侧下拉按钮时打开的菜单。 | `ContextMenu` | `null` |
+| `IsChecked` | 选中状态，支持双向绑定。当前默认模板主要保留该值供扩展样式使用。 | `bool?` | `False` |
+| `Command` | 点击左侧主按钮时执行的命令。 | `ICommand` | `null` |
+| `IsDropDownOpen` | 下拉打开状态。源码已注册该属性，当前点击逻辑直接打开菜单。 | `bool` | `False` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 左侧主按钮内容。 | `object` | `null` |
+| `Width` | 控件宽度。 | `double` | `Auto` |
+| `Height` | 控件高度。 | `double` | `30` |
+| `Padding` | 左侧主按钮边距。 | `Thickness` | `10,0` |
+| `HorizontalContentAlignment` | 主按钮内容水平对齐方式。 | `HorizontalAlignment` | `Left` |
+| `VerticalContentAlignment` | 主按钮内容垂直对齐方式。 | `VerticalAlignment` | `Center` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 按钮背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 外层边框和分隔线颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 外层边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 外层圆角。 | `CornerRadius` | `6` |
+| `AduAttach:PathDataAttach.PathData` | 左侧主按钮图标路径。 | `Geometry` | `Icon_DownArrow` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 左侧主按钮图标宽度。 | `double` | `14` |
+| `AduAttach:PathDataAttach.Margin` | 左侧主按钮图标边距。 | `Thickness` | `4,0,0,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 图标颜色。 | `Brush` | `NormalPathBrush` 动态资源 |
+
+## 交互说明
+- 点击左侧主按钮会执行 `Command`。
+- 点击右侧下拉按钮会把 `DropDownMenu.PlacementTarget` 设置为当前 `AduSplitButton`，并以 `Bottom` 位置打开菜单。
+- `DropDownMenu` 为空时，右侧下拉按钮不会显示任何菜单。
+- 默认模板中间有一条分隔线，用于区分主操作和下拉操作。
+
+## 典型场景
+- “保存 / 保存并关闭 / 另存为”等复合操作。
+- 默认执行一个常用命令，同时提供更多菜单项。
+- 工具栏中的带下拉操作按钮。
+- 表单或编辑器中的快捷主操作按钮。

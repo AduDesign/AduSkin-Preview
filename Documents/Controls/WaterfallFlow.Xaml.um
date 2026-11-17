@@ -1,0 +1,12 @@
+﻿<ItemsControl ItemsSource="{Binding ItemsSource}">
+    <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+            <AduSkin:AduWaterfallFlow MinColumnWidth="120"/>
+        </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+        <DataTemplate>
+            <Border Height="{Binding Item1}" Margin="2" CornerRadius="6" Background="{DynamicResource PBackground}"/>
+        </DataTemplate>
+    </ItemsControl.ItemTemplate>
+</ItemsControl>

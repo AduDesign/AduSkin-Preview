@@ -1,0 +1,33 @@
+﻿<UniformGrid Rows="2">
+    <AduSkin:AduTabControl BorderThickness="1" AduAttach:BorderAttach.CornerRadius="10" BorderBrush="{DynamicResource NormalBorderBrush}" AduAttach:ContentAttach.Background="{DynamicResource PanelBackground}" AduAttach:HeaderAttach.Margin="10,0">
+        <AduSkin:AduTabItem Header="Item1">
+            <TextBlock Text="Content1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        </AduSkin:AduTabItem>
+        <AduSkin:AduTabItem Header="Item2"  Width="auto">
+            <TextBlock Text="Content2" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        </AduSkin:AduTabItem>
+        <AduSkin:AduTabItem Header="Item3"  Width="auto">
+            <TextBlock Text="Content3" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10"/>
+        </AduSkin:AduTabItem>
+    </AduSkin:AduTabControl>
+
+    <AduSkin:AduTabControl ItemsSource="{Binding ItemsSource}" BorderThickness="1" 
+    BorderBrush="{DynamicResource NormalBorderBrush}" 
+    AduAttach:BorderAttach.CornerRadius="10"
+    AduAttach:ContentAttach.Background="{DynamicResource PanelBackground}" 
+    AduAttach:HeaderAttach.HorizontalAlignment="Center" AduAttach:HeaderAttach.Width="auto"
+    AduAttach:HeaderAttach.Margin="10,0" Margin="0,10,0,0" Padding="10">
+        <TabControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Description}" Margin="5,0"/>
+                </StackPanel>
+            </DataTemplate>
+        </TabControl.ItemTemplate>
+        <TabControl.ContentTemplate>
+            <DataTemplate>
+                <Demo:UCChooseBox DataContext="{Binding }"/>
+            </DataTemplate>
+        </TabControl.ContentTemplate>
+    </AduSkin:AduTabControl>
+</UniformGrid>

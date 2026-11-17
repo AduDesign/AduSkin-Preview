@@ -1,0 +1,167 @@
+﻿<!--  Example 1: Primary and Ghost Buttons  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Primary and Ghost Buttons" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Primary buttons for main actions, Ghost buttons for secondary actions"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Margin="5"
+				Command="{Binding OpenCommand}"
+				CommandParameter="Primary Button"
+				Content="Primary Button"
+				Type="Primary" />
+			<AduSkin:AduButton
+				Margin="5"
+				Command="{Binding OpenCommand}"
+				CommandParameter="Primary Button"
+				Content="Primary Button"
+				IsEnabled="{Binding IsEnabled}"
+				Type="Primary" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Default and Success Buttons  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Default and Success Buttons" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Default for standard actions, Success for confirmation or completion"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Margin="5"
+				Content="Success Button"
+				Type="Success" />
+			<AduSkin:AduButton
+				Margin="5"
+				Content="Success Button"
+				IsEnabled="{Binding IsEnabled}"
+				Type="Success" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Error and Info Buttons  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: Error and Info Buttons" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Error for dangerous actions, Info for informational dialogs"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Margin="5"
+				Content="Error Button"
+				Type="Error" />
+			<AduSkin:AduButton
+				Margin="5"
+				Content="Error Button"
+				IsEnabled="{Binding IsEnabled}"
+				Type="Error" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Warning Button  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 4: Warning Button" />
+
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="12"
+		Text="Warning button for cautious or attention-required actions"
+		TextWrapping="Wrap" />
+
+	<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+		<AduSkin:AduButton
+			Margin="5"
+			Content="Warning Button"
+			Type="Warning">
+			<AduAttach:MenuAttach.DropDownMenu>
+				<AduSkin:AduContextMenu>
+					<AduSkin:AduMenuItem Header="Edit" />
+					<AduSkin:AduMenuItem Header="Delete" />
+				</AduSkin:AduContextMenu>
+			</AduAttach:MenuAttach.DropDownMenu>
+		</AduSkin:AduButton>
+		<AduSkin:AduButton
+			Margin="5"
+			Content="Warning Button"
+			IsEnabled="{Binding IsEnabled}"
+			Type="Warning" />
+	</StackPanel>
+</StackPanel>
+
+<!--  Example 5: Warning Button  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 5: Ghost Buttons" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Ghost buttons for secondary actions"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Margin="5"
+				Command="{Binding OpenCommand}"
+				CommandParameter="Ghost Button"
+				Content="Ghost Button"
+				Type="Ghost" />
+			<AduSkin:AduButton
+				Margin="5"
+				Content="Ghost Button"
+				IsEnabled="{Binding IsEnabled}"
+				Type="Ghost" />
+		</StackPanel>
+	</StackPanel>
+</Border>

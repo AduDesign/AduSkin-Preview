@@ -1,0 +1,81 @@
+﻿public RunContainerViewModel()
+{
+    // 初始化文本数据
+    for (int i = 1; i <= 10; i++)
+    {
+        TextItems.Add(new MarqueeItemModel
+        {
+            Title = $"新闻标题 {i}",
+            Content = $"这是第 {i} 条新闻内容的简要描述..."
+        });
+    }
+
+    // 初始化图片数据
+    for (int i = 1; i <= 6; i++)
+    {
+        ImageItems.Add(new MarqueeItemModel
+        {
+            Title = $"图片 {i}",
+            ImageUrl = "pack://application:,,,/Resources/header.png",
+            Background = GetRandomColor()
+        });
+    }
+
+    // 初始化通知数据
+    for (int i = 1; i <= 8; i++)
+    {
+        NotificationItems.Add(new MarqueeItemModel
+        {
+            Content = $"系统通知：您有新的消息待处理 ({i})"
+        });
+    }
+}
+
+private string GetRandomColor()
+{
+    var colors = new[] { "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD", "#98D8C8", "#F7DC6F" };
+    return colors[(new Random()).Next(colors.Length)];
+}
+
+[ObservableProperty]
+private MarqueeDirection _marqueeDirection = MarqueeDirection.RightToLeft;
+
+[ObservableProperty]
+private double _speed = 50;
+
+[ObservableProperty]
+private bool _isAutoScroll = true;
+
+[ObservableProperty]
+private int _selectedDirectionIndex = 1;
+
+partial void OnSelectedDirectionIndexChanged(int oldValue, int newValue)
+{
+    switch (newValue)
+    {
+        case 0:
+            MarqueeDirection = MarqueeDirection.LeftToRight;
+            break;
+        case 1:
+            MarqueeDirection = MarqueeDirection.RightToLeft;
+            break;
+        case 2:
+            MarqueeDirection = MarqueeDirection.TopToBottom;
+            break;
+        case 3:
+            MarqueeDirection = MarqueeDirection.BottomToTop;
+            break;
+    }
+}
+
+[RelayCommand]
+public void Start()
+{
+    IsAutoScroll = true;
+}
+
+[RelayCommand]
+public void Pause()
+{
+    IsAutoScroll = false;
+}

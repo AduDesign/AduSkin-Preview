@@ -1,0 +1,128 @@
+﻿<!--  Example 1: Options  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Toggle Labels and Legend" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Show or hide month labels, day labels, year label, and legend."
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+			<AduSkin:AduCheckBox
+				x:Name="MonthLabelsCheck"
+				Content="Month Labels"
+				IsChecked="{Binding ShowMonthLabels, Mode=TwoWay}" />
+			<AduSkin:AduCheckBox
+				x:Name="DayLabelsCheck"
+				Margin="10,0,0,0"
+				Content="Day Labels"
+				IsChecked="{Binding ShowDayLabels, Mode=TwoWay}" />
+			<AduSkin:AduCheckBox
+				x:Name="YearLabelCheck"
+				Margin="10,0,0,0"
+				Content="Year Label"
+				IsChecked="{Binding ShowYearLabel, Mode=TwoWay}" />
+			<AduSkin:AduCheckBox
+				x:Name="LegendCheck"
+				Margin="10,0,0,0"
+				Content="Legend"
+				IsChecked="{Binding ShowLegend, Mode=TwoWay}" />
+		</StackPanel>
+
+		<AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Auto">
+			<AduSkin:AduContribution
+				x:Name="OptionsGrid"
+				CellSize="12"
+				CellSpacing="2"
+				Contributions="{Binding Contributions}"
+				ShowDayLabels="{Binding ShowDayLabels, Mode=TwoWay}"
+				ShowLegend="{Binding ShowLegend, Mode=TwoWay}"
+				ShowMonthLabels="{Binding ShowMonthLabels, Mode=TwoWay}"
+				ShowYearLabel="{Binding ShowYearLabel, Mode=TwoWay}" />
+		</AduSkin:AduScrollViewer>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Click Event  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Click Event Handling" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Click on any cell to see the selected date details below."
+			TextWrapping="Wrap" />
+
+		<Border
+			Margin="0,0,0,10"
+			Padding="10"
+			Background="{DynamicResource AltRowBackground}"
+			CornerRadius="4">
+			<AduSkin:AduContribution
+				x:Name="ClickableGrid"
+				CellClickCommand="{Binding CellClickCommand}"
+				CellSize="12"
+				CellSpacing="2"
+				Contributions="{Binding Contributions2}" />
+		</Border>
+
+		<!--  Selected Day Details  -->
+		<Border
+			Margin="0,0,0,10"
+			Padding="10"
+			Background="{DynamicResource PanelBackground}"
+			BorderBrush="{DynamicResource NormalBorderBrush}"
+			BorderThickness="1"
+			CornerRadius="4">
+			<StackPanel>
+				<TextBlock FontWeight="Bold" Text="{Binding SelectedDateText}" />
+				<ItemsControl
+					x:Name="CommitList"
+					Margin="0,10,0,0"
+					ItemsSource="{Binding SelectedDetails}"
+					Visibility="{Binding HasDetails, Converter={StaticResource BooleanToVisibility}}">
+					<ItemsControl.ItemTemplate>
+						<DataTemplate>
+							<Border
+								Margin="0,5,0,0"
+								Padding="5"
+								Background="{DynamicResource AltRowBackground}"
+								CornerRadius="4">
+								<StackPanel>
+									<TextBlock
+										FontWeight="SemiBold"
+										Text="{Binding Message}"
+										TextTrimming="CharacterEllipsis" />
+									<TextBlock FontSize="10" Foreground="{DynamicResource ThirdForeground}">
+										<Run Text="{Binding Author}" />
+										<Run Text=" - " />
+										<Run Text="{Binding Time, StringFormat={}{0:HH:mm:ss}}" />
+										<Run Text=" - " />
+										<Run Text="{Binding Sha}" />
+									</TextBlock>
+								</StackPanel>
+							</Border>
+						</DataTemplate>
+					</ItemsControl.ItemTemplate>
+				</ItemsControl>
+			</StackPanel>
+		</Border>
+	</StackPanel>
+</Border>

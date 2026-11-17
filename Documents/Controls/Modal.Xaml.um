@@ -1,0 +1,82 @@
+<Grid x:Name="ModalHost">
+	<WrapPanel>
+		<AduSkin:AduButton
+			Width="120"
+			Height="30"
+			Margin="0,0,8,8"
+			Command="{Binding OpenCenterCommand}"
+			Content="Show Modal" />
+		<AduSkin:AduButton
+			Width="120"
+			Height="30"
+			Margin="0,0,8,8"
+			Command="{Binding OpenLoadingCommand}"
+			Content="Show Loading" />
+		<AduSkin:AduButton
+			Width="120"
+			Height="30"
+			Margin="0,0,8,8"
+			Command="{Binding OpenProgressCommand}"
+			Content="Show Progress" />
+	</WrapPanel>
+
+	<Border
+		Width="300"
+		AduAttach:ModalAttach.AnimationDuration="260"
+		AduAttach:ModalAttach.BlurRadius="8"
+		AduAttach:ModalAttach.CloseOnEscape="True"
+		AduAttach:ModalAttach.CloseOnOverlayClick="True"
+		AduAttach:ModalAttach.IsBlurEnabled="True"
+		AduAttach:ModalAttach.IsModal="{Binding IsCenterModal}"
+		AduAttach:ModalAttach.ModalContainer="{Binding ElementName=ModalHost}"
+		AduAttach:ModalAttach.ModalPlacement="Center"
+		AduAttach:ModalAttach.OverlayBrush="#66000000"
+		AduAttach:ModalAttach.OverlayOpacity="1"
+		Background="{DynamicResource PanelBackground}"
+		BorderBrush="{DynamicResource SelectedBorderBrush}"
+		BorderThickness="1"
+		CornerRadius="8">
+		<StackPanel Margin="20">
+			<TextBlock
+				FontSize="16"
+				FontWeight="Bold"
+				Text="Login to your account" />
+			<AduSkin:AduTextBox Margin="0,12,0,0" AduAttach:InputAttach.InputHint="email@example.com" />
+			<AduSkin:AduButton
+				Margin="0,12,0,0"
+				Command="{Binding CloseAllCommand}"
+				Content="Login" />
+		</StackPanel>
+	</Border>
+
+	<Border
+		AduAttach:ModalAttach.IsModal="{Binding IsFullWidthModal}"
+		AduAttach:ModalAttach.ModalContainer="{Binding ElementName=ModalHost}"
+		AduAttach:ModalAttach.ModalMaxHeight="260"
+		AduAttach:ModalAttach.ModalPlacement="FullWidth"
+		Background="{DynamicResource PanelBackground}">
+		<StackPanel MaxWidth="620" Margin="32,24">
+			<TextBlock FontSize="28" Text="Authentication" />
+			<TextBlock Margin="0,18,0,8" Text="Enter your credentials" />
+			<AduSkin:AduTextBox Text="AduSkin" />
+			<AduSkin:AduButton
+				Width="120"
+				Margin="0,22,0,0"
+				HorizontalAlignment="Right"
+				Command="{Binding CloseAllCommand}"
+				Content="Login" />
+		</StackPanel>
+	</Border>
+
+	<AduSkin:AduProgressModal
+		AduAttach:ModalAttach.CloseOnOverlayClick="False"
+		AduAttach:ModalAttach.IsModal="{Binding IsProgressModal}"
+		AduAttach:ModalAttach.ModalContainer="{Binding ElementName=ModalHost}"
+		AduAttach:ModalAttach.ModalPlacement="Center"
+		CancelCommand="{Binding CloseAllCommand}"
+		Detail="{Binding ProgressDetail}"
+		IsIndeterminate="{Binding IsProgressIndeterminate}"
+		Message="{Binding ProgressMessage}"
+		Title="{Binding ProgressTitle}"
+		Value="{Binding ProgressValue}" />
+</Grid>

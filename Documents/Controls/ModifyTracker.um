@@ -1,0 +1,245 @@
+`ModifyTracker` 是一个面向业务数据的修改记录工具，位于 `AduSkin.Utility.Modifys` 命名空间。它可以记录对象属性修改，也可以记录列表的新增、删除、移动、替换和字段修改。
+
+`ModifyTracker` 默认只处理显式标记的字段。业务对象中只有添加 `[ModifyTrack]` 的属性才会参与检测和记录；未标记属性不会被读取、比较或写入修改记录。集合对象建议额外使用 `[ModifyKey]` 标记稳定主键，便于在保存时准确识别同一行数据。
+
+## 核心类型
+| 名称 | 描述 |
+| --- | --- |
+| `ModifyTracker` | 修改记录跟踪器。负责建立基准快照、检测变化、保存记录和清空记录。 |
+| `ModifyTrackMode` | 修改记录生成方式。包含 `Immediate` 和 `Manual` 两种模式。 |
+| `ModifyAction` | 修改动作类型。包含 `Add`、`Remove`、`Update`、`Replace`、`Move`、`Reset`。 |
+| `ModifyRecord` | 一条修改记录。包含动作、目标对象、主键、字段名、旧值、新值、索引和时间。 |
+| `ModifySnapshot` | 对象快照。保存对象中带 `[ModifyTrack]` 的字段值。 |
+| `ModifyFieldValue` | 快照中的单个字段值。包含属性名、显示名和值。 |
+| `ModifyTrackAttribute` | 字段跟踪标记。只有带该特性的属性才参与检测。设置 `IsNested=True` 时会递归检测嵌套对象。 |
+| `ModifyKeyAttribute` | 主键字段标记。用于集合比较时识别对象身份。 |
+
+## ModifyTracker 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Mode` | 修改记录模式。`Manual` 适合保存时统一判断，`Immediate` 适合实时记录。 | `ModifyTrackMode` | `Immediate` |
+| `RecordMoveChanges` | 是否记录集合移动。为 `False` 时，集合项索引变化不会生成 `Move` 记录。 | `bool` | `False` |
+| `Records` | 当前修改记录集合。可直接绑定到表格或列表显示。 | `ObservableCollection<ModifyRecord>` | 空集合 |
+| `HasChanges` | 是否已有修改记录。手动模式下调用 `DetectChanges` 后刷新。 | `bool` | `False` |
+
+## ModifyTracker 事件
+| 名称 | 描述 |
+| --- | --- |
+| `ChangesAccepted` | 调用 `AcceptChanges()` 时触发。事件参数会提供当前修改记录的只读快照，触发后才会刷新基准并清空 `Records`。 |
+
+## ModifyTracker 方法
+| 名称 | 描述 |
+| --- | --- |
+| `TrackObject(INotifyPropertyChanged source)` | 跟踪单个对象。实时模式监听属性变化；手动模式保存对象基准快照。 |
+| `TrackCollection(IList collection)` | 跟踪集合。实时模式要求集合实现 `INotifyCollectionChanged`；手动模式只要求 `IList`。 |
+| `TrackCollection(IList collection, bool trackItemProperties)` | 跟踪集合，并指定是否跟踪集合内对象属性。实时模式下 `trackItemProperties=True` 会监听集合项属性变化。 |
+| `CaptureBaseline()` | 将当前对象或集合状态保存为新的比较基准。 |
+| `DetectChanges()` | 手动模式下比较当前状态和基准快照，并刷新 `Records`。 |
+| `Record(ModifyRecord record)` | 手动写入一条完整修改记录。 |
+| `Record(ModifyAction action, ...)` | 手动按动作、对象、字段和值写入一条修改记录。 |
+| `AcceptChanges()` | 接受当前修改。内部会重新捕获基准快照，并清空 `Records`。通常在保存成功后调用。 |
+| `Clear()` | 清空当前修改记录，不改变对象数据。 |
+| `Dispose()` | 释放监听器和内部引用。ViewModel 释放时应调用。 |
+| `ClearCache()` | 静态方法，清空类型属性解析缓存。通常只在插件卸载、动态类型释放或需要主动回收缓存时调用。 |
+
+## ModifyRecord 属性
+| 名称 | 描述 | 数据类型 |
+| --- | --- | --- |
+| `Action` | 修改动作类型。 | `ModifyAction` |
+| `Target` | 发生变化的对象。新增记录取新对象，删除记录取旧对象。 | `object?` |
+| `Key` | 对象主键。来自 `[ModifyKey]` 标记的属性。 | `object?` |
+| `PropertyName` | 属性名。仅字段修改记录有值。 | `string?` |
+| `DisplayName` | 字段显示名。来自 `[ModifyTrack("显示名")]`。 | `string?` |
+| `OldValue` | 字段旧值。 | `object?` |
+| `NewValue` | 字段新值。 | `object?` |
+| `OldIndex` | 修改前集合索引。无索引时为 `-1`。 | `int` |
+| `NewIndex` | 修改后集合索引。无索引时为 `-1`。 | `int` |
+| `Time` | 记录生成时间。 | `DateTime` |
+| `OldSnapshot` | 修改前对象快照。 | `ModifySnapshot?` |
+| `NewSnapshot` | 修改后对象快照。 | `ModifySnapshot?` |
+| `Description` | 简短描述文本，便于直接展示。 | `string` |
+
+## 字段标记
+业务对象需要实现 `INotifyPropertyChanged`，并用 `[ModifyTrack]` 标记需要记录的字段。
+
+```csharp
+public class Employee : INotifyPropertyChanged
+{
+    [ModifyKey]
+    public int Id { get; set; }
+
+    [ModifyTrack("姓名")]
+    public string Name { get; set; }
+
+    [ModifyTrack("岗位")]
+    public string Role { get; set; }
+
+    [ModifyTrack("启用")]
+    public bool IsEnabled { get; set; }
+
+    [ModifyTrack("部门", IsNested = true)]
+    public Department Department { get; set; }
+
+    public string Note { get; set; }
+}
+
+public class Department
+{
+    [ModifyTrack("名称")]
+    public string Name { get; set; }
+
+    [ModifyTrack("位置")]
+    public string Location { get; set; }
+}
+```
+
+上例中 `Name`、`Role`、`IsEnabled` 会被检测和记录；`Department` 设置了 `IsNested=True`，因此 `Department.Name` 和 `Department.Location` 也会被检测。`Note` 没有 `[ModifyTrack]`，不会参与比较，也不会出现在修改记录中。
+
+嵌套字段会使用路径作为属性名，例如 `Department.Name`。显示名会使用父级和子级显示名组合，例如 `部门.名称`。只有显式设置 `IsNested=True` 的对象属性才会继续展开，普通 `[ModifyTrack]` 属性仍按普通值比较。
+
+## 保存时判断
+推荐在业务保存场景中使用 `Manual` 模式。它不会在用户每次编辑时立即生成记录，而是在保存按钮触发时统一比较当前数据和基准快照。
+
+```csharp
+public class EmployeeViewModel : IDisposable
+{
+    private readonly IDisposable _trackerToken;
+
+    public EmployeeViewModel()
+    {
+        Tracker = new ModifyTracker(ModifyTrackMode.Manual);
+        Employees = new ObservableCollection<Employee>();
+
+        LoadEmployees();
+
+        _trackerToken = Tracker.TrackCollection(Employees);
+    }
+
+    public ObservableCollection<Employee> Employees { get; }
+
+    public ModifyTracker Tracker { get; }
+
+    public void Save()
+    {
+        var records = Tracker.DetectChanges();
+        if (records.Count == 0)
+            return;
+
+        SaveEmployees(Employees);
+        SaveModifyRecords(records);
+
+        Tracker.AcceptChanges();
+    }
+
+    public void Dispose()
+    {
+        _trackerToken.Dispose();
+        Tracker.Dispose();
+    }
+}
+```
+
+该模式适合表单编辑、表格编辑、配置页、详情页等场景。用户在保存前反复修改、撤回或改回原值时，最终只会在 `DetectChanges()` 时生成真实差异。
+
+## 单个对象保存
+如果只需要判断一个对象是否被修改，可以使用 `TrackObject`。
+
+```csharp
+Tracker = new ModifyTracker(ModifyTrackMode.Manual);
+Tracker.TrackObject(CurrentEmployee);
+
+public void Save()
+{
+    var records = Tracker.DetectChanges();
+    if (records.Count == 0)
+        return;
+
+    SaveEmployee(CurrentEmployee);
+    Tracker.AcceptChanges();
+}
+```
+
+## 集合修改判断
+集合比较会根据 `[ModifyKey]` 判断对象身份：
+
+- 当前集合中存在、基准快照中不存在：生成 `Add`。
+- 基准快照中存在、当前集合中不存在：生成 `Remove`。
+- 主键相同但索引不同：当 `RecordMoveChanges=True` 时生成 `Move`；关闭时忽略索引变化。
+- 主键相同且被标记字段值不同：生成 `Update`。
+
+如果对象没有 `[ModifyKey]`，集合比较会退回对象引用匹配。业务列表建议始终提供稳定主键，避免删除后重新新增的对象被误判。
+
+## 手动写记录
+特殊业务操作可以直接调用 `Record` 写入记录，例如审批、批量导入、服务端返回差异或自定义排序操作。
+
+```csharp
+Tracker.Record(
+    ModifyAction.Update,
+    oldTarget: user,
+    newTarget: user,
+    propertyName: "Status",
+    displayName: "状态",
+    oldValue: "待审核",
+    newValue: "已通过");
+```
+
+如果已经自己构造了 `ModifyRecord`，也可以直接写入：
+
+```csharp
+Tracker.Record(record);
+```
+
+## 接受修改事件
+`AcceptChanges()` 会在刷新基准和清空 `Records` 之前触发 `ChangesAccepted`。事件参数中的 `Records` 是一份只读快照，适合写文件、写数据库或发送到服务端。
+
+```csharp
+Tracker.ChangesAccepted += (_, e) =>
+{
+    WriteModifyLog(e.Records);
+};
+
+Tracker.AcceptChanges();
+```
+
+如果事件处理逻辑抛出异常，`AcceptChanges()` 会中断，当前记录不会被清空。
+
+## 实时记录
+需要实时日志时可以使用默认 `Immediate` 模式。
+
+```csharp
+Tracker = new ModifyTracker();
+Tracker.TrackCollection(Employees, true);
+
+Employees.Add(new Employee { Id = 1, Name = "Tom" });
+Employees[0].Name = "Jerry";
+Employees.RemoveAt(0);
+```
+
+实时模式下，集合必须实现 `INotifyCollectionChanged`，例如 `ObservableCollection<T>`。如果 `trackItemProperties=True`，集合内对象还需要实现 `INotifyPropertyChanged`，这样字段修改才能被监听到。
+
+## 使用说明
+- 保存型业务优先使用 `ModifyTrackMode.Manual`，在保存按钮中调用 `DetectChanges()`。
+- 保存成功后调用 `AcceptChanges()`，当前数据会成为新的基准快照。
+- 默认不记录集合移动。需要记录手动上移、下移时，将 `RecordMoveChanges` 设置为 `True`。
+- 取消编辑或关闭页面时，如果不需要记录，直接释放 `ModifyTracker` 即可。
+- 只有 `[ModifyTrack]` 字段参与比较，未标记字段不会产生记录。
+- 嵌套对象需要在父属性上设置 `[ModifyTrack(IsNested = true)]`，并在子对象属性上继续使用 `[ModifyTrack]`。
+- 集合项建议使用 `[ModifyKey]` 标记主键，尤其是数据库实体、配置项、表格行数据。
+- `Clear()` 只清空记录，不会刷新基准；如果要把当前数据作为新基准，应调用 `AcceptChanges()` 或 `CaptureBaseline()`。
+- `DetectChanges()` 会刷新 `Records`，适合绑定到页面中的修改记录表格。
+- 删除记录和新增记录会保存对象快照，快照中只包含被 `[ModifyTrack]` 标记的字段。
+- `ModifyTracker` 保存对象引用和监听句柄，ViewModel 销毁时应调用 `Dispose()`。
+
+## 性能和释放
+- `ModifyTracker` 会缓存类型上的 `[ModifyTrack]` 和 `[ModifyKey]` 解析结果，避免每次 `DetectChanges()` 重复反射扫描。
+- `ModifySnapshot` 内部使用字段字典比较修改，字段数量较多时比逐个查找更稳定。
+- 集合比较会优先通过 `[ModifyKey]` 建立字典匹配，业务列表建议提供稳定主键。
+- `Dispose()` 会释放监听器、手动模式基准快照和当前记录集合中的引用。
+- 类型解析缓存是静态缓存，默认不会随单个 `ModifyTracker.Dispose()` 清空。普通业务对象类型建议保留缓存；如果使用动态程序集、插件类型或需要释放类型引用，可调用 `ModifyTracker.ClearCache()`。
+
+## 典型场景
+- 表格批量编辑后，点击保存时统一生成增删改记录。
+- 配置页面只记录用户最终保存的差异，不记录中途编辑过程。
+- 详情页保存前提示用户哪些字段发生变化。
+- 审计日志中只记录业务关心的字段，忽略临时状态、UI 状态和缓存字段。
+- 数据同步前生成变更集，用于上传到服务端或写入本地日志。

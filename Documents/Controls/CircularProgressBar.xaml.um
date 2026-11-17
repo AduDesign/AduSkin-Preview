@@ -1,0 +1,35 @@
+﻿<StackPanel Grid.Column="0" Margin="10">
+	<TextBlock
+		Margin="0,0,0,10"
+		HorizontalAlignment="Center"
+		Text="25%" />
+	<AduSkin:AduCircularProgressBar
+		x:Name="ProgressBar1"
+		AduAttach:BackgroundAttach.HighlightBackground="{DynamicResource IdelBrush}"
+		CircleSize="100"
+		StrokeThickness="8"
+		Value="25" />
+</StackPanel>
+<StackPanel Grid.Column="1" Margin="10">
+	<TextBlock
+		Margin="0,0,0,10"
+		HorizontalAlignment="Center"
+		Text="50%" />
+	<AduSkin:AduCircularProgressBar
+		AduAttach:BackgroundAttach.HighlightBackground="{DynamicResource InfoBrush}"
+		CircleSize="100"
+		StrokeThickness="8"
+		Value="50" />
+</StackPanel>
+<StackPanel Grid.Column="2" Margin="10">
+	<TextBlock
+		Margin="0,0,0,10"
+		HorizontalAlignment="Center"
+		Text="75%" />
+	<AduSkin:AduCircularProgressBar
+		x:Name="ProgressBar2"
+		AduAttach:BackgroundAttach.HighlightBackground="{DynamicResource WarnBrush}"
+		CircleSize="100"
+		StrokeThickness="8"
+		Value="75" />
+</StackPanel>

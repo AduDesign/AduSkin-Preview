@@ -1,0 +1,72 @@
+﻿private Random random = new Random();
+
+[ObservableProperty]
+private ObservableCollection<AduColumnarSeries> _itemsSource = new ObservableCollection<AduColumnarSeries>();
+
+[ObservableProperty]
+private ObservableCollection<string> _labels = new ObservableCollection<string>();
+
+[ObservableProperty]
+private bool _isDrawingGrid = true;
+
+[ObservableProperty]
+private bool _isDrawingAxes = true;
+
+[ObservableProperty]
+private bool _isDrawingLegend = true;
+
+public ColumnarChartViewModel()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Generate()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Clear()
+{
+    ItemsSource.Clear();
+    Labels.Clear();
+}
+
+private void GenerateSampleData()
+{
+    Clear();
+
+    // 添加第一个系列
+    var series1 = new AduColumnarSeries
+    {
+        Name = "战士1",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 70, 210, 210)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 70, 210, 210)),
+        Values = new List<double>()
+    };
+    var series2 = new AduColumnarSeries
+    {
+        Name = "战士2",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 153, 0)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 255, 153, 0)),
+        Values = new List<double>()
+    };
+    var series3 = new AduColumnarSeries
+    {
+        Name = "战士3",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 238, 121, 111)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 238, 121, 111)),
+        Values = new List<double>()
+    };
+    List<string> propertys = new List<string> { "力量", "敏捷", "智力", "耐力", "精神", "运气" };
+    for (int i = 0; i < 6; i++)
+    {
+        Labels.Add(propertys[i]);
+        series1.Values.Add(random.Next(10, 100));
+        series2.Values.Add(random.Next(10, 100));
+        series3.Values.Add(random.Next(10, 100));
+    }
+    ItemsSource.Add(series1);
+    ItemsSource.Add(series2);
+    ItemsSource.Add(series3);
+} 
+    

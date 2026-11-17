@@ -1,0 +1,79 @@
+Modal 是一组基于 `AduAttach:ModalAttach` 的模态附加属性，用于把任意 `FrameworkElement` 作为模态内容显示在指定容器之上。它支持遮罩、背景模糊、点击遮罩关闭、Esc 关闭、打开/关闭动画、布局放置和尺寸约束。
+
+Modal 本身不是独立窗口，不会脱离当前 WPF 视觉树。通常需要在页面中准备一个 `Grid` 作为 `ModalContainer`，再把需要弹出的内容放在同一个容器内，通过绑定 `IsModal` 控制打开和关闭。
+
+## 组成
+| 名称 | 描述 |
+| --- | --- |
+| `AduAttach:ModalAttach` | 模态行为附加属性，可附加到 `Border`、`Grid`、自定义控件等任意 `FrameworkElement`。 |
+| `AduProgressModal` | 内置的等待/进度模态内容控件，适合显示标题、加载状态、进度条、详情和取消按钮。 |
+| `ModalPlacement` | 模态内容放置方式枚举，用于控制居中、全宽、全屏、顶部、底部、左侧、右侧等布局。 |
+
+## ModalAttach 附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsModal` | 是否显示模态内容。支持双向绑定，设置为 `True` 时显示，设置为 `False` 时关闭。 | `bool` | `False` |
+| `ModalContainer` | 模态宿主容器。通常绑定到页面中的 `Grid`，遮罩和模态内容都会覆盖在该容器上。 | `FrameworkElement` | `null` |
+| `ModalPlacement` | 模态内容放置方式。 | `ModalPlacement` | `Center` |
+| `ModalMargin` | 模态内容相对宿主容器的外边距。 | `Thickness` | 保留元素原始 `Margin` |
+| `ModalMinWidth` | 模态内容最小宽度。 | `double` | 未设置 |
+| `ModalMinHeight` | 模态内容最小高度。 | `double` | 未设置 |
+| `ModalMaxWidth` | 模态内容最大宽度。设置后会与宿主可用宽度取较小值。 | `double` | 未设置 |
+| `ModalMaxHeight` | 模态内容最大高度。设置后会与宿主可用高度取较小值。 | `double` | 未设置 |
+| `OverlayBrush` | 遮罩背景画刷。 | `Brush` | `#66000000` |
+| `OverlayOpacity` | 遮罩透明度，范围 `0` 到 `1`。 | `double` | `1` |
+| `CloseOnOverlayClick` | 点击遮罩是否关闭模态。 | `bool` | `True` |
+| `CloseOnEscape` | 按 `Esc` 是否关闭模态。 | `bool` | `True` |
+| `IsBlurEnabled` | 是否启用背景模糊。 | `bool` | `True` |
+| `BlurRadius` | 背景模糊半径。 | `double` | `8` |
+| `AnimationDuration` | 打开和关闭动画时长，单位毫秒。设置为 `0` 可禁用动画。 | `int` | `260` |
+
+## ModalPlacement 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Center` | 居中显示，内容宽高自适应，适合常规表单、确认框、登录框。 |
+| `FullWidth` | 宽度铺满宿主容器，高度自适应，适合 Windows 8 / MahApps 风格横向弹窗。 |
+| `FullScreen` | 宽高铺满宿主容器，适合阻塞式流程、初始化页、全屏等待。 |
+| `Top` | 顶部显示，宽度铺满宿主容器，高度自适应。 |
+| `Bottom` | 底部显示，宽度铺满宿主容器，高度自适应。 |
+| `Left` | 左侧显示，高度铺满宿主容器，宽度自适应。 |
+| `Right` | 右侧显示，高度铺满宿主容器，宽度自适应。 |
+
+## AduProgressModal 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Title` | 标题文本。 | `string` | `Loading` |
+| `Message` | 主消息文本。 | `string` | `Please wait while the operation completes.` |
+| `Detail` | 详情文本。为空时不显示详情区域。 | `string` | 空字符串 |
+| `Value` | 当前进度值。 | `double` | `0` |
+| `Minimum` | 进度最小值。 | `double` | `0` |
+| `Maximum` | 进度最大值。 | `double` | `100` |
+| `IsIndeterminate` | 是否为不确定进度。`True` 时显示加载等待状态，`False` 时显示进度条。 | `bool` | `True` |
+| `ProgressState` | 进度条状态，可设置为 `None`、`Wait`、`Error`。 | `ProgressBarState` | `None` |
+| `CancelCommand` | 取消按钮命令。为空时不显示取消按钮。 | `ICommand` | `null` |
+| `CancelContent` | 取消按钮内容。 | `object` | `Cancel` |
+| `IsLoadingVisible` | 只读属性，表示当前是否显示 Loading 区域。 | `bool` | 自动计算 |
+| `IsProgressVisible` | 只读属性，表示当前是否显示进度条区域。 | `bool` | 自动计算 |
+
+## 使用说明
+- `ModalContainer` 最好设置为当前页面或当前区域内的 `Grid`，并让模态内容和普通内容处于同一个容器下。
+- 宿主容器必须是 `Panel` 派生类型才能自动添加遮罩，常用 `Grid`。
+- `IsModal` 支持双向绑定。点击遮罩或按 `Esc` 关闭时，控件会同步更新绑定源。
+- 默认会使用缩放淡入淡出动画；需要无动画时设置 `AnimationDuration="0"`。
+- 背景模糊会作用于宿主容器内除模态内容和遮罩之外的其它子元素。
+- `CloseOnOverlayClick=False` 适合等待、进度、必须确认的流程，防止用户误关闭。
+- `FullWidth`、`Top`、`Bottom` 会水平拉伸；`Left`、`Right` 会垂直拉伸；`FullScreen` 会双向拉伸。
+- 对内容较多的模态，建议在内部使用滚动容器，并设置 `ModalMaxHeight` 避免超出窗口。
+- 同一个宿主容器内建议同一时间只打开一个模态。需要多个模态时，可在 ViewModel 中集中关闭其它状态。
+- 等待或进度模态建议使用 `AduProgressModal`，普通业务弹窗可直接把自定义内容附加 `ModalAttach` 属性。
+- 对需要强制完成的流程，建议同时设置 `CloseOnOverlayClick=False`，并谨慎决定是否允许 `CloseOnEscape`。
+
+## 典型场景
+- 居中的登录、确认、表单编辑、设置面板。
+- Windows 8 / MahApps 风格的全宽认证弹窗。
+- 顶部或底部的阻塞式操作提示。
+- 左侧或右侧抽屉式模态面板。
+- 文件加载、数据提交、导入导出等等待状态。
+- 带确定进度的任务执行状态，例如下载、复制、批处理。
+- 需要遮罩当前页面并阻止背景交互的局部流程。
+- 对当前页面局部区域进行锁定，而不是弹出独立窗口的交互流程。

@@ -1,0 +1,55 @@
+AduAvatar 是一个基于 `Button` 的圆形头像控件，支持图片优先显示、图片加载失败时显示 fallback 文本，并支持通过对象属性路径读取头像图片和 fallback 文本。
+AduAvatarGroup 用于展示一组重叠头像，支持限制可见数量并自动显示剩余数量。
+
+以下默认值以 `AduAvatar` 和 `AduAvatarGroup` 默认样式为准；继承自 WPF `Button`、`Control` 的属性只列出常用部分。
+
+## AduAvatar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Source` | 头像图片源。设置后优先显示图片；图片为空或加载失败时显示 `FallbackText`。 | `ImageSource` | `null` |
+| `Item` | 头像绑定的数据对象。可配合 `ImageMemberPath` 和 `FallbackMemberPath` 从对象中读取图片和 fallback 文本。 | `object` | `null` |
+| `ImageMemberPath` | 图片字段路径。例如 `Image`、`Profile.Avatar`。字段值支持 `ImageSource`、`Uri`、`string` 图片路径。 | `string` | `string.Empty` |
+| `FallbackMemberPath` | fallback 文本字段路径。例如 `Name`、`User.DisplayName`。 | `string` | `string.Empty` |
+| `FallbackText` | 无图片或图片加载失败时显示的文本。 | `string` | `?` |
+| `IsImageVisible` | 当前是否显示图片。运行时根据 `Source` 和图片加载状态自动计算。 | `bool` | `False` |
+| `ImageStretch` | 头像图片填充方式。 | `Stretch` | `UniformToFill` |
+| `Width` | 控件宽度。 | `double` | `40` |
+| `Height` | 控件高度。 | `double` | `40` |
+| `Background` | fallback 区域背景色。 | `Brush` | `PrimaryBrush` |
+| `Foreground` | fallback 文本颜色。 | `Brush` | `NormalWhite` |
+| `BorderBrush` | 头像边框颜色。 | `Brush` | `NormalBorderBrush` |
+| `BorderThickness` | 头像边框厚度。 | `Thickness` | `0` |
+| `FontSize` | fallback 文本字号。 | `double` | `14` |
+| `FontWeight` | fallback 文本字重。 | `FontWeight` | `SemiBold` |
+| `Padding` | 控件内边距。 | `Thickness` | `0` |
+| `Focusable` | 是否可获得键盘焦点。 | `bool` | `False` |
+| `Cursor` | 鼠标指针样式。 | `Cursor` | `Arrow` |
+| `ClipToBounds` | 是否裁剪控件边界。 | `bool` | `True` |
+
+## AduAvatar 常用 Button 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Command` | 点击头像时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 命令参数。未显式设置时，`Item` 变更会自动作为命令参数。 | `object` | `null` |
+| `CommandTarget` | 命令目标元素。 | `IInputElement` | `null` |
+| `Click` | 点击头像时触发的事件。 | `RoutedEventHandler` | - |
+| `IsEnabled` | 是否启用头像按钮。禁用时默认降低透明度。 | `bool` | `True` |
+
+## AduAvatarGroup 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 头像数据源集合。每个元素会生成一个 `AduAvatar`。 | `IEnumerable` | `null` |
+| `MaxVisibleCount` | 最多显示的业务头像数量。超出时会追加一个 `+N` 头像显示剩余数量。 | `int` | `5` |
+| `ImageMemberPath` | 传递给组内 `AduAvatar` 的图片字段路径。 | `string` | `string.Empty` |
+| `FallbackMemberPath` | 传递给组内 `AduAvatar` 的 fallback 文本字段路径。 | `string` | `string.Empty` |
+| `ItemCommand` | 点击组内业务头像时执行的命令，命令参数为当前数据对象。`+N` 头像不绑定该命令。 | `ICommand` | `null` |
+| `AvatarSize` | 组内头像的统一宽高。 | `double` | `40` |
+| `Overlap` | 相邻头像的重叠宽度。数值越大，头像越靠近。 | `double` | `12` |
+| `AvatarBorderBrush` | 组内头像边框颜色。 | `Brush` | `NormalBorderBrush` |
+| `AvatarBorderThickness` | 组内头像边框厚度。 | `Thickness` | `1` |
+| `AvatarBackground` | 组内头像 fallback 背景色。 | `Brush` | `PrimaryBrush` |
+| `AvatarForeground` | 组内头像 fallback 文本颜色。 | `Brush` | `NormalBorderBrush` |
+| `ImageStretch` | 组内头像图片填充方式。 | `Stretch` | `UniformToFill` |
+| `Focusable` | 是否可获得键盘焦点。 | `bool` | `False` |
+| `ClipToBounds` | 是否裁剪 group 边界。 | `bool` | `False` |
+

@@ -1,0 +1,51 @@
+AduSlider 是一个带 AduSkin 默认样式的滑块控件，继承自 WPF `Slider`。它在标准滑块基础上增加了自定义轨道颜色、自动隐藏滑块头、拖拽完成事件等能力，适合做数值调节、进度拖动和媒体播放进度控制。
+
+以下默认值以 `AduSlider` 的默认样式为准。控件支持水平和垂直两种方向。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `DecreaseColor` | 减少侧轨道颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `IncreaseColor` | 增加侧轨道颜色。 | `Brush` | `SelectedBackground` 动态资源 |
+| `RepeatButtonWidth` | 轨道厚度，模板里同时影响 RepeatButton 尺寸。 | `double` | `4` |
+| `RepeatButtonCornerRadius` | 轨道圆角。会随 `RepeatButtonWidth` 自动更新。 | `CornerRadius` | `2` |
+| `IsVideoVisibleWhenPressThumb` | 是否在拖动滑块头时立即视为“正在拖拽”。 | `bool` | `False` |
+| `IsAutoHideThumb` | 是否在鼠标未悬停时自动隐藏滑块头。 | `bool` | `False` |
+
+## 路由事件
+| 名称 | 描述 |
+| --- | --- |
+| `DropValueChanged` | 在鼠标拖动滑块头或点击轨道导致值变化完成后触发。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前值。 | `double` | `0` |
+| `Minimum` | 最小值。 | `double` | `0` |
+| `Maximum` | 最大值。 | `double` | `10` |
+| `Orientation` | 滑块方向。 | `Orientation` | `Horizontal` |
+| `TickPlacement` | 刻度线位置。 | `TickPlacement` | `None` |
+| `TickFrequency` | 刻度间隔。 | `double` | `0` |
+| `IsSnapToTickEnabled` | 是否吸附到刻度。 | `bool` | `False` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 滑块背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderBrush` | 边框颜色。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 刻度和主色调前景。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `VerticalAlignment` | 默认垂直对齐。 | `VerticalAlignment` | `Center` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 滑块头颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+
+## 使用说明
+- `RepeatButtonWidth` 同时决定横向轨道的厚度和纵向轨道的宽度。
+- `RepeatButtonCornerRadius` 会在 `RepeatButtonWidth` 变化时自动更新为半径值。
+- `IsAutoHideThumb=True` 时，鼠标不在控件上时会隐藏滑块头。
+- `DropValueChanged` 只在拖拽或点击完成后触发，适合需要区分“拖动中”和“确认值”的场景。
+- `IsVideoVisibleWhenPressThumb=True` 时，拖拽中的值变更也会按拖动完成逻辑处理。
+
+## 典型场景
+- 音量、亮度、进度、比例调节。
+- 媒体播放器的拖动进度条。
+- 需要隐藏滑块头的简洁型调节条。
+- 需要在拖动结束后才提交值的交互。

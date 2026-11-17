@@ -1,0 +1,71 @@
+﻿<Grid>
+	<AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+		<StackPanel Margin="20">
+			<TextBlock
+				Margin="0,0,0,10"
+				FontSize="28"
+				FontWeight="Bold"
+				Text="MessageTip Demo" />
+
+			<TextBlock
+				Margin="0,0,0,30"
+				FontSize="14"
+				Text="Sonner-like message tips with stacked layout, drawer expansion on hover, and automatic dismissal." />
+
+			<Border
+				Margin="0,0,0,20"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="18"
+						FontWeight="SemiBold"
+						Text="Message Types" />
+
+					<TextBlock
+						Margin="0,0,0,15"
+						FontSize="12"
+						Text="Click several buttons quickly. The latest message stays in front; at most three are visible. Hover the stack to expand it downward."
+						TextWrapping="Wrap" />
+
+					<WrapPanel HorizontalAlignment="Left" Orientation="Horizontal">
+						<AduSkin:AduButton
+							Margin="4"
+							Command="{Binding ShowSuccessCommand}"
+							Content="Success" />
+						<AduSkin:AduButton
+							Margin="4"
+							Command="{Binding ShowErrorCommand}"
+							Content="Error" />
+						<AduSkin:AduButton
+							Margin="4"
+							Command="{Binding ShowWarnCommand}"
+							Content="Warning" />
+						<AduSkin:AduButton
+							Margin="4"
+							Command="{Binding ShowInfoCommand}"
+							Content="Info" />
+						<AduSkin:AduButton
+							Margin="4"
+							Command="{Binding ShowBatchCommand}"
+							Content="Batch" />
+					</WrapPanel>
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</AduSkin:AduScrollViewer>
+
+	<AduSkin:AduMessageTipHost
+		x:Name="MessageTipHost"
+		Margin="0,30,0,0"
+		DefaultDuration="5000"
+		MaxVisibleCount="3"
+		TipWidth="426">
+		<Interactivity:Interaction.Triggers>
+			<Interactivity:EventTrigger EventName="Loaded">
+				<Interactivity:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=MessageTipHost}" />
+			</Interactivity:EventTrigger>
+		</Interactivity:Interaction.Triggers>
+	</AduSkin:AduMessageTipHost>
+</Grid>

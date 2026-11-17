@@ -1,0 +1,49 @@
+﻿private AduMessageTipHost? _messageTipHost;
+
+[RelayCommand]
+private void Loaded(object param)
+{
+    if (param is AduMessageTipHost messageTipHost)
+    {
+        _messageTipHost = messageTipHost;
+        AduMessageTipService.Initialize(messageTipHost);
+    }
+}
+
+[RelayCommand]
+private void ShowSuccess()
+{
+    ShowMessage("Event has been created", "Sunday, December 03, 2023 at 9:00 AM", NotificationType.Success);
+}
+
+[RelayCommand]
+private void ShowError()
+{
+    ShowMessage("Unable to connect to the server", "Please check the network and try again.", NotificationType.Error);
+}
+
+[RelayCommand]
+private void ShowWarn()
+{
+    ShowMessage("Storage is almost full", "Only 10% disk space is available.", NotificationType.Warn);
+}
+
+[RelayCommand]
+private void ShowInfo()
+{
+    ShowMessage("Background task finished", "The report has been generated successfully.", NotificationType.Info);
+}
+
+[RelayCommand]
+private void ShowBatch()
+{
+    ShowMessage("Event has been created", "Sunday, December 03, 2023 at 9:00 AM", NotificationType.Success);
+    ShowMessage("Invite has been sent", "Ada Lovelace will receive an email notification.", NotificationType.Info);
+    ShowMessage("Calendar synced", "All devices are up to date.", NotificationType.Success);
+    ShowMessage("Reminder updated", "You will be notified 10 minutes before start.", NotificationType.Warn);
+}
+
+private void ShowMessage(string message, string description, NotificationType type)
+{
+    _messageTipHost?.Show(message, description, type, actionContent: "Undo");
+}

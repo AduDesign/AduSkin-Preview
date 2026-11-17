@@ -1,0 +1,54 @@
+AduBadge 是一个角标显示控件，用于在界面上展示数量、提醒数或红点状态。控件本身继承自 WPF `Control`，只负责显示一个独立角标；如果需要把角标挂到按钮、输入框、下拉框等控件右上角，可以配合 `AduBadgeAdorner` 的附加属性使用。
+
+以下默认值以 `AduBadge` 的默认样式为准。控件适合用于消息数、未读数、通知提醒、状态红点等场景。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Number` | 角标中显示的数字。默认模板中，当数值大于 `99` 时显示为 `99+`。 | `int` | `0` |
+| `IsDot` | 是否显示为圆点。为 `True` 时隐藏数字角标，只显示红点。 | `bool` | `False` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 数字角标背景。 | `Brush` | `WarnBrush` 动态资源 |
+| `BorderBrush` | 数字角标边框。 | `Brush` | `NormalWhite` 动态资源 |
+| `Foreground` | 数字文本颜色。 | `Brush` | `NormalWhite` 动态资源 |
+| `BorderThickness` | 数字角标边框厚度。 | `Thickness` | `1` |
+| `Padding` | 数字角标内边距。 | `Thickness` | `4,1` |
+| `MinWidth` | 数字角标最小宽度。 | `double` | `18` |
+| `FontSize` | 数字文本字号。 | `double` | `10` |
+| `AduAttach:BorderAttach.CornerRadius` | 数字角标圆角。 | `CornerRadius` | `8` |
+| `HorizontalContentAlignment` | 数字文本水平对齐方式。 | `HorizontalAlignment` | `Center` |
+| `VerticalContentAlignment` | 数字文本垂直对齐方式。 | `VerticalAlignment` | `Center` |
+
+## 角标装饰器附加属性
+`AduBadgeAdorner` 可以把 `AduBadge` 作为装饰层添加到任意可装饰的 `FrameworkElement` 上。
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduSkin:AduBadgeAdorner.HasAdorner` | 是否创建角标装饰器。为 `True` 时在控件加载后添加装饰层。 | `bool` | `False` |
+| `AduSkin:AduBadgeAdorner.IsShowAdorner` | 是否显示角标。只控制已有角标的可见性。 | `bool` | `False` |
+| `AduSkin:AduBadgeAdorner.Number` | 装饰器角标显示的数字，负数会被修正为 `0`。 | `int` | `0` |
+| `AduSkin:AduBadgeAdorner.Background` | 装饰器角标背景。为空时使用 `AduBadge` 默认背景。 | `Brush` | `null` |
+| `AduSkin:AduBadgeAdorner.BadgeType` | 装饰器角标类型。 | `BadgeType` | `Normal` |
+
+## 枚举说明
+### `BadgeType`
+| 名称 | 描述 |
+| --- | --- |
+| `Normal` | 显示带数字的角标。 |
+| `Dot` | 显示圆点角标。 |
+
+## 使用说明
+- 直接使用 `AduBadge` 时，通过 `Number` 设置数字，通过 `IsDot=True` 切换为红点。
+- `Number` 只影响数字角标。`IsDot=True` 时模板会隐藏数字区域，不再显示 `Number`。
+- 需要把角标挂在其他控件右上角时，优先使用 `AduBadgeAdorner` 附加属性。
+- 使用装饰器时，先设置 `HasAdorner=True` 创建装饰器，再使用 `IsShowAdorner` 控制显示和隐藏。
+- 装饰器依赖 `AdornerLayer`，如果目标控件不在可装饰层内，角标不会显示。
+
+## 典型场景
+- 消息、通知、任务数量提示。
+- 顶部导航、侧边菜单、工具栏按钮的未读提醒。
+- 表单项或数据行上的红点状态提示。
+- 需要把角标作为独立 UI 元素排版的状态展示。

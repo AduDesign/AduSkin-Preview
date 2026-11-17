@@ -1,0 +1,21 @@
+﻿[ObservableProperty]
+private ObservableCollection<string> _itemsSource = new ObservableCollection<string>() { "第一步", "第二步", "第三步", "第四步" };
+
+[ObservableProperty]
+private int _selectedIndex;
+
+[RelayCommand]
+public void Next(string e)
+{
+    if (SelectedIndex >= ItemsSource.Count)
+        return;
+    SelectedIndex += 1;
+}
+[RelayCommand]
+public void Up(string e)
+{
+    if (SelectedIndex > 0)
+    {
+        SelectedIndex -= 1;
+    }
+}

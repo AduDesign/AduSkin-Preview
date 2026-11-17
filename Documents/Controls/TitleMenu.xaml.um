@@ -1,0 +1,149 @@
+﻿<!--  Example 1: Full Featured Title Menu  -->
+<Border
+    Margin="0,0,0,20"
+    BorderThickness="1"
+    CornerRadius="8">
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Text="Example 1: Complete Title Menu Bar" />
+
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="12"
+            Text="Hierarchical menu with navigation items, dropdown menus, and theme toggle"
+            TextWrapping="Wrap" />
+
+        <AduSkin:AduTitleMenu Height="40" HorizontalAlignment="Center">
+            <AduSkin:AduTitleMenuItem
+                Command="{Binding OpenViewCommand}"
+                CommandParameter="Home"
+                Header="{DynamicResource MainTitle_Home}" />
+            <AduSkin:AduTitleMenuItem
+                Command="{Binding OpenViewCommand}"
+                CommandParameter="Components"
+                Header="{DynamicResource MainTitle_ControlLibrary}" />
+            <AduSkin:AduTitleMenuItem
+                Command="{Binding OpenViewCommand}"
+                CommandParameter="ControlLibrary"
+                Header="{DynamicResource MainTitle_Preview}" />
+            <AduSkin:AduTitleMenuItem Header="{DynamicResource MainTitle_OtherFunctions}">
+                <AduSkin:AduMenuItem
+                    Command="{Binding OpenViewCommand}"
+                    CommandParameter="ColorSelector"
+                    Header="{DynamicResource MainTitle_ColorSelector}"
+                    IsCheckable="True">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_ThemeSelector}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="{Binding OpenViewCommand}"
+                    CommandParameter="LanguageConfiguration"
+                    Header="{DynamicResource MainTitle_LanguageConfiguration}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_LanguageConfiguration}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="{Binding OpenViewCommand}"
+                    CommandParameter="AdditionalAttribute"
+                    Header="{DynamicResource MainTitle_AdditionalAttribute}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_AdditionalAttribute}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduTitleMenuItem>
+            <AduSkin:AduTitleMenuItem
+                AduAttach:PathDataAttach.Width="20"
+                Command="{Binding OpenViewCommand}"
+                CommandParameter="About"
+                Header="{DynamicResource MainTitle_AboutSponsor}" />
+            <AduSkin:AduTitleMenuItem
+                AduAttach:BorderAttach.CornerRadius="6"
+                Header="{DynamicResource MainTitle_ContactUS}"
+                WindowChrome.IsHitTestVisibleInChrome="True">
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="http://wpa.qq.com/msgrd?v=3&amp;uin=1280429435&amp;site=qq&amp;menu=yes"
+                    Header="QQ">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_QQ}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="https://jq.qq.com/?_wv=1027&amp;k=57GYQeb"
+                    Header="{DynamicResource QQGroup}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_QQGroup}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="mailto:1280429435@qq.com"
+                    Header="{DynamicResource Email}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_Emil}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduTitleMenuItem>
+            <AduSkin:AduTitleMenuItem AduAttach:BorderAttach.CornerRadius="6" Header="{DynamicResource MainTitle_SourceCode}">
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="https://github.com/aduskin"
+                    Header="GitHub">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_Github}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="https://gitee.com/aduskin"
+                    Header="{DynamicResource Gitee}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Data="{DynamicResource Icon_Gitee}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem CommandParameter="AduSkinDemo" Header="{DynamicResource ProjectCase}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Data="{DynamicResource Icon_Case}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduTitleMenuItem>
+            <AduSkin:AduTitleMenuItem AduAttach:BorderAttach.CornerRadius="6" Header="{DynamicResource Home_StartUse}">
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="https://www.nuget.org/packages/aduskin"
+                    Header="Nuget">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Width="20" Data="{DynamicResource Icon_Nuget}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+                <AduSkin:AduMenuItem
+                    Command="Interactivity:ControlCommands.OpenLink"
+                    CommandParameter="https://www.cnblogs.com/aduskin"
+                    Header="{DynamicResource Blog}">
+                    <AduSkin:AduMenuItem.Icon>
+                        <Path Data="{DynamicResource Icon_Blog}" />
+                    </AduSkin:AduMenuItem.Icon>
+                </AduSkin:AduMenuItem>
+            </AduSkin:AduTitleMenuItem>
+            <MenuItem Style="{DynamicResource StylelessMenuItem}">
+                <MenuItem.Header>
+                    <AduSkin:AduToggleButton
+                        AduAttach:PathBrushAttach.MouseOverPathBrush="{DynamicResource MouseOverPathBrush}"
+                        AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource NormalPathBrush}"
+                        AduAttach:PathBrushAttach.PressedPathBrush="{DynamicResource PressedPathBrush}"
+                        AduAttach:PathBrushAttach.SelectedPathBrush="{DynamicResource SelectedPathBrush}"
+                        AduAttach:PathDataAttach.PathData="{DynamicResource Icon_Light}"
+                        AduAttach:PathDataAttach.SelectedPathData="{DynamicResource Icon_Dark}"
+                        BorderThickness="0"
+                        IsChecked="{Binding IsLight}" />
+                </MenuItem.Header>
+            </MenuItem>
+        </AduSkin:AduTitleMenu>
+    </StackPanel>
+</Border>

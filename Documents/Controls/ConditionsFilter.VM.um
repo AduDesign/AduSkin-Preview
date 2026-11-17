@@ -1,0 +1,162 @@
+﻿public ConditionsFilterViewModel()
+{
+    InitializeBasicFilter();
+    InitializeEcommerceFilter();
+    InitializeDynamicFilter();
+}
+
+#region Properties
+
+[ObservableProperty]
+private FilterGroup _basicFilterGroup;
+
+[ObservableProperty]
+private FilterGroup _ecommerceFilterGroup;
+
+[ObservableProperty]
+private FilterGroup _dynamicFilterGroup;
+
+#endregion
+
+#region Initialization Methods
+
+private void InitializeBasicFilter()
+{
+    BasicFilterGroup = new FilterGroup();
+
+    // Add simple conditions
+    BasicFilterGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Customer age is greater than 18"
+    });
+
+    BasicFilterGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Customer location is in United States"
+    });
+
+    BasicFilterGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Customer email is verified"
+    });
+}
+
+private void InitializeEcommerceFilter()
+{
+    EcommerceFilterGroup = new FilterGroup();
+
+    // Main condition
+    EcommerceFilterGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Select contacts by behaviour in last 7 days number of Abandoned Cart equals 1"
+    });
+
+    // Create a sub-group with OR logic
+    var orGroup = new FilterGroup
+    {
+        Operator = LogicalOperator.Or
+    };
+
+    // Add conditions to OR group
+    orGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Select from \"emoji test\" segment"
+    });
+
+    orGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Contact that have bounce from Email Channel"
+    });
+
+    // Create a nested AND group inside the OR group
+    var andGroup = new FilterGroup
+    {
+        Operator = LogicalOperator.And
+    };
+
+    andGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "master_contact > gender equals F"
+    });
+
+    andGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "master_contact > birth_date is after current date minus 50 years"
+    });
+
+    // Add the AND group to the OR group
+    orGroup.Items.Add(andGroup);
+
+    // Add the OR group to root
+    EcommerceFilterGroup.Items.Add(orGroup);
+}
+
+private void InitializeDynamicFilter()
+{
+    DynamicFilterGroup = new FilterGroup();
+
+    // Start with one condition
+    DynamicFilterGroup.Items.Add(new FilterCondition
+    {
+        DisplayText = "Initial condition - Click buttons above to modify"
+    });
+}
+
+#endregion
+
+#region Commands
+
+[RelayCommand]
+private void AddSimpleCondition()
+{
+    var condition = new FilterCondition
+    {
+        DisplayText = $"New condition added at {DateTime.Now:HH:mm:ss}"
+    };
+    DynamicFilterGroup.Items.Add(condition);
+}
+
+[RelayCommand]
+private void AddGroupWithConditions()
+{
+    var group = new FilterGroup
+    {
+        Operator = LogicalOperator.Or
+    };
+
+    group.Items.Add(new FilterCondition
+    {
+        DisplayText = "First condition in new group"
+    });
+
+    group.Items.Add(new FilterCondition
+    {
+        DisplayText = "Second condition in new group"
+    });
+
+    DynamicFilterGroup.Items.Add(group);
+}
+
+[RelayCommand]
+private void ToggleRootOperator()
+{
+    if (DynamicFilterGroup.Operator == LogicalOperator.And)
+    {
+        DynamicFilterGroup.Operator = LogicalOperator.Or;
+        MessageBox.Show("Root operator changed to OR", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+    else
+    {
+        DynamicFilterGroup.Operator = LogicalOperator.And;
+        MessageBox.Show("Root operator changed to AND", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+}
+
+[RelayCommand]
+private void ClearAll()
+{
+    DynamicFilterGroup.Items.Clear();
+    MessageBox.Show("All conditions cleared", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+}
+
+#endregion

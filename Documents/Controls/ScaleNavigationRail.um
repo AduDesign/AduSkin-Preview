@@ -1,0 +1,56 @@
+AduScaleNavigationRail 是刻度式导航列表控件，用于以紧凑的垂直刻度展示文档章节、会话节点或长列表位置。控件支持数据绑定、内部滚动、回收虚拟化、悬浮预览、相邻刻度联动、单项选择和点击命令。
+
+AduScaleNavigationItem 是导航轨自动生成的刻度项容器，通常不需要手动创建。以下默认值以当前依赖属性注册值和默认样式为准。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduScaleNavigationRail` | 可滚动的刻度式导航列表，负责生成刻度项、维护选择并分发点击事件。 | `ListBox` |
+| `AduScaleNavigationItem` | 单个刻度的可视与交互容器。 | `ListBoxItem` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ScaleLength` | 普通状态下的刻度长度。 | `double` | `9` |
+| `NearScaleLength` | 与悬浮项相邻一格的刻度长度。 | `double` | `14` |
+| `FarScaleLength` | 与悬浮项相邻两格的刻度长度。 | `double` | `11` |
+| `HoverScaleLength` | 悬浮项和选中项的刻度长度。 | `double` | `30` |
+| `ScaleThickness` | 刻度线粗细。 | `double` | `2` |
+| `ScaleSpacing` | 刻度上下视觉间距。间距位于透明命中区域内，鼠标经过间隙时悬浮不会中断。 | `double` | `3` |
+| `HoverRange` | 悬浮时参与联动的相邻项数量。设为 `0` 时仅伸长当前项。 | `int` | `2` |
+| `ScaleBrush` | 普通刻度画刷。 | `Brush` | `Gray` |
+| `HoverScaleBrush` | 悬浮刻度画刷。 | `Brush` | `White` |
+| `SelectedScaleBrush` | 选中刻度画刷。 | `Brush` | `White` |
+| `PreviewContentTemplate` | 鼠标悬浮卡片的内容模板，数据上下文为当前原始数据项。 | `DataTemplate` | `null` |
+| `ItemClickCommand` | 点击刻度时执行的命令，命令参数为当前原始数据项。 | `ICommand` | `null` |
+
+## 路由事件
+| 名称 | 描述 | 事件处理类型 | 参数 |
+| --- | --- | --- | --- |
+| `ItemClick` | 点击刻度时触发。重复点击已选中项仍会触发。 | `RoutedPropertyChangedEventHandler<object>` | `NewValue` 为当前原始数据项 |
+
+## 常用 ListBox 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 导航项数据源，可以使用任意对象集合。 | `IEnumerable` | `null` |
+| `SelectedItem` | 当前选中的原始数据项，支持双向绑定。 | `object` | `null` |
+| `SelectedIndex` | 当前选中项索引。 | `int` | `-1` |
+| `SelectionChanged` | 选择发生变化时触发的 WPF 标准事件。 | `SelectionChangedEventHandler` | - |
+| `ScrollViewer.VerticalScrollBarVisibility` | 内部垂直滚动条显示方式。 | `ScrollBarVisibility` | `Auto` |
+| `VirtualizingPanel.IsVirtualizing` | 是否启用列表虚拟化。 | `bool` | `True` |
+| `VirtualizingPanel.VirtualizationMode` | 虚拟化容器模式。 | `VirtualizationMode` | `Recycling` |
+
+## 使用说明
+- `ItemsSource` 中的每个对象对应一个刻度，不要求使用专用数据模型。
+- 鼠标进入刻度或它上下的透明间距时，当前刻度会伸长，并根据 `HoverRange` 联动相邻刻度。
+- `PreviewContentTemplate` 的数据上下文是当前刻度对应的数据对象，可以绑定标题、摘要或任意业务字段。
+- 点击刻度后，控件会更新 `SelectedItem`，触发 `ItemClick`，然后执行 `ItemClickCommand`。
+- 选中项变化时，导航轨会自动调用 `ScrollIntoView`，保证自身选中刻度可见。
+- 如果需要导航右侧正文列表，可让两个列表绑定同一个 `SelectedItem`，并在 `ItemClick` 中对正文列表调用 `ScrollIntoView`。
+- `ItemClick` 在重复点击当前项时仍会执行；`SelectionChanged` 仅在选择实际改变时执行。
+
+## 典型场景
+- 长文档、帮助中心和设置页面的章节导航。
+- 聊天记录、日志和时间线的快速定位。
+- 图片、页面或卡片列表的缩略导航轨。
+- 需要以较小宽度表达大量导航节点的侧边区域。

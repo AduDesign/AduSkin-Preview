@@ -1,0 +1,303 @@
+﻿<!--  Example 1: Different Values  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Different Values" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Showcasing different value positions on the gauge"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduArcGauge
+				Width="120"
+				Height="120"
+				Margin="0,0,-50,0"
+				VerticalAlignment="Bottom"
+				EndAngle="120"
+				IsDrawText="False"
+				MajorTickBrush="{DynamicResource NormalBlue}"
+				MinorTickBrush="{DynamicResource NormalBlue}"
+				StartAngle="-120"
+				ValueVisibility="Collapsed"
+				Value="{Binding Value1}">
+				<AduSkin:AduArcGauge.Effect>
+					<DropShadowEffect
+						BlurRadius="40"
+						Direction="270"
+						Opacity=".7"
+						ShadowDepth="0"
+						Color="{DynamicResource BlueColor}" />
+				</AduSkin:AduArcGauge.Effect>
+			</AduSkin:AduArcGauge>
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="0"
+				EndAngle="120"
+				MajorTickBrush="{DynamicResource NormalRed}"
+				MinorTickBrush="{DynamicResource NormalRed}"
+				StartAngle="-120"
+				ValueVisibility="Collapsed"
+				Value="{Binding Value2}">
+				<AduSkin:AduArcGauge.Effect>
+					<DropShadowEffect
+						BlurRadius="40"
+						Direction="270"
+						Opacity=".7"
+						ShadowDepth="0"
+						Color="{DynamicResource RedColor}" />
+				</AduSkin:AduArcGauge.Effect>
+			</AduSkin:AduArcGauge>
+
+			<AduSkin:AduArcGauge
+				Width="120"
+				Height="120"
+				Margin="-50,0,0,0"
+				VerticalAlignment="Bottom"
+				EndAngle="120"
+				IsDrawText="False"
+				MajorTickBrush="{DynamicResource WarnBrush}"
+				MinorTickBrush="{DynamicResource WarnBrush}"
+				StartAngle="-120"
+				ValueVisibility="Collapsed"
+				Value="{Binding Value3}">
+				<AduSkin:AduArcGauge.Effect>
+					<DropShadowEffect
+						BlurRadius="40"
+						Direction="270"
+						Opacity=".7"
+						ShadowDepth="0"
+						Color="{DynamicResource YellowColor}" />
+				</AduSkin:AduArcGauge.Effect>
+			</AduSkin:AduArcGauge>
+		</StackPanel>
+
+		<AduSkin:AduToggleButton
+			Margin="0,-30,0,0"
+			Content="自动运行"
+			IsChecked="{Binding IsRunning}" />
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Custom Range  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Custom Range" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Gauges with custom minimum and maximum values"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				MaxValue="50"
+				MinValue="0"
+				Value="25" />
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				MaxValue="100"
+				MinValue="-100"
+				Value="0" />
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				MaxValue="1000"
+				MinValue="0"
+				Value="750" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Hide Value Display  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Hide/Show Value Display" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Control visibility of the value display at the bottom"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				Value="65" />
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				ValueVisibility="Collapsed"
+				Value="45" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Hide Scale Text  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Hide/Show Scale Text" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Control visibility of the scale text labels"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				IsDrawText="True"
+				Value="65" />
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				IsDrawText="False"
+				Value="45" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Custom Tick Count  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Custom Tick Count" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Customize the number of major and minor ticks"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<!--  Default: 11 major ticks, 9 minor ticks per major  -->
+			<AduSkin:AduArcGauge
+				Width="180"
+				Height="180"
+				Margin="10"
+				MajorTickCount="11"
+				MinorTicksPerMajor="9"
+				Value="50" />
+
+			<!--  Simple: 7 major ticks, 4 minor ticks per major  -->
+			<AduSkin:AduArcGauge
+				Width="180"
+				Height="180"
+				Margin="10"
+				MajorTickCount="7"
+				MinorTicksPerMajor="4"
+				Value="50" />
+
+			<!--  Minimal: 5 major ticks, no minor ticks  -->
+			<AduSkin:AduArcGauge
+				Width="180"
+				Height="180"
+				Margin="10"
+				IsDrawText="False"
+				MajorTickCount="5"
+				MinorTicksPerMajor="0"
+				Value="50" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 6: Different Sizes  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Different Sizes" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Gauges in various sizes - control automatically maintains 1:1 aspect ratio"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				Value="50" />
+
+			<AduSkin:AduArcGauge
+				Width="150"
+				Height="150"
+				Margin="10"
+				Value="50" />
+
+			<AduSkin:AduArcGauge
+				Width="200"
+				Height="200"
+				Margin="10"
+				Value="50" />
+		</StackPanel>
+	</StackPanel>
+</Border>

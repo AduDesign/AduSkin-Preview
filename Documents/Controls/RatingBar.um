@@ -1,0 +1,33 @@
+AduRatingBar 是一个评分控件，支持半分选择、点击评分和可读/只读模式。它通过多个图标片段组成评分条，继承自 WPF `Control`，评分值使用 `Value` 表示。
+
+以下默认值以 `AduRatingBar` 的默认样式为准。控件适合用于星级评分、满意度评分、点赞评分和分值打分。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前评分值，支持双向绑定。 | `double` | `0.0` |
+| `Maximum` | 最大评分数，也就是图标数量。 | `int` | `5` |
+| `IsReadOnly` | 是否只读。为 `True` 时禁止点击修改。 | `bool` | `False` |
+
+## 样式附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 评分图标路径。 | `Geometry` | `Icon_Like` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 图标宽度。 | `double` | `24` |
+| `AduAttach:PathDataAttach.Margin` | 图标间距。 | `Thickness` | `0,0,10,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 未选中图标颜色。 | `Brush` | `PrimaryBrush30` 动态资源 |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 已选中图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `Cursor` | 鼠标指针。 | `Cursor` | `Hand` |
+
+## 使用说明
+- 控件会根据 `Maximum` 生成对应数量的评分图标。
+- 点击图标左半边时计为 `0.5`，右半边时计为 `1.0`。
+- `Value` 支持小数，因此可表达半星、半分或其他细粒度评分。
+- `IsReadOnly=True` 时只显示评分，不响应点击修改。
+- `Value` 改变后会自动更新选中区域。
+
+## 典型场景
+- 商品评分、文章评分、服务满意度。
+- 点赞/喜欢强度选择。
+- 需要半分粒度的打分表单。
+- 只读展示历史评分。

@@ -1,0 +1,88 @@
+BarChart 对应控件 `AduBarChart`，是横向条形图控件，用于展示分类数值对比和排行榜。控件支持多个系列分组排列、降序排序、正负数值、网格线、坐标轴、轴名称、数值标签、图例和悬浮提示。
+
+以下默认值以 `AduBarChart` 的默认样式和源码默认值为准。控件适合用于产品销量对比、门店排名、分类统计和指标达成情况等场景。
+
+## 控件类型
+
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduBarChart` | 横向分组条形图控件，可切换为降序排行榜。 | `Control` |
+| `AduBarSeries` | 条形图数据系列，包含名称、数值集合、颜色和可见性。 | `AduSeriesBase` |
+
+## 依赖属性
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Series` | 数据系列集合，每个系列使用一个 `AduBarSeries` 表示。 | `IEnumerable<AduBarSeries>` | `null` |
+| `YAxisLabels` | 分类名称集合，按索引与每个系列的 `Values` 对应。 | `IEnumerable<string>` | `null` |
+| `SortDescending` | 是否按每个分类在可见系列中的合计值降序显示。 | `bool` | `False` |
+| `BarRatio` | 每组条形占分类行高的比例，必须大于 `0` 且小于或等于 `1`。多个可见系列平分该组高度。 | `double` | `0.72` |
+| `BarCornerRadius` | 条形圆角半径，单位为 DIP，必须为非负有限值。`0` 表示直角；绘制时不超过条形宽高较小值的一半。 | `double` | `4` |
+| `Background` | 图表背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 分类、刻度、轴名称、图例和条内数值的文字颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `FontSize` | 绘制文字的字号。 | `double` | `12` |
+| `Padding` | 图表整体内边距。 | `Thickness` | `0` |
+
+## AduBarSeries 属性
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Name` | 系列名称，显示在图例和悬浮提示中。 | `string` | `null` |
+| `Values` | 分类数值集合；集合内容变化或替换集合后会自动刷新。设置为 `null` 时转换为空集合。 | `ObservableCollection<double>` | 空集合 |
+| `SeriesColor` | 条形和图例色块的颜色。 | `Color` | `CornflowerBlue` |
+| `IsVisible` | 是否参与条形绘制、数值范围计算和排序。点击图例会切换此值。 | `bool` | `True` |
+
+`AduBarSeries` 继承自 `AduSeriesBase`，但当前条形外观使用 `SeriesColor`，不使用基类的 `Stroke`、`Fill`、`StrokeThickness`、`FillOpacity` 或数据点相关属性。
+
+## 常用附加属性
+
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:ChartAttach.IsDrawingGrid` | 是否绘制网格线。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingAxes` | 是否绘制零值轴和底部数值轴；关闭后也隐藏 X/Y 轴标签。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingXAxisValues` | 是否显示 X 轴数值刻度，还受 `IsDrawingAxes` 控制。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingYAxisValues` | 是否显示 Y 轴分类名称，还受 `IsDrawingAxes` 控制。 | `True` |
+| `AduAttach:ChartAttach.XAxisName` | X 轴名称，显示在图表下方。 | 空字符串 |
+| `AduAttach:ChartAttach.YAxisName` | Y 轴名称，显示在图表左上方。 | 空字符串 |
+| `AduAttach:ChartAttach.GridBrush` | 网格线画刷。 | `GridBrush` 动态资源 |
+| `AduAttach:ChartAttach.AxesBrush` | 坐标轴画刷。 | `PrimaryBrush` 动态资源 |
+| `AduAttach:ChartAttach.IsDrawingLegend` | 是否显示图例，还受 `LegendAttach.Visible` 控制。 | `True` |
+| `AduAttach:LegendAttach.Visible` | 仅为 `Visible` 时允许显示图例；隐藏时不保留图例区域。 | `Visible` |
+| `AduAttach:ChartAttach.ShowLabels` | 是否绘制条形内部的数值文字。 | `False` |
+| `AduAttach:ChartAttach.LabelFormat` | 条内数值格式，`{0}` 为系列名称，`{1}` 为原始数值。 | `{1:0.##}` |
+
+以上仅列出当前控件使用的附加属性。图例由控件在底部绘制并自动换行，当前不使用 `LegendAttach` 的方向、对齐、边距等布局属性，也不使用 `HeaderAttach` 标题属性。图表标题可通过外部 `TextBlock` 展示。
+
+## 使用说明
+
+- 在页面中声明 `xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"` 和 `xmlns:AduAttach="clr-namespace:AduSkin.AdditionalAttributes;assembly=AduSkin"`，并确保应用已合并 AduSkin 主题资源。
+- 将页面的 `DataContext` 设置为对应 ViewModel。XAML 示例中的绑定与 ViewModel 示例中的属性和命令一一对应；ViewModel 使用 CommunityToolkit.Mvvm 的 `ObservableObject`、`ObservableProperty` 和 `RelayCommand`。
+- `YAxisLabels[0]` 对应所有系列的 `Values[0]`，其余分类依此类推。默认按数据顺序从上到下排列，多个系列在同一分类内分组展示。
+- 分类行数取分类名称数量与可见系列最大数值数量中的较大值。分类名称不足时使用从 `1` 开始的索引作为名称，系列数值不足时对应条形留空。
+- 数值范围根据可见系列自动计算，并始终包含零值。正数向零轴右侧绘制，负数向左侧绘制。当前不提供手动设置数值范围或刻度数量的属性。
+- `NaN` 和正负无穷不会绘制，也不参与范围计算；排序时按零贡献处理。零值条形宽度为零，不会显示条内数值或形成可悬停区域。
+- `SortDescending=True` 时按可见系列合计值降序显示；单系列时即按该系列数值排序。排序只影响显示顺序，不修改分类或数值源集合。点击图例隐藏系列后会重新计算排名和坐标范围。
+- 图例保留隐藏系列，并以较低透明度显示，便于再次点击恢复。悬停条形时显示分类、系列名称和原始数值。
+- `ShowLabels=True` 时仅在条形宽度和高度足以容纳文字的情况下显示数值。若未显示，可增加图表宽高、减小字号或减少分类、系列数量。
+- 在 XAML 中设置格式字符串需要使用转义，例如 `AduAttach:ChartAttach.LabelFormat="{}{1:0.0}"`。格式只影响条内文字，不改变刻度文字和悬浮提示；格式无效时回退为原始数值文本。
+- 使用 `ObservableCollection` 可自动响应系列、分类和数值的增加、删除、替换及清空。系列名称、颜色、可见性变化也会刷新。普通集合内部修改不会自动通知；替换 ViewModel 中绑定的集合属性时，需要触发属性变更通知。
+- 在 UI 线程修改绑定数据。后台获取数据后，可通过 `Application.Current.Dispatcher.InvokeAsync` 将赋值操作切回 UI 线程。
+- 控件不按分类数量自动增加高度。分类较多时可显式增加 `Height`，并放入 `AduScrollViewer`。过长的分类名称会省略显示。
+
+## 绘制与性能
+
+- 在 `OnRender(DrawingContext)` 中直接调用 `DrawRoundedRectangle` 绘制条形，不为每条数据创建独立的 `Border`、`Rectangle` 或其他 UI 控件。
+- 数值集合内容变化只标记数据需要刷新；系列集合变化或 `Values` 集合替换时才重建订阅。WPF 合并重绘请求，数值范围和排序延迟到实际绘制时计算。
+- 数据未改变时复用系列列表、分类列表、数值范围和排序索引。排序预先计算分类合计值，相同合计值保持源顺序。
+- 系列画刷冻结后复用，网格与坐标轴画笔缓存复用；文字按内容与可用宽度缓存，字号、字体、DPI 或前景画刷变化时重建文字缓存。缓存容量受限，避免动态值长期累积。
+- 悬停根据行高和系列位置直接定位条形，圆角空白处不触发提示；仅在切换条形时生成提示文字。
+- 当前仍绘制全部分类，没有虚拟化、Top N 或自动抽样。大量分类建议在业务层筛选排名范围或分页；性能还受文字数量、控件尺寸和更新频率影响。
+
+## 典型场景
+
+- 月度产品销量、不同产品或渠道的分组对比。
+- 门店销售额、人员业绩、设备产量等排行榜。
+- 分类收入与支出、正负增长值等双向数值展示。
+- 通过可观察集合更新的业务统计看板。
+
+配套 XAML 和 ViewModel 示例展示月度产品对比、门店排行榜、显示选项和数据更新按钮；完整运行示例见 Demo 的 `BarChart` 页面。

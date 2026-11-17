@@ -1,0 +1,95 @@
+TrendChart 对应控件 `AduTrendChart`，是趋势折线图控件，用于绘制一条或多条连续数据曲线。控件支持直线或贝塞尔曲线、数据点、线下填充、网格线、坐标轴、轴名称、图例、悬浮提示和上下限等指示线。
+
+以下默认值以 `AduTrendChart` 的默认样式和源码默认值为准。控件适合用于趋势分析、监控曲线、实时指标、历史数据变化等场景。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduTrendChart` | 趋势折线图控件。 | `Control` |
+| `AduTrendSeries` | 趋势图数据系列，包含数据点集合和线条外观。 | `AduSeriesBase` |
+| `AduIndicatorLine` | 指示线模型，常用于上限、下限、阈值线。 | 普通数据模型 |
+
+## AduTrendChart 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Series` | 数据系列集合。每个系列使用一个 `AduTrendSeries` 表示，支持双向绑定。 | `IEnumerable<AduTrendSeries>` | `null` |
+| `IndicatorLines` | 指示线集合，可绘制阈值线、上限线、下限线等。 | `IEnumerable<AduIndicatorLine>` | `null` |
+| `ShowIndicatorLines` | 是否显示指示线。 | `bool` | `True` |
+| `MaxRenderedPoints` | 最大渲染点数设置，当前源码保留该属性；实际采样逻辑使用控件内部的可见点数限制。 | `int` | `2000` |
+| `EnableFill` | 是否绘制折线下方的半透明填充区域。 | `bool` | `True` |
+
+## AduTrendSeries 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `DataPoints` | 数据点集合，每个点的 `X` 和 `Y` 分别参与坐标映射。 | `ObservableCollection<Point>` | `null` |
+| `SeriesColor` | 系列主颜色，用于自动生成线条、点和填充颜色。 | `Color?` | `null` |
+| `IsGradientColor` | 是否使用渐变填充。 | `bool` | `True` |
+| `Name` | 系列名称，显示在图例和悬浮提示中。 | `string` | `null` |
+| `Stroke` | 线条颜色。未指定 `SeriesColor` 时可用于设置线条颜色。 | `Brush` | `DarkCyan` |
+| `StrokeThickness` | 线条粗细。 | `double` | `2.0` |
+| `Fill` | 填充区域颜色。 | `Brush` | `Transparent` |
+| `PointBrush` | 数据点颜色。 | `Brush` | `DarkRed` |
+| `ShowPoints` | 当前系列是否显示数据点。还会受 `ChartAttach.ShowPoints` 控制。 | `bool` | `True` |
+| `PointSize` | 系列点尺寸，保留给系列模型使用。 | `double` | `8.0` |
+| `MouseOverPointSize` | 鼠标悬浮点尺寸，保留给系列模型使用。 | `double` | `10.0` |
+| `IsVisible` | 当前系列是否参与绘制。图例点击会切换该值。 | `bool` | `True` |
+| `FillOpacity` | 填充透明度，保留给系列模型使用。 | `double` | `0.3` |
+
+## AduIndicatorLine 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Name` | 指示线名称。 | `string` | 空字符串 |
+| `Value` | 指示线所在的 Y 轴数值。 | `double` | `0` |
+| `Brush` | 指示线颜色。 | `Brush` | `Red` |
+| `Thickness` | 指示线粗细。 | `double` | `1` |
+| `IsVisible` | 当前指示线是否显示。 | `bool` | `True` |
+| `IsDash` | 是否为虚线标记，当前源码保留该属性；指示线绘制逻辑主要使用 `Brush` 和 `Thickness`。 | `bool` | `True` |
+
+## AduTrendSeries 事件
+| 名称 | 描述 | 参数 |
+| --- | --- | --- |
+| `DataPointsChanged` | `DataPoints` 集合内容变化时触发，控件订阅后会刷新图表。 | `EventArgs` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 图表标题内容。 | `null` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题区域。 | `Visible` |
+| `AduAttach:LegendAttach.Visible` | 是否显示图例区域。 | `Visible` |
+| `AduAttach:ChartAttach.ChartCurveType` | 曲线类型，可选直线或贝塞尔曲线。 | `Line` |
+| `AduAttach:ChartAttach.Tension` | 贝塞尔曲线张力。 | `0.5` |
+| `AduAttach:ChartAttach.ShowPoints` | 是否绘制数据点。 | `True` |
+| `AduAttach:ChartAttach.PointSize` | 数据点显示尺寸。 | `5` |
+| `AduAttach:ChartAttach.IsDrawingGrid` | 是否绘制网格线。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingAxes` | 是否绘制坐标轴。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingLegend` | 是否绘制图例内容。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingXAxisValues` | 是否显示 X 轴数值。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingYAxisValues` | 是否显示 Y 轴数值。 | `True` |
+| `AduAttach:ChartAttach.XAxisName` | X 轴名称。 | 空字符串 |
+| `AduAttach:ChartAttach.YAxisName` | Y 轴名称。 | 空字符串 |
+| `AduAttach:ChartAttach.AxesBrush` | 坐标轴颜色。 | `PrimaryBrush` 动态资源 |
+| `AduAttach:ChartAttach.GridBrush` | 网格线颜色。 | `GridBrush` 动态资源 |
+
+## ChartCurveType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Line` | 使用直线连接数据点。 |
+| `BezierCurve` | 使用贝塞尔曲线连接数据点。 |
+
+## 使用说明
+- 每个 `AduTrendSeries.DataPoints` 至少需要 2 个点才会绘制曲线。
+- `X` 值和 `Y` 值都会参与范围计算；控件会根据所有可见系列和可见指示线自动计算坐标范围。
+- `EnableFill` 为 `True` 时，控件会在线条下方绘制半透明填充区域。
+- `ChartAttach.ChartCurveType` 为 `BezierCurve` 时，`ChartAttach.Tension` 会影响曲线平滑程度。
+- `ChartAttach.ShowPoints` 与系列自身的 `ShowPoints` 同时为 `True` 时才显示数据点。
+- `IndicatorLines` 适合绘制报警线、阈值线、目标线等参考值。
+- `AduIndicatorLine.IsVisible=False` 时，该指示线不会参与绘制，也不会参与 Y 轴范围计算。
+- 当前源码会对数据点进行内部采样，点数较多时不会逐点完整绘制。
+- 图例项可点击，用于切换对应系列的 `IsVisible`。
+- 鼠标在图表区域移动时，会显示靠近当前 X 位置的数据点数值提示。
+
+## 典型场景
+- 设备温度、压力、流量等实时趋势。
+- 销售额、访问量、成交量等时间序列。
+- 质量检测数据和上下限阈值线。
+- 多条指标曲线的对比分析。

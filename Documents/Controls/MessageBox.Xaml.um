@@ -1,0 +1,7 @@
+﻿<UniformGrid Rows="3">
+    <AduSkin:AduButton Content="Default" Command="{Binding OpenDefaultCommand}"/>
+    <AduSkin:AduButton Content="OK" Command="{Binding OpenOkCommand}"/>
+    <AduSkin:AduButton Content="OK Cancel"  Command="{Binding OpenOkCancelCommand}"/>
+    <AduSkin:AduButton Content="Yes No" Command="{Binding OpenYesNoCommand}"/>
+    <AduSkin:AduButton Content="Yes No Cancel" Command="{Binding OpenYesNoCancelCommand}"/>
+</UniformGrid>

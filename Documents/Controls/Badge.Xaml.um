@@ -1,0 +1,133 @@
+﻿<!--  Example 1: Button Badges  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Button Badges" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Display notification badges on different button types"
+			TextWrapping="Wrap" />
+
+		<UniformGrid
+			HorizontalAlignment="Left"
+			Columns="2"
+			Rows="1">
+			<AduSkin:AduButton
+				Margin="0,0,20,0"
+				AduSkin:AduBadgeAdorner.BadgeType="Normal"
+				AduSkin:AduBadgeAdorner.HasAdorner="True"
+				AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+				AduSkin:AduBadgeAdorner.Number="98"
+				Content="Success Button"
+				Type="Success" />
+			<AduSkin:AduButton
+				Margin="20,0,0,0"
+				AduSkin:AduBadgeAdorner.BadgeType="Normal"
+				AduSkin:AduBadgeAdorner.HasAdorner="True"
+				AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+				AduSkin:AduBadgeAdorner.Number="12"
+				Content="Warning Button"
+				Type="Warning" />
+		</UniformGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Input Control Badges  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Input Control Badges" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Badges can be applied to textbox and combobox controls"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="2" Rows="1">
+			<AduSkin:AduFormBox Margin="0,0,20,0" Header="TextBox with Badge">
+				<AduSkin:AduTextBox
+					AduAttach:InputAttach.InputHint="Enter text..."
+					AduSkin:AduBadgeAdorner.BadgeType="Normal"
+					AduSkin:AduBadgeAdorner.HasAdorner="True"
+					AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+					AduSkin:AduBadgeAdorner.Number="5" />
+			</AduSkin:AduFormBox>
+			<AduSkin:AduFormBox Margin="20,0,0,0" Header="ComboBox with Badge">
+				<AduSkin:AduComboBox
+					AduSkin:AduBadgeAdorner.BadgeType="Normal"
+					AduSkin:AduBadgeAdorner.HasAdorner="True"
+					AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+					AduSkin:AduBadgeAdorner.Number="3" />
+			</AduSkin:AduFormBox>
+		</UniformGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Icon Button with Badge  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 3: Icon Button with Badge" />
+
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="12"
+		Text="Icon buttons commonly display badges for notifications or unread counts"
+		TextWrapping="Wrap" />
+
+	<UniformGrid Columns="4" Rows="1">
+		<AduSkin:AduPathIconButton
+			Width="22"
+			Height="22"
+			Margin="5"
+			AduAttach:PathDataAttach.PathData="{StaticResource Icon_RingTone}"
+			AduSkin:AduBadgeAdorner.BadgeType="Normal"
+			AduSkin:AduBadgeAdorner.HasAdorner="True"
+			AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+			AduSkin:AduBadgeAdorner.Number="99" />
+		<AduSkin:AduPathIconButton
+			Width="22"
+			Height="22"
+			Margin="5"
+			AduAttach:PathDataAttach.PathData="{StaticResource Icon_RingTone}"
+			AduSkin:AduBadgeAdorner.BadgeType="Normal"
+			AduSkin:AduBadgeAdorner.HasAdorner="True"
+			AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+			AduSkin:AduBadgeAdorner.Number="1" />
+		<AduSkin:AduPathIconButton
+			Width="22"
+			Height="22"
+			Margin="5"
+			AduAttach:PathDataAttach.PathData="{StaticResource Icon_RingTone}"
+			AduSkin:AduBadgeAdorner.BadgeType="Normal"
+			AduSkin:AduBadgeAdorner.HasAdorner="True"
+			AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+			AduSkin:AduBadgeAdorner.Number="25" />
+		<AduSkin:AduPathIconButton
+			Width="22"
+			Height="22"
+			Margin="5"
+			AduAttach:PathDataAttach.PathData="{StaticResource Icon_RingTone}"
+			AduSkin:AduBadgeAdorner.BadgeType="Normal"
+			AduSkin:AduBadgeAdorner.HasAdorner="True"
+			AduSkin:AduBadgeAdorner.IsShowAdorner="True"
+			AduSkin:AduBadgeAdorner.Number="5" />
+	</UniformGrid>
+</StackPanel>

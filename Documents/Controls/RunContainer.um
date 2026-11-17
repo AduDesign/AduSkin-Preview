@@ -1,0 +1,54 @@
+AduRunContainer 是一个走马灯滚动容器，继承自 `ItemsControl`。它支持水平和垂直方向滚动、自动滚动、循环滚动和无缝循环，适合展示公告、动态消息、标签列表和滚动内容。
+
+以下默认值以 `AduRunContainer` 的源码和默认样式为准。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Direction` | 滚动方向。 | `MarqueeDirection` | `RightToLeft` |
+| `Speed` | 滚动速度，单位为像素/秒。 | `double` | `50.0` |
+| `IsAutoScroll` | 是否自动滚动，默认支持双向绑定。 | `bool` | `True` |
+| `IsLoop` | 是否循环滚动。 | `bool` | `True` |
+| `FadeEdgeThickness` | 渐变遮罩厚度。 | `double` | `30.0` |
+| `IsSeamless` | 是否启用无缝循环模式。 | `bool` | `True` |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `LeftToRight` | 从左向右滚动。 |
+| `RightToLeft` | 从右向左滚动。 |
+| `TopToBottom` | 从上向下滚动。 |
+| `BottomToTop` | 从下向上滚动。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 滚动数据源。 | `IEnumerable` | `null` |
+| `Items` | 直接添加的滚动项集合。 | `ItemCollection` | 空集合 |
+| `ItemTemplate` | 滚动项模板。 | `DataTemplate` | `null` |
+| `ItemsPanel` | 项布局面板。水平方向默认横向排列，垂直方向自动切换为纵向排列。 | `ItemsPanelTemplate` | 按方向决定 |
+| `Background` | 容器背景。 | `Brush` | `Transparent` |
+| `BorderThickness` | 容器边框厚度。 | `Thickness` | `0` |
+| `Padding` | 容器内边距。 | `Thickness` | `0` |
+
+## 样式说明
+| 名称 | 描述 |
+| --- | --- |
+| 默认样式 | 隐藏滚动条，通过内容位移实现滚动。 |
+| 垂直样式 | 设置 `Direction=TopToBottom`，并使用纵向 `ItemsPanel`。 |
+| 渐变样式 | 提供带边缘渐变遮罩的样式资源，适合公告条或横向标签流。 |
+
+## 使用说明
+- 使用 `ItemsSource` 或 `Items` 提供滚动内容。
+- `Speed` 越大滚动越快，值单位为像素/秒。
+- `IsAutoScroll=False` 时停止滚动，再设为 `True` 时继续滚动。
+- `IsLoop=False` 时滚动到边界后会停止并自动将 `IsAutoScroll` 设为 `False`。
+- `IsSeamless=True` 且 `IsLoop=True` 时，控件会复制一份数据源用于连续循环滚动。
+- 切换 `Direction` 后，控件会重置滚动偏移并重新开始动画。
+- 内容总尺寸不大于视口尺寸时，不会产生明显滚动效果。
+
+## 典型场景
+- 首页公告和系统通知滚动条。
+- 横向滚动标签、图标或状态项。
+- 垂直滚动新闻、日志和实时消息。
+- 大屏展示中的循环信息栏。

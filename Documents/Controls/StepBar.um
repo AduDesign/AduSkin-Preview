@@ -1,0 +1,73 @@
+AduStepBar 是一个步骤进度条控件，继承自 WPF `ItemsControl`。它会为每个项生成 `AduStepBarItem`，并根据 `Progress` 标记已完成、当前步骤和未完成步骤。
+
+以下默认值以 `AduStepBar` 和 `AduStepBarItem` 的默认样式为准。控件适合流程引导、向导步骤、审批流程和进度步骤展示。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduStepBar` | 步骤条容器，管理步骤项和当前进度。 | `ItemsControl` |
+| `AduStepBarItem` | 步骤条子项，显示编号和内容。 | `ContentControl` |
+| `AduStepBarPanel` | 步骤条布局面板，支持水平和垂直排列。 | `Panel` |
+
+## AduStepBar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Orientation` | 排列方向：`Horizontal` 水平，`Vertical` 垂直。支持绑定和运行时切换。 | `Orientation` | `Horizontal` |
+| `Progress` | 当前步骤索引，从 `0` 开始。小于 `0` 时修正为 `0`，大于等于项数时修正为最后一项。 | `int` | `0` |
+
+## AduStepBarItem 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Number` | 步骤编号文本。容器生成时会按顺序自动设置为 `1`、`2`、`3` 等。 | `string` | `null` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 步骤数据源。 | `IEnumerable` | `null` |
+| `Items` | 直接添加的步骤项集合。 | `ItemCollection` | 空集合 |
+| `ItemTemplate` | 步骤内容模板。 | `DataTemplate` | `null` |
+| `Content` | `AduStepBarItem` 显示的步骤内容。 | `object` | `null` |
+
+## 子项样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 当前步骤圆点背景色。 | `Brush` | `SelectedPathBrush` 动态资源 |
+| `AduAttach:ForegroundAttach.SelectedForeground` | 当前步骤编号前景色。 | `Brush` | `NormalWhite` 动态资源 |
+| `AduAttach:ForegroundAttach.DisabledForeground` | 未完成步骤禁用前景色。 | `Brush` | `DisabledForeground` 动态资源 |
+| `FontSize` | 步骤文字字号。 | `double` | `14` |
+| `FontWeight` | 步骤文字字重。 | `FontWeight` | `Normal` |
+
+## 进度状态
+| 状态 | 判断方式 | 默认表现 |
+| --- | --- | --- |
+| 已完成 | 子项索引小于 `Progress` | 显示完成图标，连接线使用主色。 |
+| 当前步骤 | 子项索引等于 `Progress` | 显示编号，圆点使用选中色。 |
+| 未完成 | 子项索引大于 `Progress` | 子项进入禁用视觉状态。 |
+
+## 使用说明
+- `Progress` 使用从 `0` 开始的索引，不是显示编号。
+- 步骤项数量变化时，控件会重新设置每个子项的 `Number`，并把 `Progress` 重置为 `0`。
+- 最后一个步骤项会自动隐藏连接线：水平时为右侧，垂直时为下方。
+- 水平布局宽度有限时，`AduStepBarPanel` 会让最后一个项按自身宽度显示，其余项平均分配剩余宽度。
+- 水平布局宽度无限时，各步骤按自身期望宽度依次排列。
+
+## 垂直布局
+设置 `Orientation="Vertical"` 后，步骤从上到下排列，文字位于编号右侧，连接线沿编号下方延伸。进度状态和数据绑定方式与水平布局一致。
+
+```xml
+<AduSkin:AduStepBar
+    Height="260"
+    Orientation="Vertical"
+    ItemsSource="{Binding ItemsSource}"
+    Progress="{Binding SelectedIndex, Mode=TwoWay}" />
+```
+
+- 在垂直 `StackPanel` 或滚动容器中，不设置高度时，各步骤按自然高度排列。
+- 指定足够的 `Height` 或由父容器提供高度时，多余空间会分配到前面步骤的连接线区域；最后一步保留自然高度。
+- 默认 `Orientation="Horizontal"`，现有用法无需修改。
+
+## 典型场景
+- 分步表单、安装向导和配置向导。
+- 审批、发布、订单等流程进度展示。
+- 当前进度和历史完成步骤同时展示。
+- 需要按步骤编号自动生成 UI 的流程组件。

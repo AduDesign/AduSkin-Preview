@@ -1,0 +1,40 @@
+AduGridSplitter 是一个网格分隔条控件，继承自 WPF `GridSplitter`。它提供 AduSkin 默认样式，可用于拖拽调整 `Grid` 中相邻行或列的尺寸，并根据 `ResizeDirection` 自动切换横向或纵向拖拽外观。
+
+以下默认值以 `AduGridSplitter` 的默认样式为准。控件适合用于左右面板、上下区域、编辑器布局和可调整侧栏。
+
+## 依赖属性
+`AduGridSplitter` 本身未新增依赖属性，主要使用 `GridSplitter` 的继承属性和 AduSkin 附加属性控制行为和外观。
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ResizeDirection` | 调整方向，可调整列或行。 | `GridResizeDirection` | `Columns` |
+| `ResizeBehavior` | 调整哪些相邻区域的尺寸。 | `GridResizeBehavior` | `PreviousAndNext` |
+| `ShowsPreview` | 拖拽时是否先显示预览。 | `bool` | WPF 默认值 |
+| `Background` | 分隔条背景色。 | `Brush` | `PanelBorderBrush` 动态资源 |
+| `BorderBrush` | 分隔条边框颜色。 | `Brush` | WPF 默认值 |
+| `BorderThickness` | 分隔条边框厚度。 | `Thickness` | WPF 默认值 |
+| `HorizontalAlignment` | 水平对齐方式。行分隔模式下默认为 `Stretch`。 | `HorizontalAlignment` | 按模板触发器决定 |
+| `VerticalAlignment` | 垂直对齐方式。 | `VerticalAlignment` | WPF 默认值 |
+| `Width` | 列分隔模式下宽度由布局决定。 | `double` | `Auto` |
+| `Height` | 行分隔模式下高度由布局决定。 | `double` | `Auto` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 中间拖拽把手圆角。 | `CornerRadius` | `3` |
+| `ResizeDirection=Columns` | 使用竖向分隔模板，拖拽把手高度为 `40`。 | `GridResizeDirection` | - |
+| `ResizeDirection=Rows` | 使用横向分隔模板，拖拽把手宽度为 `40`。 | `GridResizeDirection` | - |
+
+## 使用说明
+- 将控件放入 `Grid` 的行或列中，通过 `ResizeDirection` 决定调整行高还是列宽。
+- 默认 `ResizeBehavior=PreviousAndNext`，拖拽时会调整分隔条前后两个区域。
+- 用于调整列宽时通常给控件所在列设置较小宽度；用于调整行高时通常给控件所在行设置较小高度。
+- 鼠标悬停在拖拽把手上时，默认样式会改变把手透明度。
+- 禁用控件后，默认样式会降低整体透明度并停止交互。
+
+## 典型场景
+- 左侧导航栏和右侧内容区之间的宽度调整。
+- 日志面板、控制台面板和主编辑区之间的高度调整。
+- 主从详情布局中可拖拽的分隔线。
+- 仪表盘、设计器和多面板工作台布局。

@@ -1,0 +1,16 @@
+﻿public CoverFlowViewModel()
+{
+    for (int i = 0; i < 5; i++)
+    {
+        ItemsSource.Add(new TempModel() { String1 = "pack://application:,,,/Resources/header.png" });
+    }
+}
+
+[ObservableProperty]
+private ObservableCollection<TempModel> _itemsSource = new ObservableCollection<TempModel>();
+
+//JumpTo Index
+this.Loaded += (e, a) =>
+{
+    coverflow.JumpTo(3);
+};

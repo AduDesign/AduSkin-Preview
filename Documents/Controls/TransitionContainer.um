@@ -1,0 +1,51 @@
+AduTransitionContainer 是一个带过渡动画的内容容器，继承自 `ContentControl`。当控件加载、显示或切换过渡类型时，会对内容播放预设视觉状态动画，也可以通过自定义 `Storyboard` 替代默认动画。
+
+以下默认值以 `AduTransitionContainer` 的源码和默认样式为准。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `TransitionType` | 默认过渡动画类型。 | `TransitionType` | `Right2Left` |
+| `TransitionStoryboard` | 自定义过渡动画。设置后优先播放该动画。 | `Storyboard` | `null` |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `Right2Left` | 内容从右向左进入。 |
+| `Left2Right` | 内容从左向右进入。 |
+| `Bottom2Top` | 内容从下向上进入。 |
+| `Top2Bottom` | 内容从上向下进入。 |
+| `Right2LeftWithFade` | 从右向左进入并带透明度变化。 |
+| `Left2RightWithFade` | 从左向右进入并带透明度变化。 |
+| `Bottom2TopWithFade` | 从下向上进入并带透明度变化。 |
+| `Top2BottomWithFade` | 从上向下进入并带透明度变化。 |
+| `Fade` | 淡入动画。 |
+| `Custom` | 自定义动画标识，通常配合 `TransitionStoryboard` 使用。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 需要播放过渡的内容。 | `object` | `null` |
+| `ContentTemplate` | 内容模板。 | `DataTemplate` | `null` |
+| `ContentTemplateSelector` | 内容模板选择器。 | `DataTemplateSelector` | `null` |
+| `Visibility` | 控件可见性。变为可见时会尝试播放动画。 | `Visibility` | `Visible` |
+
+## 样式说明
+| 名称 | 描述 |
+| --- | --- |
+| 默认模板 | 内容根元素会被设置缩放、倾斜、旋转、平移变换组，用于承载预设动画。 |
+| 预设动画 | 默认视觉状态动画时长约为 `0.4s`，缓动方式为 `EaseOut`。 |
+| 自定义动画 | 设置 `TransitionStoryboard` 后，控件会在内容根元素上播放该动画。 |
+
+## 使用说明
+- 使用 `Content` 放置需要过渡显示的内容。
+- 设置 `TransitionType` 可选择默认动画方向和是否淡入。
+- 控件加载完成或 `Visibility` 变为 `Visible` 时会自动播放过渡。
+- 重新设置 `TransitionType` 时会先触发过渡，再保存新的类型值。
+- 需要完全自定义动画时，设置 `TransitionStoryboard`，并可将 `TransitionType` 保持为 `Custom` 作为语义标识。
+
+## 典型场景
+- 页面、卡片和局部内容切换。
+- 弹层内容进入动画。
+- 首屏模块加载时的轻量过渡。
+- 需要统一进入动效的内容容器。

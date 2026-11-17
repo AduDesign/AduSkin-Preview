@@ -1,0 +1,185 @@
+<!--  Example 1: Basic Color Picker  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Basic Color Picker" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Use the hue and opacity sliders, select a preset, or enter a HEX value"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduColorPicker
+			x:Name="BasicColorPicker"
+			HorizontalAlignment="Center"
+			SelectedColor="CornflowerBlue" />
+
+		<StackPanel
+			Margin="0,15,0,0"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal">
+			<Border
+				Width="48"
+				Height="48"
+				BorderBrush="{DynamicResource NormalBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="6">
+				<Border.Background>
+					<SolidColorBrush Color="{Binding SelectedColor, ElementName=BasicColorPicker}" />
+				</Border.Background>
+			</Border>
+			<StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+				<TextBlock>
+					<Run Text="RGBA: " />
+					<Run Text="{Binding Red, ElementName=BasicColorPicker}" />
+					<Run Text=", " />
+					<Run Text="{Binding Green, ElementName=BasicColorPicker}" />
+					<Run Text=", " />
+					<Run Text="{Binding Blue, ElementName=BasicColorPicker}" />
+					<Run Text=", " />
+					<Run Text="{Binding Alpha, ElementName=BasicColorPicker}" />
+				</TextBlock>
+				<TextBlock Margin="0,4,0,0" Text="{Binding Hex, ElementName=BasicColorPicker}" />
+			</StackPanel>
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Bound Presets  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Bound Presets" />
+	<AduSkin:AduColorPicker
+		HorizontalAlignment="Left"
+		BoundPresetColors="{Binding PresetPalette}"
+		SelectedColor="{Binding SelectedColor, Mode=TwoWay}"
+		SelectionModes="BoundPresets" />
+	<AduSkin:AduColorPickerButton
+		Margin="0,12,0,0"
+		HorizontalAlignment="Left"
+		BoundPresetColors="{Binding PresetPalette}"
+		SelectedColor="{Binding SelectedColor, Mode=TwoWay}"
+		SelectionModes="BoundPresets" />
+</StackPanel>
+
+<!--  Example 3: Compact Color Picker Buttons  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Compact Color Picker Buttons" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Click a color button to open the picker in a popup"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduColorPickerButton
+				Width="48"
+				Height="28"
+				Margin="6"
+				CornerRadius="6"
+				SelectedColor="Red" />
+			<AduSkin:AduColorPickerButton
+				Width="48"
+				Height="28"
+				Margin="6"
+				CornerRadius="6"
+				SelectedColor="DodgerBlue" />
+			<AduSkin:AduColorPickerButton
+				Width="48"
+				Height="28"
+				Margin="6"
+				CornerRadius="6"
+				SelectedColor="#FFFFA500" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Two-way Binding  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Two-way Binding" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Bind the full picker and compact button to the same ViewModel color"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center">
+			<AduSkin:AduColorPicker SelectedColor="{Binding SelectedColor, Mode=TwoWay}" />
+			<StackPanel
+				Margin="0,12,0,0"
+				HorizontalAlignment="Center"
+				Orientation="Horizontal">
+				<AduSkin:AduColorPickerButton SelectedColor="{Binding SelectedColor, Mode=TwoWay}" />
+				<TextBlock
+					Margin="12,0"
+					VerticalAlignment="Center"
+					Text="{Binding SelectedColor}" />
+				<AduSkin:AduButton
+					Command="{Binding ResetColorCommand}"
+					Content="Reset" />
+			</StackPanel>
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Control Popup State  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Control Popup State" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Use IsDropDownOpen to control the popup from the ViewModel"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduColorPickerButton
+				Margin="0,0,12,0"
+				IsDropDownOpen="{Binding IsColorPickerOpen, Mode=TwoWay}"
+				SelectedColor="{Binding SelectedColor, Mode=TwoWay}" />
+			<AduSkin:AduToggleButton
+				Content="Open color picker"
+				IsChecked="{Binding IsColorPickerOpen, Mode=TwoWay}" />
+		</StackPanel>
+	</StackPanel>
+</Border>

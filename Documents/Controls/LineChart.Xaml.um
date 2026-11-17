@@ -1,0 +1,38 @@
+﻿<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+
+    <StackPanel Margin="0,0,0,10" Orientation="Horizontal">
+        <AduSkin:AduButton Command="{Binding GenerateCommand}" Content="生成随机数据" />
+        <AduSkin:AduButton
+            Margin="10,0"
+            Command="{Binding ClearCommand}"
+            Content="清除数据" />
+        <AduSkin:AduCheckBox Content="IsDrawingGrid" IsChecked="{Binding IsDrawingGrid}" />
+        <AduSkin:AduCheckBox
+            Margin="10,0"
+            Content="IsDrawingAxes"
+            IsChecked="{Binding IsDrawingAxes}" />
+        <AduSkin:AduCheckBox Content="IsDrawingLegend" IsChecked="{Binding IsDrawingLegend}" />
+    </StackPanel>
+
+    <AduSkin:AduLineChart
+        Grid.Row="1"
+        Height="300"
+        AduAttach:ChartAttach.IsDrawingAxes="{Binding IsDrawingAxes}"
+        AduAttach:ChartAttach.IsDrawingGrid="{Binding IsDrawingGrid}"
+        AduAttach:ChartAttach.IsDrawingLegend="{Binding IsDrawingLegend}"
+        AduAttach:HeaderAttach.FontSize="14"
+        AduAttach:HeaderAttach.Foreground="{DynamicResource PrimaryBrush}"
+        AduAttach:HeaderAttach.Header="Line Chart"
+        AduAttach:HeaderAttach.Height="auto"
+        Background="Transparent"
+        FontSize="14"
+        Foreground="{DynamicResource PrimaryBrush}"
+        PointSize="8"
+        Series="{Binding ItemsSource}"
+        ShowGrid="True"
+        ShowPoints="True" />
+</Grid>

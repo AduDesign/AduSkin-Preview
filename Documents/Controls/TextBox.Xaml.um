@@ -1,0 +1,6 @@
+﻿<UniformGrid Columns="1" Rows="4">
+    <AduSkin:AduTextBox Text="{Binding Name,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" Margin="5"/>
+    <AduSkin:AduTextBox Text="{Binding Age,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" Margin="5" AduAttach:InputAttach.InputHint="请输入关键字" />
+    <AduSkin:AduTextBox Text="{Binding Address,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" Margin="5"/>
+    <AduSkin:AduTextBox Text="{Binding Address,UpdateSourceTrigger=PropertyChanged,ValidatesOnNotifyDataErrors=True}" Margin="5"/>
+</UniformGrid>

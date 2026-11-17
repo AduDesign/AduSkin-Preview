@@ -1,0 +1,203 @@
+﻿<!--  Example 1: TextBox with Vertical Layout  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: TextBox with Vertical Layout" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="FormBox with left-aligned header, vertical layout direction, and auto-width header"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			AduAttach:LayoutAttach.DirectionType="Vertical"
+			Foreground="{DynamicResource PrimaryBrush}"
+			Header="Input Field"
+			Prompt="(unit)"
+			PromptVisibility="Visible">
+			<AduSkin:AduTextBox HorizontalAlignment="Stretch" Text="Sample content" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: TextBox with Horizontal Layout  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: TextBox with Horizontal Layout" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="FormBox with left-aligned header and horizontal layout (header beside content)"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			Foreground="{DynamicResource PrimaryBrush}"
+			Header="Label Text"
+			Prompt="(unit)"
+			PromptVisibility="Visible">
+			<AduSkin:AduTextBox HorizontalAlignment="Stretch" Text="Sample content" />
+		</AduSkin:AduFormBox>
+		<AduSkin:AduFormBox
+			Margin="0,6"
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			Foreground="{DynamicResource PrimaryBrush}"
+			Header="Label Text"
+			Prompt="(unit)"
+			PromptVisibility="Visible">
+			<AduSkin:AduComboBox HorizontalAlignment="Stretch" Text="Sample content">
+				<ComboBoxItem Content="AduSkin" />
+				<ComboBoxItem Content="AntDesign" />
+				<ComboBoxItem Content="HandyControl" />
+			</AduSkin:AduComboBox>
+		</AduSkin:AduFormBox>
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			Foreground="{DynamicResource PrimaryBrush}"
+			Header="Label Text"
+			Prompt="(unit)"
+			PromptVisibility="Visible">
+			<AduSkin:AduTextBox HorizontalAlignment="Stretch" Text="Sample content" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: ComboBox with Fixed Header Width  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: ComboBox with Fixed Header Width" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="FormBox with fixed header width set to 50 pixels and vertical layout"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="50"
+			AduAttach:LayoutAttach.DirectionType="Vertical"
+			Header="Select">
+			<AduSkin:AduComboBox Text="Select item..." />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Multiple Buttons Group  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 4: Multiple Buttons Group" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="FormBox containing a horizontal group of buttons with vertical layout direction"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			AduAttach:LayoutAttach.DirectionType="Vertical"
+			Header="Actions">
+			<UniformGrid Columns="2">
+				<AduSkin:AduButton
+					Width="auto"
+					Margin="0,0,4,0"
+					Content="Button 1" />
+				<AduSkin:AduButton
+					Width="auto"
+					Margin="4,0,0,0"
+					Content="Button 2" />
+			</UniformGrid>
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: RadioButton Group  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 5: RadioButton Group" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="FormBox with horizontally arranged radio buttons for single selection"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			AduAttach:HeaderAttach.HorizontalAlignment="Left"
+			AduAttach:HeaderAttach.Width="Auto"
+			Header="Options">
+			<StackPanel Orientation="Horizontal">
+				<AduSkin:AduRadioButton Content="Option 1" />
+				<AduSkin:AduRadioButton Margin="10,0,0,0" Content="Option 2" />
+			</StackPanel>
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 6: CheckBox Group  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 6: CheckBox Group" />
+
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="12"
+		Text="FormBox with horizontally arranged checkboxes for multiple selection"
+		TextWrapping="Wrap" />
+
+	<AduSkin:AduFormBox
+		AduAttach:HeaderAttach.HorizontalAlignment="Left"
+		AduAttach:HeaderAttach.Width="Auto"
+		Header="Selections">
+		<StackPanel Orientation="Horizontal">
+			<AduSkin:AduCheckBox Content="Option 1" />
+			<AduSkin:AduCheckBox Margin="10,0,0,0" Content="Option 2" />
+		</StackPanel>
+	</AduSkin:AduFormBox>
+</StackPanel>

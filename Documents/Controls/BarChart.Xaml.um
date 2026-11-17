@@ -1,0 +1,71 @@
+<AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock Margin="0,0,0,10" FontSize="28" FontWeight="Bold" Text="BarChart Demo" />
+            <TextBlock Margin="0,0,0,30" FontSize="14" TextWrapping="Wrap"
+                       Text="Horizontal bar chart with grouped series, ranking and dynamic data updates" />
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,15" FontSize="18" FontWeight="SemiBold" Text="Example: Monthly Product Comparison" />
+                    <TextBlock Margin="0,0,0,15" FontSize="12" TextWrapping="Wrap"
+                               Text="Compare multiple series within each category. Generate new data to refresh both examples. Hover over a bar to view its value, or click a legend item to show or hide a series." />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Margin="0,0,0,10" Orientation="Horizontal">
+                            <AduSkin:AduButton Command="{Binding UpdateCommand}" Content="Generate Data" />
+                        </StackPanel>
+                        <AduSkin:AduBarChart Grid.Row="1" Height="300" BarCornerRadius="6"
+                            Series="{Binding ProductSeries}" YAxisLabels="{Binding Months}"
+                            AduAttach:ChartAttach.IsDrawingAxes="True"
+                            AduAttach:ChartAttach.IsDrawingGrid="{Binding ShowGrid}"
+                            AduAttach:ChartAttach.IsDrawingLegend="{Binding ShowLegend}"
+                            AduAttach:ChartAttach.IsDrawingXAxisValues="{Binding IsDrawingXAxisValues}"
+                            AduAttach:ChartAttach.IsDrawingYAxisValues="{Binding IsDrawingYAxisValues}"
+                            AduAttach:ChartAttach.ShowLabels="{Binding ShowValues}"
+                            AduAttach:ChartAttach.XAxisName="Sales"
+                            AduAttach:ChartAttach.YAxisName="Month"
+                            AduAttach:LegendAttach.Visible="Visible" />
+                        <WrapPanel Grid.Row="2">
+                            <AduSkin:AduCheckBox Margin="5" Content="Show Grid" IsChecked="{Binding ShowGrid}" />
+                            <AduSkin:AduCheckBox Margin="5" Content="Show Values" IsChecked="{Binding ShowValues}" />
+                            <AduSkin:AduCheckBox Margin="5" Content="Show X Axis Values" IsChecked="{Binding IsDrawingXAxisValues}" />
+                            <AduSkin:AduCheckBox Margin="5" Content="Show Y Axis Values" IsChecked="{Binding IsDrawingYAxisValues}" />
+                            <AduSkin:AduCheckBox Margin="5" Content="Show Legend" IsChecked="{Binding ShowLegend}" />
+                        </WrapPanel>
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Margin="0,0,0,15" FontSize="18" FontWeight="SemiBold" Text="Example: Store Sales Ranking" />
+                    <TextBlock Margin="0,0,0,15" FontSize="12" TextWrapping="Wrap"
+                               Text="Display stores in descending order of sales. Sorting keeps labels paired with their values and leaves the source collection unchanged." />
+                    <AduSkin:AduBarChart Height="280" SortDescending="True" BarCornerRadius="6"
+                        Series="{Binding RankingSeries}" YAxisLabels="{Binding Stores}"
+                        AduAttach:ChartAttach.IsDrawingAxes="True"
+                        AduAttach:ChartAttach.IsDrawingGrid="True"
+                        AduAttach:ChartAttach.IsDrawingXAxisValues="True"
+                        AduAttach:ChartAttach.IsDrawingYAxisValues="True"
+                        AduAttach:ChartAttach.ShowLabels="True"
+                        AduAttach:ChartAttach.XAxisName="Sales (10,000 CNY)"
+                        AduAttach:ChartAttach.YAxisName="Store"
+                        AduAttach:LegendAttach.Visible="Collapsed" />
+                </StackPanel>
+            </Border>
+            <StackPanel>
+                <TextBlock Margin="0,0,0,8" FontSize="14" FontWeight="Bold"
+                           Foreground="{DynamicResource NormalBlue}" Text="Features:" />
+                <TextBlock FontSize="12" Foreground="{DynamicResource NormalBlue}" TextWrapping="Wrap">
+                    <Run Text="- Horizontal grouped bars with multiple data series" /><LineBreak />
+                    <Run Text="- Rounded bars with cached drawing resources" /><LineBreak />
+                    <Run Text="- Automatic descending ranking without changing source data" /><LineBreak />
+                    <Run Text="- Observable collection updates and series visibility changes" /><LineBreak />
+                    <Run Text="- Shared chart properties for grids, axes, labels and legends" /><LineBreak />
+                    <Run Text="- Interactive tooltips and clickable legend items" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>

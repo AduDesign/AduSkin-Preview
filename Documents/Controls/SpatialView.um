@@ -1,0 +1,276 @@
+# AduSpatialView 空间视图
+
+## 渲染质量与锯齿优化
+
+`RenderScale` 是 `double` 依赖属性，默认 `2`，支持 `1～4` 或 `0`。它通过交互宿主 `Viewport2DVisual3D.CacheMode` 配置 `BitmapCache.RenderAtScale`，提高面板内容缓存分辨率，同时保留真实控件和输入交互。设为 `0` 可关闭显式缓存，与原来的渲染路径比较。
+
+```xml
+<AduSkin:AduSpatialView Height="560" RenderScale="2">
+    <AduSkin:AduSpatialPanel>
+        <AduSkin:AduTextBox Text="高分辨率空间面板" />
+    </AduSkin:AduSpatialPanel>
+</AduSkin:AduSpatialView>
+```
+
+示例页提供 1～4 倍切换。建议先使用 2 倍；3～4 倍适合放大阅读，但缓存像素量随倍率平方增长，复杂动态面板可能增加显存和刷新开销。该设置改善面板内容的采样分辨率，不保证消除三维轮廓锯齿；实际质量也受 DPI、透视角度和渲染环境影响。缓存关闭 ClearType，以避免透明、旋转表面上的彩色子像素边缘。视口明确使用 `EdgeMode.Unspecified`，避免继承 Aliased 设置。
+
+使用原生 WPF Viewport2DVisual3D 将可交互 UI 放置在面向观察者的平面上。无额外依赖。
+
+```xml
+<AduSkin:AduSpatialView x:Name="Space" Height="560" Radius="4" FieldOfView="90">
+    <AduSkin:AduSpatialPanel Azimuth="-44" PanelWidth="2.4" PanelHeight="1.8">
+        <AduSkin:AduButton Content="左侧按钮" />
+    </AduSkin:AduSpatialPanel>
+    <AduSkin:AduSpatialPanel>
+        <AduSkin:AduTextBox Text="正前方，可编辑" />
+    </AduSkin:AduSpatialPanel>
+    <AduSkin:AduSpatialPanel Azimuth="44">
+        <AduSkin:AduCheckBox Content="右侧设置" />
+    </AduSkin:AduSpatialPanel>
+</AduSkin:AduSpatialView>
+```
+
+在已配置 AduSkin 主题的 WPF 页面中使用，页面需声明以下命名空间：
+
+```xml
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"
+```
+
+- `Panels` 支持运行时添加、移除面板；每块面板只能属于一个空间视图，不要重复添加同一实例。
+- `Azimuth`：方位角，负数左侧，正数右侧；`Elevation`：场景中的垂直偏移。
+- `PanelWidth/PanelHeight`：三维场景尺寸；`Width/Height`：二维 UI 布局尺寸，默认 640×480。两者自动按 PixelsPerUnit 换算，不需要同时设置。
+- `Radius`：面板距原点的水平距离，默认 4；`Yaw/Pitch`：相机左右/上下角度，支持绑定。Pitch 限制在 ±80°。
+- 右键拖动环视；左键操作内容；Ctrl+滚轮调整 FieldOfView（25°～110°）；普通滚轮控制相机远近；Shift + 滚轮保留给内容。
+- `ResetView()` 将 Yaw、Pitch、FieldOfView 恢复为 0、0、75。
+- 面板作为逻辑子元素继承 DataContext；可正常使用内容模板和绑定。
+
+Demo 导航中搜索 `SpatialView` 或“空间视图容器”，可体验列表选择、文本输入、按钮点击、滑块和滚动。
+
+这是桌面三维空间 UI，未实现系统级磨砂背景或 VR。Popup、下拉菜单、ToolTip 由 WPF 独立窗口呈现，不会自动贴合三维平面；WebView、WindowsFormsHost 等 HWND 内容不适用于此承载方式。面板只从正面显示。右键手势由容器占用，不用于面板上下文菜单。
+
+## 控件组成
+
+| 类型 | 基类 | 用途 |
+| --- | --- | --- |
+| `AduSpatialView` | `Grid` | 管理空间面板、透视相机和鼠标环视 |
+| `AduSpatialPanel` | `ContentControl` | 承载单个面板的内容，设置位置与尺寸 |
+
+命名空间为 `AduSkin.Controls`，程序集为 `AduSkin`。面板直接写在空间容器内部时会加入默认内容属性 `Panels`。通过 `Panels` 管理空间面板，不要用继承的 `Children` 添加面板或清除内部视口。
+
+## AduSpatialView 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `Panels` | `ObservableCollection<AduSpatialPanel>` | 空集合 | 只读集合属性，可添加、移除、替换或清空；不是依赖属性 |
+| `Radius` | `double` | `4` | 所有面板中心到原点的水平距离，必须为有限正数 |
+| `Yaw` | `double` | `0` | 水平观看角，单位为度；正数向右看、负数向左看，无角度范围限制 |
+| `Pitch` | `double` | `0` | 俯仰角，单位为度；正数向上看、负数向下看，强制限制在 `[-80, 80]` |
+| `FieldOfView` | `double` | `75` | 相机水平视野角，单位为度，强制限制在 `[25, 110]` |
+
+除 `Panels` 外，上表属性均为依赖属性，拒绝 `NaN` 和无穷值。`Yaw`、`Pitch` 的绑定默认双向；`FieldOfView` 如需将鼠标修改同步回 ViewModel，应显式设置 `Mode=TwoWay`。
+
+`Width`、`Height`、`MinHeight`、`Background` 等继承属性按 WPF 常规方式使用。默认背景透明，内容裁剪到容器边界。在 StackPanel 或外层滚动容器中使用时，建议指定高度，确保视口有有效显示尺寸。
+
+## AduSpatialPanel 属性
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `Azimuth` | `double` | `0` | 水平方位角，单位为度；0 在前方，负数向左、正数向右 |
+| `Elevation` | `double` | `0` | 面板中心的垂直偏移，单位为场景单位；正数向上，并非角度 |
+| `PanelWidth` | `double` | `NaN`（自动） | 可选空间宽度；指定后自动计算 UI 宽度 |
+| `PanelHeight` | `double` | `NaN`（自动） | 可选空间高度；指定后自动计算 UI 高度 |
+| `PixelsPerUnit` | `double` | `200` | 每个场景单位对应的 UI DIP 数，必须为有限正数 |
+| `Width` | `double` | `640` | 二维 UI 布局宽度，单位为 WPF DIP |
+| `Height` | `double` | `480` | 二维 UI 布局高度，单位为 WPF DIP |
+| `Content` | `object` | `null` | 面板内容，可用布局容器组织多个控件 |
+
+前四项为控件声明的空间布局依赖属性；`Azimuth`、`Elevation` 接受有限数值。默认内容水平、垂直对齐均为 `Stretch`。
+
+### 只设置一套尺寸
+
+推荐直接设置 UI 尺寸，空间尺寸自动根据 `PixelsPerUnit` 换算：
+
+```xml
+<AduSkin:AduSpatialPanel Width="800" Height="600">
+    <AduSkin:AduTextBox Text="内容填充 800×600 DIP 的布局区域" />
+</AduSkin:AduSpatialPanel>
+```
+
+默认 200 DIP 对应 1 场景单位，上例空间大小为 4×3。增大 Width/Height，空间面板也会增大。
+
+也可以只设置空间尺寸：
+
+```xml
+<AduSkin:AduSpatialPanel PanelWidth="4" PanelHeight="3">
+    <AduSkin:AduTextBox Text="自动按 800×600 DIP 布局" />
+</AduSkin:AduSpatialPanel>
+```
+
+默认 Width/Height 为 640×480，对应空间尺寸 3.2×2.4。PanelWidth/PanelHeight 默认 NaN，表示按 UI 实际布局自动计算。每个轴独立处理；如果同一轴同时指定 UI 尺寸和空间尺寸，空间尺寸优先，UI 尺寸将被自动换算。清除空间尺寸或设为 NaN 后恢复 UI 尺寸控制。运行时修改和绑定也适用。
+
+空间几何使用实际布局宽高除以 PixelsPerUnit，保持与内容相同的宽高比。MinWidth/MaxWidth 等布局约束可能影响最终大小。内容仍按 WPF 布局规则填充，固定大小、Margin 或自身对齐设置不会被强行覆盖。PixelsPerUnit 越大，相同 UI 尺寸对应的空间面板越小。
+
+### 坐标与朝向
+
+当 CameraDistance 等于 Radius 时，相机位于原点，默认朝向 Z 轴负方向。仅当 UseEdgeLayout=False 使用圆弧定位时，面板中心按以下公式计算，角度计算时转换为弧度：
+
+```text
+x = Radius × sin(Azimuth)
+y = Elevation
+z = -Radius × cos(Azimuth)
+```
+
+圆弧模式下，面板绕 Y 轴朝向圆弧中心。改变 Elevation 只改变高度，不会使面板上下倾斜。所有面板共用 Radius，目前没有独立距离或任意三轴旋转属性。
+
+修改集合顺序不会自动调整面板位置。侧面角度较大时面板可能在初始视野之外，需要转动相机查看；面板重叠时按三维深度显示。
+
+## 鼠标交互
+
+| 操作 | 行为 |
+| --- | --- |
+| 左键 | 点击、输入、选择、拖动面板内的控件 |
+| 按住右键拖动 | 捕获鼠标并改变 Yaw、Pitch |
+| 普通滚轮 | 向上滚动拉近，向下滚动拉远；关闭 IsMouseWheelZoomEnabled 后不拦截 |
+| Shift + 滚轮 | 空间容器不拦截，交由内容或外层滚动区域处理 |
+| Ctrl + 滚轮 | 改变 FieldOfView，标准一刻度约调整 3° |
+| 松开右键、丢失鼠标捕获或控件卸载 | 结束环视 |
+
+环视灵敏度为每 WPF DIP `0.15°`，当前没有公共配置属性。普通滚轮改变 CameraDistance，实际移动相机；Ctrl + 滚轮只改变视野角。
+
+## 复位和切换方向
+
+```csharp
+using AduSkin.Controls;
+
+Space.ResetView();
+
+// 保留已有的依赖属性绑定表达式。
+Space.SetCurrentValue(AduSpatialView.YawProperty, -44d);
+Space.SetCurrentValue(AduSpatialView.YawProperty, 44d);
+```
+
+`ResetView()` 只将 Yaw、Pitch、FieldOfView 设置为 `0`、`0`、`75`，同时将 CameraDistance 恢复到 Radius（受距离范围限制），不改变 Radius 和面板布局。恢复的是控件默认值，不是 XAML 初始值；即使初始 FieldOfView 为 90，复位后也是 75。没有内置复位命令，可在按钮事件或自定义命令中调用此方法。
+
+## 数据绑定
+
+面板继承空间容器的 DataContext，内容支持普通绑定、命令与 ContentTemplate。
+
+```xml
+<AduSkin:AduSpatialView Height="560"
+    Yaw="{Binding ViewYaw, Mode=TwoWay}"
+    Pitch="{Binding ViewPitch, Mode=TwoWay}"
+    FieldOfView="{Binding ViewFieldOfView, Mode=TwoWay}">
+    <AduSkin:AduSpatialPanel>
+        <StackPanel>
+            <AduSkin:AduTextBox Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" />
+            <AduSkin:AduButton Content="发送" Command="{Binding SendCommand}" />
+        </StackPanel>
+    </AduSkin:AduSpatialPanel>
+</AduSkin:AduSpatialView>
+```
+
+ViewModel 需提供对应属性和命令，并在需要时实现属性变更通知。Panels 不是 ItemsSource，当前没有内置的集合数据自动生成面板机制。
+
+## 动态添加与移除
+
+在 UI 线程中操作集合及面板属性：
+
+```csharp
+using AduSkin.Controls;
+
+var panel = new AduSpatialPanel
+{
+    Azimuth = 60,
+    Elevation = 0.3,
+    PanelWidth = 2.4,
+    PanelHeight = 1.8,
+    Content = new AduButton { Content = "运行时面板" }
+};
+
+Space.Panels.Add(panel);
+panel.Azimuth = 45;          // 立即更新空间位置。
+Space.Panels.Remove(panel); // 解除承载关系，可随后重新添加。
+Space.Panels.Clear();       // 移除全部面板。
+```
+
+同一个面板实例只应添加一次，且不能同时属于多个空间视图。面板内容也不能同时被其他视觉父级承载。增加或调整其他面板不会主动重建已有面板内容。
+
+## 外观与性能
+
+- 面板不自动绘制卡片背景、圆角、边框和阴影，可在内容中使用 Border 与 AduSkin 控件组合外观。
+- 使用主题画刷，保持面板背景与文字的对比度。容器透明背景可由父级提供场景背景。
+- 大量控件、复杂阴影、持续动画和频繁重绘会增加开销，建议先使用少量面板，并在目标设备上评估流畅度。
+- 侧面角度或视野角过大时，文字会因透视变小，可转向目标面板后再阅读和操作。
+- 边缘布局自动按宽度留出间距；圆弧模式没有防碰撞布局机制。内部相机近、远裁剪距离分别为 0.05 和 1000，极端布局可能被裁剪。
+
+## 当前未提供的能力
+
+鼠标悬停视差、惯性环视、视角过渡动画、面板拖动、自动布局、头部追踪和面板自动跟随观看方向尚未实现。弹出层与 HWND 内容的限制见文档前面的说明。
+
+## 示例与源码
+
+Demo 中搜索 **SpatialView** 或 **空间视图容器**，体验三面板布局、左右视角切换、复位和各类 AduSkin 内容交互。
+
+- [XAML 示例](SpatialView.Xaml.um)
+- [示例交互代码](SpatialView.VM.um)（该控件示例采用页面事件代码，并非独立 ViewModel 实现）
+- [示例页面](../../AduSkin.Demo/Views/Demo/UCSpatialView.xaml)
+- [容器源码](../../AduSkin/Controls/Containers/AduSpatialView.cs)
+- [面板源码](../../AduSkin/Controls/Containers/AduSpatialPanel.cs)
+
+
+## 相机远近设置
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `CameraDistance` | `double` | `4` | 相机沿观看方向到半径参考点的距离，支持默认双向绑定，受最小和最大距离限制 |
+| `MinCameraDistance` | `double` | `0.5` | 最小距离，有限正数 |
+| `MaxCameraDistance` | `double` | `20` | 最大距离，有限正数；有效值不会小于最小距离 |
+| `ZoomStep` | `double` | `0.25` | 标准滚轮一刻度改变的场景距离，有限正数 |
+| `IsMouseWheelZoomEnabled` | `bool` | `True` | 是否用普通滚轮控制相机远近；不影响 Ctrl + 滚轮视野调整 |
+
+以上均为依赖属性。向上滚轮减小距离、向下滚轮增大距离。达到边界后距离不再变化，滚轮仍由空间容器处理。修改距离范围会重新约束当前距离。
+
+```xml
+<AduSkin:AduSpatialView Height="560" Radius="4"
+    CameraDistance="4" MinCameraDistance="0.5" MaxCameraDistance="12"
+    ZoomStep="0.25" IsMouseWheelZoomEnabled="True">
+    <AduSkin:AduSpatialPanel>
+        <AduSkin:AduButton Content="滚轮拉近或拉远" />
+    </AduSkin:AduSpatialPanel>
+</AduSkin:AduSpatialView>
+```
+
+相机位置为 `LookDirection × (Radius - CameraDistance)`。距离等于 Radius 时位于原点，小于 Radius 时向前移动，大于 Radius 时向后移动。环视时相机位置也按当前观看方向更新。距离是相对圆弧参考点的值，并非到每个面板的精确欧氏距离；偏高、偏侧或重叠的面板仍可能被裁剪，当前不提供碰撞检测。
+
+内容中包含滚动区域时，可按住 Shift 使用滚轮；或将 IsMouseWheelZoomEnabled 设为 False 恢复普通滚轮的内容滚动。ResetView() 将距离恢复为 Radius 在当前范围内的值，并将视野角恢复为 75°。
+
+
+## 中间面板优先的边缘布局
+
+默认 `UseEdgeLayout=True`，按真实面板宽度连接排列，不再将各面板中心强行放在同一圆弧上。
+
+| 属性 | 类型 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `UseEdgeLayout` | `bool` | `True` | 按边缘排列；设为 False 恢复旧圆弧模式 |
+| `PanelSpacing` | `double` | `0.2` | 相邻边缘在水平面中的间距，单位为场景单位；接受有限非负数 |
+
+两项均为依赖属性。布局先选择 Azimuth 最接近 0 的面板作为中间面板，将中心固定在 `(0, Elevation, -Radius)`；再按 Azimuth 从左到右排序，从中间向两侧逐块排列。角度相同按 Panels 集合顺序，选择中间面板的绝对角度相同时优先排序靠前的一块。建议明确提供一个 Azimuth=0 的中间面板。
+
+Azimuth 在边缘模式中表示面板绕 Y 轴的折转朝向，侧面中心位置由边缘布局计算。有效折转角限制在 -80°～80°，确保各面板沿水平方向向外展开。各面板的角度相对世界坐标，不是逐块累加角度。间隙沿相邻面板水平向量的角平分方向留出。Elevation 仍独立控制高度；高度不同时，三维边缘距离还包含高度差。
+
+```xml
+<AduSkin:AduSpatialView Height="560" Radius="4" PanelSpacing="0.25" UseEdgeLayout="True">
+    <AduSkin:AduSpatialPanel Width="600" Height="480" Azimuth="-44">
+        <AduSkin:AduButton Content="左侧" />
+    </AduSkin:AduSpatialPanel>
+    <AduSkin:AduSpatialPanel Width="1000" Height="600" Azimuth="0">
+        <AduSkin:AduTextBox Text="中间面板变宽，两侧自动向外排列" />
+    </AduSkin:AduSpatialPanel>
+    <AduSkin:AduSpatialPanel Width="600" Height="480" Azimuth="44">
+        <AduSkin:AduCheckBox Content="右侧" />
+    </AduSkin:AduSpatialPanel>
+</AduSkin:AduSpatialView>
+```
+
+添加、移除、修改方位角、修改尺寸和实际布局尺寸变化均会触发整组重新排列。该布局避免平面几何互相穿插，不保证在任意相机位置投影后互不遮挡；过近观看或极端角度仍可能遮挡其他面板。面板总宽增加后可能超出视野，可滚轮拉远或环视查看。

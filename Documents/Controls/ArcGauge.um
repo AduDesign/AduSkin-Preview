@@ -1,0 +1,45 @@
+AduArcGauge 是弧形仪表盘控件，用于以半圆或自定义角度弧线展示当前数值。控件支持最小值、最大值、指针动画、大刻度、小刻度、刻度文字、中心数值显示和小数位格式化。
+
+以下默认值以 `AduArcGauge` 的默认样式和源码默认值为准。控件适合用于温度、压力、速度、占比、进度、仪表指标等需要仪表盘表达的场景。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduArcGauge` | 弧形仪表盘控件，通过指针角度展示 `Value` 在范围内的位置。 | `Control` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前数值。变化时会更新中心显示并通过动画移动指针。 | `double` | `0` |
+| `MinValue` | 最小值。`Value` 小于该值时指针停在起始角度。 | `double` | `0` |
+| `MaxValue` | 最大值。`Value` 大于该值时指针停在结束角度。 | `double` | `100` |
+| `DecimalPlaces` | 中心数值显示的小数位数。 | `int` | `0` |
+| `FormattedValue` | 格式化后的显示值，只读，通常由控件内部按 `Value` 和 `DecimalPlaces` 计算。 | `string` | `0` |
+| `IsDrawText` | 是否绘制刻度文字。 | `bool` | `True` |
+| `ValueVisibility` | 中心数值显示区域可见性。 | `Visibility` | `Visible` |
+| `MajorTickCount` | 大刻度数量。 | `int` | `11` |
+| `MinorTicksPerMajor` | 每两个大刻度之间的小刻度数量。 | `int` | `9` |
+| `StartAngle` | 刻度起始角度，单位为度。 | `double` | `-90` |
+| `EndAngle` | 刻度结束角度，单位为度。 | `double` | `90` |
+| `MajorTickBrush` | 大刻度线画刷。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `MinorTickBrush` | 小刻度线画刷。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `TextBrush` | 刻度文字画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 仪表盘背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `Foreground` | 中心数值文字颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 圆环和数值区域边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+
+## 使用说明
+- `Value` 会按 `MinValue` 到 `MaxValue` 的比例映射到 `StartAngle` 和 `EndAngle` 之间。
+- `Value` 超出范围时不会继续外扩，指针会限制在起始角度或结束角度。
+- `MinValue` 与 `MaxValue` 相等时，控件内部会避免除零并按最小范围处理。
+- `MajorTickCount` 决定刻度文字数量，也决定大刻度之间的数值间隔。
+- `MinorTicksPerMajor` 只影响小刻度密度，不影响数值计算。
+- `IsDrawText=False` 时只显示刻度线和指针，不显示刻度数值。
+- `DecimalPlaces` 只影响中心数值显示，不影响 `Value` 本身。
+- `StartAngle`、`EndAngle` 可以扩展为更大或更小弧度范围，用于半圆、扇形或近圆形仪表。
+
+## 典型场景
+- 工业监控中的温度、压力、流量、转速。
+- 仪表盘页面中的 CPU、内存、磁盘占用率。
+- 任务完成度、健康度、评分等百分制指标。
+- 需要通过指针动画突出数值变化的状态展示。

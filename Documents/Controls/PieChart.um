@@ -1,0 +1,52 @@
+AduPieChart 是饼图控件，用于展示多个分类在整体中的占比。控件支持实心饼图、环形图、百分比标签、图例、加载动画、鼠标悬浮外扩和悬浮提示。
+
+以下默认值以 `AduPieChart` 的默认样式和源码默认值为准。控件适合用于比例分析、分类占比、资源分布和仪表盘概览。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduPieChart` | 饼图或环形图控件。 | `Control` |
+| `AduPieSeries` | 饼图数据项，表示一个扇区。 | `AduSeriesBase` |
+
+## AduPieChart 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Series` | 饼图数据集合。每个 `AduPieSeries` 表示一个扇区，支持双向绑定。 | `IEnumerable<AduPieSeries>` | `null` |
+| `InnerRadiusRatio` | 内径比例。`0` 表示实心饼图，大于 `0` 时显示为环形图。 | `double` | `0.0` |
+
+## AduPieSeries 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前扇区的数值。仅大于 `0` 且可见的数据参与绘制。 | `double` | `0` |
+| `Name` | 扇区名称，显示在图例和悬浮提示中。 | `string` | `null` |
+| `Fill` | 扇区填充颜色。 | `Brush` | `Transparent` |
+| `Stroke` | 线条颜色，继承自系列基类。 | `Brush` | `DarkCyan` |
+| `StrokeThickness` | 线条粗细，继承自系列基类。 | `double` | `2.0` |
+| `IsVisible` | 当前扇区是否参与绘制。图例点击会切换该值。 | `bool` | `True` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 图表标题内容。 | `null` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题区域。 | `Visible` |
+| `AduAttach:LegendAttach.Visible` | 是否显示图例区域。 | `Visible` |
+| `AduAttach:ChartAttach.ShowLabels` | 是否在扇区内部显示标签。 | `True` |
+| `AduAttach:ChartAttach.LabelFormat` | 标签格式，格式参数包含数值和百分比。 | `{1:P0}` |
+| `AduAttach:ChartAttach.EnableLoadAnimation` | 数据变化时是否启用加载动画。 | `True` |
+| `AduAttach:ChartAttach.AnimationDuration` | 加载动画时长，单位为毫秒。 | `800` |
+| `AduAttach:BorderAttach.CornerRadius` | 图表外框圆角。 | `10` |
+
+## 使用说明
+- `Series` 中 `IsVisible=True` 且 `Value>0` 的项会参与总数和百分比计算。
+- `InnerRadiusRatio=0` 时为实心饼图；设置为 `0.3`、`0.5` 等值可形成不同粗细的环形图。
+- 标签文本由 `ChartAttach.LabelFormat` 控制；参数 `0` 表示数值，参数 `1` 表示百分比。
+- 扇区角度过小时，控件会自动不绘制扇区内部标签，避免文字拥挤。
+- 图例会显示扇区颜色、名称和百分比，点击图例项可切换该扇区是否显示。
+- 鼠标悬浮扇区时，扇区会外扩并显示名称、数值和百分比。
+- 当没有可显示数据时，控件会显示空数据提示。
+
+## 典型场景
+- 分类销售额、订单量或用户来源占比。
+- 磁盘、内存、预算等资源分布。
+- 任务状态、告警等级、缺陷类型占比。
+- 仪表盘中的简洁比例概览。

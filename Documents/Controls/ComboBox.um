@@ -1,0 +1,131 @@
+ComboBox 文档覆盖 AduSkin 中的两个下拉选择控件：`AduComboBox` 和 `AduMultiSelectComboBox`。`AduComboBox` 用于单选下拉，支持搜索过滤和可编辑输入；`AduMultiSelectComboBox` 用于复选下拉，支持多项选择、选中项文本汇总和搜索过滤。
+
+两个控件都继承自 WPF `ComboBox`，保留 `ItemsSource`、`SelectedItem`、`SelectedIndex`、`IsDropDownOpen`、`IsEditable`、`DisplayMemberPath` 等常用下拉框能力。以下默认值以各自默认样式和依赖属性注册值为准；继承属性只列出常用部分。
+
+## AduComboBox 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsShowFilterBox` | 是否显示下拉面板顶部的搜索框。属性 getter 会同时要求 `ItemsSource` 不为空，因此无数据源时即使设置为 `True` 也不会显示。 | `bool` | `False` |
+| `IsNotFound` | 当前搜索结果是否为空。属性 getter 会同时要求 `ItemsSource` 不为空。默认样式会在结果为空时显示 `NotFound` 动态资源文本。 | `bool` | `False` |
+
+## AduComboBox 常用 ComboBox 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 下拉选项数据源。设置后控件会创建独立 `ListCollectionView` 用于过滤；传入 `ICollectionView` 时直接使用该视图。 | `IEnumerable` | `null` |
+| `SelectedItem` | 当前选中项。搜索过滤时，当前选中项会被保留在过滤视图中，避免被自动清空。 | `object` | `null` |
+| `SelectedValue` | 当前选中值，通常配合 `SelectedValuePath` 使用。 | `object` | `null` |
+| `SelectedIndex` | 当前选中项索引。 | `int` | `-1` |
+| `DisplayMemberPath` | 选项显示字段路径。过滤对象集合时会按该字段文本匹配。 | `string` | `string.Empty` |
+| `IsEditable` | 是否允许在输入框中编辑文本。为 `True` 时默认模板显示 `PART_EditableTextBox`。 | `bool` | `False` |
+| `Text` | 可编辑模式下的输入文本，也可用于显示当前文本。 | `string` | `string.Empty` |
+| `IsDropDownOpen` | 下拉面板是否打开。 | `bool` | `False` |
+| `MaxDropDownHeight` | WPF 原生下拉最大高度。默认模板主要使用 `AduAttach:PanelAttach.MaxHeight` 控制面板高度。 | `double` | 系统默认值 |
+| `SelectionChanged` | 选中项变化时触发的事件。 | `SelectionChangedEventHandler` | - |
+| `DropDownOpened` | 下拉面板打开时触发的事件。 | `EventHandler` | - |
+| `DropDownClosed` | 下拉面板关闭时触发的事件。 | `EventHandler` | - |
+| `IsEnabled` | 是否启用下拉框。禁用时默认降低整体透明度。 | `bool` | `True` |
+
+## AduComboBox 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Height` | 默认控件高度。 | `double` | `30` |
+| `Background` | 输入区域背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 内容、提示和箭头前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 聚焦或鼠标悬停时的高亮边框画刷。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `BorderThickness` | 输入区域边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 输入区域和下拉面板圆角。 | `CornerRadius` | `6` |
+| `AduAttach:InputAttach.InputHint` | 未选择内容时显示的占位提示。 | `string` | `请选择...` |
+| `AduAttach:BackgroundAttach.PanelBackground` | 下拉面板背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `AduAttach:BorderAttach.PanelBorderBrush` | 下拉面板边框画刷。 | `Brush` | `PanelBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.BorderThickness` | 下拉面板边框厚度。 | `Thickness` | `1` |
+| `AduAttach:PanelAttach.MaxHeight` | 下拉列表最大高度。 | `double` | `220` |
+| `AduAttach:PanelAttach.MinHeight` | 下拉列表最小高度。 | `double` | `10` |
+| `AduAttach:PathDataAttach.PathData` | 下拉箭头图标。 | `Geometry` | `Icon_DownArrow` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 下拉箭头宽度。 | `double` | `10` |
+| `AduAttach:PathDataAttach.Margin` | 下拉箭头边距。 | `Thickness` | `0,0,6,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 下拉箭头颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `ItemContainerStyle` | 下拉项样式。 | `Style` | `DefaultComboBoxItem` |
+| `FontSize` | 内容字号。 | `double` | `12` |
+| `Padding` | 输入区域内边距。 | `Thickness` | `5,0,0,0` |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认样式关闭系统焦点框。 | `Style` | `null` |
+
+## AduComboBox 模板部件
+| 名称 | 类型 | 描述 |
+| --- | --- | --- |
+| `PART_FilterTextBox` | `TextBox` | 搜索过滤输入框。下拉打开时自动聚焦并清空文本，文本变化时刷新过滤视图。 |
+| `PART_EditableTextBox` | `TextBox` | WPF `ComboBox` 可编辑模式输入框。`IsEditable=True` 时显示。 |
+
+## AduMultiSelectComboBox 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedItems` | 当前选中项集合。支持双向绑定；为空时控件会尝试根据绑定属性类型或数据源项类型创建集合。 | `IList` | `null` |
+| `DisplayText` | 选中项汇总文本。控件会按选中项显示文本用 `, ` 拼接，并显示在输入区域中。 | `string` | `string.Empty` |
+| `DisplayMemberPath` | 选项显示字段路径。该控件重新声明了该属性，用于显示文本、过滤文本和内部列表显示。 | `string` | `string.Empty` |
+| `IsNotFound` | 当前搜索结果是否为空。属性会随过滤刷新更新，但当前默认样式中的未找到提示文本处于注释状态。 | `bool` | `False` |
+| `IsShowFilterBox` | 是否显示下拉面板顶部的搜索框。 | `bool` | `True` |
+
+## AduMultiSelectComboBox 常用 ComboBox 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 多选下拉选项数据源。设置后控件会创建独立 `ListCollectionView`，并将其绑定到内部列表。 | `IEnumerable` | `null` |
+| `IsDropDownOpen` | 下拉面板是否打开。打开时会聚焦搜索框并清空搜索文本。 | `bool` | `False` |
+| `MaxDropDownHeight` | 下拉面板最大高度。默认模板的弹出面板使用该属性限制高度。 | `double` | 系统默认值 |
+| `SelectionChanged` | 继承自 `Selector` 的选择变化事件。多选业务通常优先使用 `SelectedItems` 或 `SelectedItemsChanged`。 | `SelectionChangedEventHandler` | - |
+| `DropDownOpened` | 下拉面板打开时触发的事件。 | `EventHandler` | - |
+| `DropDownClosed` | 下拉面板关闭时触发的事件，关闭时控件会刷新 `DisplayText`。 | `EventHandler` | - |
+| `IsEnabled` | 是否启用复选下拉框。禁用时默认降低整体透明度。 | `bool` | `True` |
+
+## AduMultiSelectComboBox 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Height` | 默认控件高度。 | `double` | `30` |
+| `Cursor` | 鼠标悬停时的指针样式。 | `Cursor` | `Hand` |
+| `Background` | 输入区域背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 内容、提示和箭头前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 聚焦或鼠标悬停时的高亮边框画刷。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `BorderThickness` | 输入区域边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 输入区域和下拉面板圆角。 | `CornerRadius` | `6` |
+| `AduAttach:InputAttach.InputHint` | 未选择内容时显示的占位提示。 | `string` | `请选择...` |
+| `AduAttach:BackgroundAttach.PanelBackground` | 下拉面板背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 下拉项鼠标悬停背景。 | `Brush` | `MouseOverBackground` 动态资源 |
+| `AduAttach:BorderAttach.PanelBorderBrush` | 下拉面板边框画刷。 | `Brush` | `PanelBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.BorderThickness` | 下拉面板边框厚度。 | `Thickness` | `1` |
+| `AduAttach:PanelAttach.MaxHeight` | 样式默认设置的面板最大高度。当前模板实际主要使用 `MaxDropDownHeight` 和内部列表 `MaxHeight=200`。 | `double` | `210` |
+| `AduAttach:PanelAttach.MinHeight` | 样式默认设置的面板最小高度。 | `double` | `10` |
+| `AduAttach:PathDataAttach.PathData` | 下拉箭头图标。 | `Geometry` | `Icon_DownArrow` 动态资源 |
+| `AduAttach:PathDataAttach.SelectedPathData` | 选中状态下拉箭头图标。 | `Geometry` | `Icon_DownArrow` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 下拉箭头宽度。 | `double` | `10` |
+| `AduAttach:PathDataAttach.Margin` | 下拉箭头边距。 | `Thickness` | `0,0,6,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 下拉箭头颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `ItemContainerStyle` | 样式默认值。当前模板中的内部 `AduListBox` 自带 `ListBoxItem` 样式。 | `Style` | `DefaultComboBoxItem` |
+| `FontSize` | 内容字号。 | `double` | `12` |
+| `Padding` | 输入区域内边距。 | `Thickness` | `5,0,0,0` |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认样式关闭系统焦点框。 | `Style` | `null` |
+
+## AduMultiSelectComboBox 模板部件
+| 名称 | 类型 | 描述 |
+| --- | --- | --- |
+| `PART_FilterTextBox` | `TextBox` | 搜索过滤输入框。文本变化时刷新内部集合视图。 |
+| `PART_ItemsListBox` | `ListBox` | 内部多选列表，`SelectionMode` 为 `Multiple`，负责显示选项和维护选中状态。 |
+
+## 路由事件
+| 名称 | 控件 | 描述 | 事件类型 |
+| --- | --- | --- | --- |
+| `SelectedItemsChanged` | `AduMultiSelectComboBox` | 内部列表选中项变化或 `SelectedItems` 属性变化时触发。 | `RoutedPropertyChangedEventHandler<IList>` |
+
+## 行为说明
+- `AduComboBox` 打开下拉时会聚焦搜索框并清空搜索文本；过滤时按字符串项本身或对象的 `DisplayMemberPath` 字段进行大小写不敏感匹配。
+- `AduComboBox` 会为普通 `ItemsSource` 创建独立 `ListCollectionView`，避免多个下拉框共享默认视图导致过滤互相影响。
+- `AduComboBox` 过滤时会保留当前 `SelectedItem`，避免搜索文本不匹配时选中项被视图移除后自动清空。
+- `AduMultiSelectComboBox` 的选中状态由 `SelectedItems` 集合维护，内部列表只负责当前视图中可见项的选中交互。
+- `AduMultiSelectComboBox` 搜索过滤不会从 `SelectedItems` 中移除被过滤隐藏的已选项；搜索条件变化后可继续显示原选中状态。
+- `AduMultiSelectComboBox` 的 `DisplayText` 会按 `SelectedItems` 中每个项的显示文本拼接，适合展示少量已选项；选项很多时建议配合 `ToolTip` 或业务侧摘要文本。
+- 两个控件的下拉箭头都会在打开和关闭时播放旋转动画，下拉面板使用淡入和缩放过渡。
+- 两个控件禁用时默认降低整体透明度，选项列表和搜索框不再响应交互。
+
+## 典型场景
+- `AduComboBox` 适合表单中的单选字段，例如分类、状态、角色、地区。
+- `AduComboBox` 的过滤框适合选项较多但仍然是单选的列表。
+- `AduComboBox` 的可编辑模式适合允许用户输入自定义值的选择框。
+- `AduMultiSelectComboBox` 适合标签、权限、筛选条件、批量分类等多选场景。
+- `AduMultiSelectComboBox` 适合在空间有限的表单里收纳多选列表。

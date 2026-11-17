@@ -1,0 +1,144 @@
+﻿ public ListBoxViewModel()
+{
+    ItemsSource = new ObservableCollection<string>() { "AduSkin", "AntDesign", "HandyControl" };
+
+    for (int i = 0; i < 30; i++)
+        ItemsSource.Add($"TestItem{i + 1}");
+
+    SelectedItem = ItemsSource.FirstOrDefault();
+
+    foreach (ContainerType item in Enum.GetValues(typeof(ContainerType)))
+        ContainerTypes.Add(item);
+    SelectedContainerType = ContainerTypes.FirstOrDefault();
+
+    foreach (DirectionType item in Enum.GetValues(typeof(DirectionType)))
+        DirectionTypes.Add(item);
+    SelectedDirectionType = DirectionTypes.FirstOrDefault();
+
+    foreach (ScrollPosition item in Enum.GetValues(typeof(ScrollPosition)))
+        ScrollPositionTypes.Add(item);
+    SelectedScrollPositionType = ScrollPositionTypes.FirstOrDefault();
+
+    foreach (SelectionMode item in Enum.GetValues(typeof(SelectionMode)))
+        SelectionModes.Add(item);
+    SelectedSelectionMode = SelectionModes.FirstOrDefault();
+}
+
+#region 属性
+/// <summary>
+/// 容器类型
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<SelectionMode> _selectionModes = new ObservableCollection<SelectionMode>();
+[ObservableProperty]
+private SelectionMode _selectedSelectionMode;
+
+/// <summary>
+/// 容器类型
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<ContainerType> _containerTypes = new ObservableCollection<ContainerType>();
+[ObservableProperty]
+private ContainerType _selectedContainerType;
+
+/// <summary>
+/// 布局方向
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<DirectionType> _directionTypes = new ObservableCollection<DirectionType>();
+[ObservableProperty]
+private DirectionType _selectedDirectionType;
+
+/// <summary>
+/// 滚动类型
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<ScrollPosition> _scrollPositionTypes = new ObservableCollection<ScrollPosition>();
+[ObservableProperty]
+private ScrollPosition _selectedScrollPositionType;
+
+/// <summary>
+/// 刷新
+/// </summary>
+[RelayCommand]
+void RefreshSelected()
+{
+    Random random = new Random();
+    SelectedItem = ItemsSource[random.Next(0, ItemsSource.Count - 1)];
+}
+/// <summary>
+/// 行数列数
+/// </summary>
+[ObservableProperty]
+private int _columnCount = 4;
+
+/// <summary>
+/// 框选禁用
+/// </summary>
+[ObservableProperty]
+private bool _enableRectangleSelection;
+
+/// <summary>
+/// 数据源
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<string> _itemsSource;
+
+[ObservableProperty]
+private string _selectedItem;
+#endregion
+
+#region 性能测试
+/// <summary>
+/// 最大行
+/// </summary>
+[ObservableProperty]
+private int _maxRow = 500;
+/// <summary>
+/// 间隔
+/// </summary>
+[ObservableProperty]
+private int _interval = 100;
+/// <summary>
+/// 取消令牌
+/// </summary>
+private CancellationTokenSource cancellationTokenSource = null;
+/// <summary>
+/// 测试
+/// </summary>
+[ObservableProperty]
+private bool _isTestFlight;
+partial void OnIsTestFlightChanged(bool oldValue, bool newValue)
+{
+    if (newValue)
+    {
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        int index = 0;
+        Task.Run(async () =>
+        {
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (ItemsSource.Count > MaxRow)
+                        ItemsSource.RemoveAt(0);
+                    ItemsSource.Add($"Item{index}");
+                    index += 1;
+                });
+                await Task.Delay(Interval);
+            }
+        });
+    }
+    else
+        cancellationTokenSource.Cancel();
+}
+/// <summary>
+/// 取消
+/// </summary>
+[RelayCommand]
+public void Unloaded()
+{
+    cancellationTokenSource?.Cancel();
+}
+#endregion

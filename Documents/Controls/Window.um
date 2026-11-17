@@ -1,0 +1,67 @@
+AduWindow 是 AduSkin 的窗口基类，继承自 WPF `Window`，提供统一的标题栏、系统按钮、菜单区域、窗口边框、遮罩状态和主题样式。控件内置最小化、最大化、还原、关闭按钮处理，并支持按 `Esc` 关闭窗口。
+
+以下默认值以 `AduWindow` 的默认样式和源码默认值为准。控件适合用作 AduSkin 应用的主窗口、对话框和业务窗口基类。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduWindow` | 主题化窗口控件，带自定义标题栏和系统按钮。 | `Window` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsSubWindowShow` | 是否显示子窗口遮罩状态。切换时会进入对应视觉状态。 | `bool` | `False` |
+| `Menu` | 标题栏菜单区域内容。 | `object` | `null` |
+| `BorderBrush` | 窗口边框画刷。该属性重新定义自窗口基类。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `TitleForeground` | 标题文字颜色。 | `Brush` | 默认画刷 |
+| `TitleFontSize` | 标题字号属性。源码类型为 `FontSizeConverter`。 | `FontSizeConverter` | 默认值 |
+| `SysButtonColor` | 最小化、最大化、还原、关闭按钮图标颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `SysButtonMargin` | 系统按钮区域外边距。 | `Thickness` | `0` |
+| `SysButtonVisible` | 系统按钮区域可见性。 | `Visibility` | `Visible` |
+
+## 普通属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ReturnValue` | 窗口返回值，可由业务代码保存关闭结果。 | `object` | `null` |
+| `EscClose` | 是否允许按 `Esc` 关闭窗口。 | `bool` | `False` |
+
+## 常用继承属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `Title` | 窗口标题，显示在标题栏。 | 空字符串 |
+| `Icon` | 标题栏图标。 | AduSkin 默认图标 |
+| `WindowStartupLocation` | 窗口初始位置。初始化时设置为居中屏幕。 | `CenterScreen` |
+| `WindowStyle` | 窗口样式。默认样式设置为 `SingleBorderWindow`。 | `SingleBorderWindow` |
+| `ResizeMode` | 控制是否允许调整大小、最大化或最小化。 | 继承默认值 |
+| `WindowState` | 当前窗口状态。 | `Normal` |
+| `Background` | 窗口背景。 | `WindowBackground` 动态资源 |
+| `Foreground` | 窗口内容前景色。 | `NormalForeground` 动态资源 |
+| `BorderThickness` | 窗口边框厚度。 | `1` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Height` | 标题栏高度。 | `40` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题栏。 | `Visible` |
+| `AduAttach:HeaderAttach.FontSize` | 标题栏字体大小。 | `12` |
+| `AduAttach:HeaderAttach.Foreground` | 标题栏文字颜色。 | `NormalForeground` 动态资源 |
+| `AduAttach:HeaderAttach.Background` | 标题栏背景。 | `NormalBorderBrush` 动态资源 |
+| `AduAttach:HeaderAttach.Margin` | 标题栏内容外边距。 | `0,10` |
+| `AduAttach:HeaderAttach.IconWidth` | 标题栏图标宽高。 | `20` |
+
+## 行为说明
+- 点击系统按钮会分别执行最小化、最大化、还原和关闭。
+- `ResizeMode=NoResize` 时会隐藏最小化、最大化、还原按钮。
+- `ResizeMode=CanMinimize` 时会隐藏最大化和还原按钮。
+- `WindowStyle=ToolWindow` 时会隐藏最小化、最大化和还原按钮。
+- `WindowStyle=None` 时会隐藏标题栏和全部系统按钮，内容区域占满窗口。
+- `WindowState=Maximized` 时会隐藏最大化按钮并显示还原按钮。
+- `WindowState=Normal` 时会隐藏还原按钮并显示最大化按钮。
+- `EscClose=True` 时，按 `Esc` 会调用窗口关闭。
+- 当 `ResizeMode` 不允许最大化时，如果窗口状态被设置为最大化，控件会恢复为普通状态。
+
+## 典型场景
+- AduSkin 应用主窗口。
+- 带统一标题栏和系统按钮的业务窗口。
+- 需要窗口级遮罩状态的弹窗或子窗口容器。
+- 需要把菜单内容放入标题栏中间区域的桌面应用。

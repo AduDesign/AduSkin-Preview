@@ -1,0 +1,861 @@
+<!--  Example 1: Filtering and Batch Editing  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Cell Editing and Filtering and Batch Editing" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Column filters and batch edit buttons on editable columns"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="4"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Click="BtnClearFilter_Click"
+				Content="Clear Filters" />
+
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="4"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding AddEditingItemCommand}"
+				Content="Add Item" />
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="2"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding RemoveEditingSelectedItemsCommand}"
+				Content="Remove SelectedItems" />
+			<AduSkin:AduSwitch
+				Margin="4"
+				Content="Drag Move"
+				IsChecked="{Binding CanDragMove}" />
+
+			<AduSkin:AduSwitch
+				Margin="4"
+				Content="Is Virtualizing"
+				IsChecked="{Binding IsVirtualizing}" />
+
+			<AduSkin:AduSwitch
+				Margin="4"
+				Content="Is ReadOnly"
+				IsChecked="{Binding IsReadOnly}" />
+
+			<TextBlock Margin="10,0" VerticalAlignment="Center">
+				<Run Text="加载耗时：" />
+				<Run
+					FontSize="14"
+					Foreground="{DynamicResource PrimaryBrush}"
+					Text="{Binding TotalTime, Mode=OneWay}" />
+			</TextBlock>
+		</StackPanel>
+
+		<AduSkin:AduDataGrid
+			x:Name="MainDataGrid"
+			Height="300"
+			AduAttach:BorderAttach.CornerRadius="10"
+			AduAttach:DataGridBatchEditAttach.EnableBatchColumnEdit="True"
+			AduAttach:DataGridFilterAttach.EnableColumnFilter="True"
+			AduAttach:DragDropAttach.IsDragSource="{Binding CanDragMove}"
+			AduAttach:DragDropAttach.IsDropTarget="{Binding CanDragMove}"
+			AlternationCount="2"
+			FrozenColumnCount="4"
+			GridLinesVisibility="All"
+			HeadersVisibility="All"
+			IsMultiselectEnabled="True"
+			IsReadOnly="{Binding IsReadOnly}"
+			ItemsSource="{Binding EditItemsSource}"
+			RowHeaderWidth="30"
+			SelectionMode="Extended"
+			SelectionUnit="FullRow"
+			VirtualizingPanel.IsVirtualizing="{Binding IsVirtualizing}"
+			VirtualizingPanel.VirtualizationMode="Recycling">
+			<AduSkin:AduDataGrid.Columns>
+				<AduSkin:AduDataGridTextColumn
+					Width="50"
+					Binding="{Binding Int1}"
+					Header="Index"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="String1"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					AduAttach:DataGridFilterAttach.IsFilterEnabled="True"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Binding="{Binding String1, UpdateSourceTrigger=LostFocus}"
+					CanUserSort="True"
+					Header="Left"
+					TextAlignment="Left" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="String2"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					AduAttach:DataGridFilterAttach.IsFilterEnabled="True"
+					Binding="{Binding String2, UpdateSourceTrigger=LostFocus}"
+					Header="Center"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="String3"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					AduAttach:DataGridFilterAttach.IsFilterEnabled="True"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Right"
+					Binding="{Binding String3, UpdateSourceTrigger=LostFocus}"
+					Header="Right"
+					TextAlignment="Right" />
+				<AduSkin:AduDataGridComboBoxColumn
+					Width="100"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="SelectedItem"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					DisplayMemberPath="String1"
+					Header="ComboBox"
+					IsShowFilterBox="True"
+					ItemsSource="{Binding DataContext.SubItems, RelativeSource={RelativeSource AncestorType=AduSkin:AduDataGrid}}"
+					SelectedItemBinding="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+					SortMemberPath="SelectedItem.String1"
+					VirtualizingPanel.IsVirtualizing="True"
+					VirtualizingPanel.VirtualizationMode="Recycling" />
+				<AduSkin:AduDataGridComboBoxColumn
+					Width="130"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					Header="ComboBoxString"
+					IsShowFilterBox="True"
+					ItemsSource="{Binding DataContext.SubItemStrings, RelativeSource={RelativeSource AncestorType=AduSkin:AduDataGrid}}"
+					SelectedItemBinding="{Binding SelectedStringItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+				<AduSkin:AduDataGridMultiSelectComboBoxColumn
+					Width="100"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="SelectedItems"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					DisplayMemberPath="String1"
+					DisplayTextBinding="{Binding SubSeledtedText, Mode=OneWay}"
+					Header="MultiSelect"
+					IsShowFilterBox="True"
+					ItemsSource="{Binding DataContext.SubItems, RelativeSource={RelativeSource AncestorType=AduSkin:AduDataGrid}}"
+					SelectedItemsBinding="{Binding SelectedItems, UpdateSourceTrigger=PropertyChanged}"
+					SortMemberPath="SubSeledtedText" />
+				<AduSkin:AduDataGridCheckBoxColumn
+					Width="80"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="Boolean1"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					Binding="{Binding Boolean1}"
+					Header="Boolean" />
+				<DataGridTemplateColumn
+					Width="100"
+					Header="Int"
+					IsReadOnly="True"
+					SortMemberPath="Int3">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduProgressBar
+								Margin="4,0"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="{DynamicResource PrimaryBrush}"
+								CornerRadius="2"
+								Value="{Binding Int3}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<AduSkin:AduDataGridIntegerColumn
+					Width="80"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="Int2"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					Binding="{Binding Int3, UpdateSourceTrigger=PropertyChanged}"
+					Header="Int"
+					LimitMode="Both"
+					Maximum="100"
+					Minimum="0" />
+				<AduSkin:AduDataGridDoubleColumn
+					Width="80"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="Double1"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					Binding="{Binding Double1, UpdateSourceTrigger=PropertyChanged}"
+					EditingVerticalContentAlignment="Stretch"
+					Header="Double"
+					LimitMode="Both"
+					Maximum="100"
+					Minimum="0" />
+				<DataGridTemplateColumn
+					Width="180"
+					AduAttach:DataGridBatchEditAttach.BatchPropertyName="DateTime1"
+					AduAttach:DataGridBatchEditAttach.IsBatchEditEnabled="True"
+					Header="DateTime"
+					SortMemberPath="DateTime1">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock
+								Margin="2,0"
+								Text="{Binding DateTime1, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+								TextAlignment="Center"
+								TextTrimming="CharacterEllipsis" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<AduSkin:AduDatePicker
+								Margin="0,0,10,0"
+								BorderThickness="0"
+								DateStringFormat="yyyy-MM-dd"
+								SelectedDateTime="{Binding DateTime1, UpdateSourceTrigger=PropertyChanged}"
+								Type="DateTime" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+			</AduSkin:AduDataGrid.Columns>
+		</AduSkin:AduDataGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Common Properties  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Common Properties" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Header visibility, frozen columns, scroll viewer, and loading state"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,8" HorizontalAlignment="Left">
+			<StackPanel Orientation="Horizontal">
+				<AduSkin:AduFormBox
+					Margin="6"
+					HorizontalAlignment="Left"
+					Header="Header Visible">
+					<AduSkin:AduComboBox ItemsSource="{Binding HeaderVisibles}" SelectedItem="{Binding SelectedHeaderVisible}" />
+				</AduSkin:AduFormBox>
+				<AduSkin:AduFormBox
+					Margin="6"
+					HorizontalAlignment="Left"
+					Header="FrozenColumnCount">
+					<AduSkin:AduIntegerUpDown Width="60" Value="{Binding FrozenColumnCount}" />
+				</AduSkin:AduFormBox>
+
+				<AduSkin:AduCheckBox
+					x:Name="CommonScrollCheckBox"
+					Width="Auto"
+					Margin="6"
+					HorizontalAlignment="Left"
+					BorderThickness="0"
+					Content="Enable Scrollbar"
+					IsChecked="True" />
+
+				<AduSkin:AduCheckBox
+					x:Name="CommonLoadingCheckBox"
+					Width="Auto"
+					Margin="6"
+					HorizontalAlignment="Left"
+					BorderThickness="0"
+					Content="Loading"
+					IsChecked="False" />
+			</StackPanel>
+
+		</StackPanel>
+
+		<AduSkin:AduDataGrid
+			Height="200"
+			AduAttach:BorderAttach.CornerRadius="10"
+			AduAttach:LoadingAttach.IsActive="{Binding ElementName=CommonLoadingCheckBox, Path=IsChecked}"
+			AlternationCount="2"
+			FrozenColumnCount="{Binding FrozenColumnCount}"
+			GridLinesVisibility="All"
+			HeadersVisibility="{Binding SelectedHeaderVisible}"
+			IsScrollViewerEnabled="{Binding ElementName=CommonScrollCheckBox, Path=IsChecked}"
+			ItemsSource="{Binding CommonItems}"
+			RowHeaderWidth="30"
+			SelectionMode="Single"
+			SelectionUnit="FullRow"
+			VirtualizingStackPanel.IsVirtualizing="True"
+			VirtualizingStackPanel.VirtualizationMode="Recycling">
+			<AduSkin:AduDataGrid.Columns>
+				<AduSkin:AduDataGridTextColumn
+					Width="60"
+					Binding="{Binding Int1}"
+					Header="Index"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Binding="{Binding String1, UpdateSourceTrigger=LostFocus}"
+					Header="Left"
+					IsReadOnly="True"
+					TextAlignment="Left" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					Binding="{Binding String2, UpdateSourceTrigger=LostFocus}"
+					Header="Center"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Right"
+					Binding="{Binding String3, UpdateSourceTrigger=LostFocus}"
+					Header="Right"
+					IsReadOnly="True"
+					TextAlignment="Right" />
+				<AduSkin:AduDataGridTextColumn
+					Width="60"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Right"
+					Binding="{Binding Double1, UpdateSourceTrigger=LostFocus}"
+					Header="Double"
+					IsReadOnly="True"
+					TextAlignment="Right" />
+
+				<DataGridTemplateColumn
+					Width="120"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Header="Progress"
+					IsReadOnly="True"
+					SortMemberPath="Int3">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduProgressBar
+								Margin="4,0"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="{DynamicResource PrimaryBrush}"
+								CornerRadius="2"
+								Value="{Binding Int3}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+
+				<AduSkin:AduDataGridTextColumn
+					Width="150"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Center"
+					Binding="{Binding DateTime1, UpdateSourceTrigger=LostFocus}"
+					Header="DateTime"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+			</AduSkin:AduDataGrid.Columns>
+		</AduSkin:AduDataGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Selection Binding  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: Selection Binding" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Get and set SelectedItem and AduSelectedItems from the view model"
+			TextWrapping="Wrap" />
+
+		<StackPanel Margin="0,0,0,8" Orientation="Horizontal">
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="2"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding GetSelectedItemCommand}"
+				Content="Get SelectedItem" />
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="2"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding SetSelectedItemCommand}"
+				Content="Set SelectedItem" />
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="2"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding GetSelectedItemsCommand}"
+				Content="Get SelectedItems" />
+			<AduSkin:AduButton
+				Width="Auto"
+				Margin="2"
+				Padding="10,0"
+				HorizontalAlignment="Left"
+				Command="{Binding SetSelectedItemsCommand}"
+				Content="Set SelectedItems" />
+		</StackPanel>
+
+		<AduSkin:AduDataGrid
+			Height="300"
+			AduAttach:BorderAttach.CornerRadius="10"
+			AduSelectedItems="{Binding SelectedItems, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+			AlternationCount="2"
+			FrozenColumnCount="2"
+			GridLinesVisibility="All"
+			HeadersVisibility="All"
+			IsMultiselectEnabled="True"
+			ItemsSource="{Binding ItemsSource}"
+			RowHeaderWidth="30"
+			SelectedItem="{Binding SelectedItem}"
+			SelectionMode="Extended"
+			SelectionUnit="FullRow">
+			<Interactivity:Interaction.Behaviors>
+				<Interactivity:DataGridDoubleClickBehavior Command="{Binding DoubleClickCommand}" />
+			</Interactivity:Interaction.Behaviors>
+			<AduSkin:AduDataGrid.Columns>
+				<AduSkin:AduDataGridTextColumn
+					Width="50"
+					Binding="{Binding Int1}"
+					Header="Index"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Binding="{Binding String1, UpdateSourceTrigger=LostFocus}"
+					Header="Left"
+					IsReadOnly="True"
+					TextAlignment="Left" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					Binding="{Binding String2, UpdateSourceTrigger=LostFocus}"
+					Header="Center"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Right"
+					Binding="{Binding String3}"
+					Header="Right"
+					IsReadOnly="True"
+					TextAlignment="Right" />
+				<AduSkin:AduDataGridCheckBoxColumn
+					Width="60"
+					Binding="{Binding Boolean1, UpdateSourceTrigger=PropertyChanged}"
+					Header="Boolean"
+					IsReadOnly="True" />
+				<DataGridTemplateColumn
+					Width="120"
+					Header="Int"
+					IsReadOnly="True"
+					SortMemberPath="Int3">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduProgressBar
+								Margin="4,0"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="{DynamicResource PrimaryBrush}"
+								CornerRadius="2"
+								Value="{Binding Int3}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn
+					Width="60"
+					Header="Int"
+					IsReadOnly="True"
+					SortMemberPath="Int2">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Int2}" TextAlignment="Center" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<AduSkin:AduIntegerUpDown
+								BorderBrush="{DynamicResource NormalBorderBrush}"
+								BorderThickness="0"
+								Maximum="9999"
+								Minimum="-9999"
+								Value="{Binding Int2, UpdateSourceTrigger=PropertyChanged}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn
+					Width="80"
+					Header="Double"
+					IsReadOnly="True"
+					SortMemberPath="Double1">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Double1, StringFormat={}{0:F2}}" TextAlignment="Center" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<AduSkin:AduDoubleUpDown
+								BorderBrush="{DynamicResource NormalBorderBrush}"
+								BorderThickness="0"
+								Value="{Binding Double1, UpdateSourceTrigger=PropertyChanged}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn
+					Width="180"
+					Header="DateTime"
+					IsReadOnly="True"
+					SortMemberPath="DateTime1">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock
+								Margin="2,0"
+								Text="{Binding DateTime1, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+								TextAlignment="Center"
+								TextTrimming="CharacterEllipsis" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<AduSkin:AduDatePicker
+								BorderThickness="0"
+								DateStringFormat="yyyy-MM-dd"
+								SelectedDateTime="{Binding DateTime1, UpdateSourceTrigger=PropertyChanged}"
+								Type="DateTime" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+			</AduSkin:AduDataGrid.Columns>
+		</AduSkin:AduDataGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Performance Testing  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 5: Performance Testing" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Append rows continuously while virtualization is enabled"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox
+			Margin="2,0,0,8"
+			HorizontalAlignment="Left"
+			Header="Performance Testing">
+			<StackPanel Orientation="Horizontal">
+				<TextBlock VerticalAlignment="Center" Text="MaxRow" />
+				<AduSkin:AduIntegerUpDown
+					Width="60"
+					Margin="4,0"
+					IsEnabled="{Binding IsTestFlight, Converter={StaticResource BooleanReverseConverter}}"
+					Maximum="9999"
+					Value="{Binding MaxRow}" />
+				<TextBlock VerticalAlignment="Center" Text="Interval(ms)" />
+				<AduSkin:AduIntegerUpDown
+					Width="60"
+					Margin="4,0"
+					IsEnabled="{Binding IsTestFlight, Converter={StaticResource BooleanReverseConverter}}"
+					Maximum="9999"
+					Value="{Binding Interval}" />
+				<AduSkin:AduToggleButton
+					Width="Auto"
+					Margin="2"
+					Padding="8,0"
+					AduAttach:PathDataAttach.Visibility="Visible"
+					Content="TestFlight"
+					IsChecked="{Binding IsTestFlight}" />
+			</StackPanel>
+		</AduSkin:AduFormBox>
+
+		<AduSkin:AduDataGrid
+			Height="300"
+			AduAttach:BorderAttach.CornerRadius="10"
+			AlternationCount="2"
+			FrozenColumnCount="2"
+			GridLinesVisibility="All"
+			HeadersVisibility="All"
+			IsScrollViewerEnabled="True"
+			ItemsSource="{Binding PerformanceItems}"
+			RowHeaderWidth="30"
+			SelectionUnit="FullRow"
+			VirtualizingStackPanel.IsVirtualizing="True"
+			VirtualizingStackPanel.VirtualizationMode="Recycling">
+			<AduSkin:AduDataGrid.Columns>
+				<AduSkin:AduDataGridTextColumn
+					Width="60"
+					Binding="{Binding Int1}"
+					Header="Index"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Binding="{Binding String1}"
+					Header="Left"
+					IsReadOnly="True"
+					TextAlignment="Left" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					Binding="{Binding String2}"
+					Header="Center"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="160"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Right"
+					Binding="{Binding String3}"
+					Header="Right"
+					IsReadOnly="True"
+					TextAlignment="Right" />
+				<AduSkin:AduDataGridCheckBoxColumn
+					Width="60"
+					Binding="{Binding Boolean1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					Header="Boolean" />
+				<DataGridTemplateColumn
+					Width="120"
+					Header="Progress"
+					IsReadOnly="True"
+					SortMemberPath="Int3">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduProgressBar
+								Margin="4,0"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="{DynamicResource PrimaryBrush}"
+								CornerRadius="2"
+								Value="{Binding Int3}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn
+					Width="180"
+					Header="DateTime"
+					SortMemberPath="DateTime1">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock
+								Margin="2,0"
+								Text="{Binding DateTime1, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+								TextAlignment="Center"
+								TextTrimming="CharacterEllipsis" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+			</AduSkin:AduDataGrid.Columns>
+		</AduSkin:AduDataGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Copy Cell Value  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 6: DataGrid Copy Cell Value" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Cell-level copy (Ctrl+C) and paste (Ctrl+V) support between two grids"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="2">
+			<AduSkin:AduDataGrid
+				ItemsSource="{Binding Items1}"
+				SelectionMode="Extended"
+				SelectionUnit="Cell">
+				<Interactivity:Interaction.Triggers>
+					<Interactivity:EventTrigger EventName="PreviewKeyDown">
+						<Interactivity:EventToCommand Command="{Binding PreviewKeyDownCommand}" PassEventArgsToCommand="True" />
+					</Interactivity:EventTrigger>
+				</Interactivity:Interaction.Triggers>
+				<AduSkin:AduDataGrid.Columns>
+					<AduSkin:AduDataGridTextColumn
+						Binding="{Binding Int1}"
+						Header="Left"
+						TextAlignment="Center" />
+					<AduSkin:AduDataGridTextColumn
+						Width="*"
+						Binding="{Binding String1}"
+						Header="Center"
+						TextAlignment="Center" />
+					<AduSkin:AduDataGridTextColumn
+						AduAttach:DataGridFilterAttach.IsFilterEnabled="False"
+						Binding="{Binding Boolean1}"
+						Header="Center"
+						TextAlignment="Center" />
+				</AduSkin:AduDataGrid.Columns>
+			</AduSkin:AduDataGrid>
+			<AduSkin:AduDataGrid
+				Margin="5,0,0,0"
+				ItemsSource="{Binding Items2}"
+				SelectionMode="Extended"
+				SelectionUnit="Cell">
+				<Interactivity:Interaction.Triggers>
+					<Interactivity:EventTrigger EventName="PreviewKeyDown">
+						<Interactivity:EventToCommand Command="{Binding PreviewKeyDownCommand}" PassEventArgsToCommand="True" />
+					</Interactivity:EventTrigger>
+				</Interactivity:Interaction.Triggers>
+				<AduSkin:AduDataGrid.Columns>
+					<AduSkin:AduDataGridTextColumn
+						Binding="{Binding Int1}"
+						Header="Left"
+						TextAlignment="Center" />
+					<AduSkin:AduDataGridTextColumn
+						Width="*"
+						Binding="{Binding String1}"
+						Header="Center"
+						TextAlignment="Center" />
+					<AduSkin:AduDataGridTextColumn
+						AduAttach:DataGridFilterAttach.IsFilterEnabled="False"
+						Binding="{Binding Boolean1}"
+						Header="Center"
+						TextAlignment="Center" />
+				</AduSkin:AduDataGrid.Columns>
+			</AduSkin:AduDataGrid>
+		</UniformGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 6: Large  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 6: Selection Binding" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Get and set SelectedItem and AduSelectedItems from the view model"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduDataGrid
+			Height="322"
+			AduAttach:BorderAttach.CornerRadius="0"
+			AlternationCount="2"
+			BorderThickness="0"
+			ColumnHeaderHeight="50"
+			FrozenColumnCount="2"
+			GridLinesVisibility="Horizontal"
+			HeadersVisibility="All"
+			IsMultiselectEnabled="True"
+			ItemsSource="{Binding EditItemsSource}"
+			MinRowHeight="45"
+			RowHeaderWidth="40"
+			SelectionMode="Extended"
+			SelectionUnit="FullRow">
+			<AduSkin:AduDataGrid.Columns>
+				<AduSkin:AduDataGridTextColumn
+					Width="50"
+					Binding="{Binding Int1}"
+					Header="Index"
+					IsReadOnly="True"
+					TextAlignment="Center" />
+				<AduSkin:AduDataGridTextColumn
+					Width="120"
+					AduAttach:DataGridHeaderAttach.HorizontalContentAlignment="Left"
+					Binding="{Binding String1, UpdateSourceTrigger=LostFocus}"
+					Header="String"
+					TextAlignment="Left" />
+				<AduSkin:AduDataGridCheckBoxColumn
+					Width="70"
+					Binding="{Binding Boolean1, UpdateSourceTrigger=PropertyChanged}"
+					Header="CheckBox" />
+				<DataGridTemplateColumn
+					Width="*"
+					Header="Progress"
+					IsReadOnly="True"
+					SortMemberPath="Int3">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduProgressBar
+								Margin="4,0"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="{DynamicResource PrimaryBrush}"
+								CornerRadius="2"
+								Value="{Binding Int3}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<DataGridTemplateColumn
+					Width="*"
+					Header="Tags"
+					IsReadOnly="True">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<AduSkin:AduTagBox
+								HorizontalAlignment="Center"
+								AduAttach:HeaderAttach.Visible="Collapsed"
+								Background="Transparent"
+								BorderThickness="0"
+								IsReadOnly="True"
+								Tags="{Binding Strings}" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+				</DataGridTemplateColumn>
+				<AduSkin:AduDataGridIntegerColumn
+					Width="60"
+					Binding="{Binding Int2, UpdateSourceTrigger=PropertyChanged}"
+					Header="Int"
+					Maximum="9999"
+					Minimum="-9999"
+					SortMemberPath="Int2" />
+				<AduSkin:AduDataGridDoubleColumn
+					Width="80"
+					Binding="{Binding Double1, UpdateSourceTrigger=PropertyChanged}"
+					Header="Double"
+					SortMemberPath="Double1" />
+				<DataGridTemplateColumn
+					Width="*"
+					Header="TimePicker"
+					SortMemberPath="DateTime1">
+					<DataGridTemplateColumn.CellTemplate>
+						<DataTemplate>
+							<TextBlock
+								Margin="2,0"
+								Text="{Binding DateTime1, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}"
+								TextAlignment="Center"
+								TextTrimming="CharacterEllipsis" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellTemplate>
+					<DataGridTemplateColumn.CellEditingTemplate>
+						<DataTemplate>
+							<AduSkin:AduDatePicker
+								BorderThickness="0"
+								DateStringFormat="yyyy-MM-dd"
+								SelectedDateTime="{Binding DateTime1, UpdateSourceTrigger=PropertyChanged}"
+								Type="DateTime" />
+						</DataTemplate>
+					</DataGridTemplateColumn.CellEditingTemplate>
+				</DataGridTemplateColumn>
+			</AduSkin:AduDataGrid.Columns>
+		</AduSkin:AduDataGrid>
+	</StackPanel>
+</Border>

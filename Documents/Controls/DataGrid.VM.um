@@ -1,0 +1,567 @@
+#region 构造初始化数据源
+/// <summary>
+/// 字段名称映射表
+/// </summary>
+private static readonly Dictionary<string, string> EditPropertyDisplayNames = new()
+{
+    [nameof(TempModel.Int1)] = "Int1",
+    [nameof(TempModel.Int2)] = "Int2",
+    [nameof(TempModel.Int3)] = "Int3",
+    [nameof(TempModel.Double1)] = "Double1",
+    [nameof(TempModel.Double2)] = "Double2",
+    [nameof(TempModel.Double3)] = "Double3",
+    [nameof(TempModel.String1)] = "String1",
+    [nameof(TempModel.String2)] = "String2",
+    [nameof(TempModel.String3)] = "String3",
+    [nameof(TempModel.Boolean1)] = "Boolean1",
+    [nameof(TempModel.Boolean2)] = "Boolean2",
+    [nameof(TempModel.Boolean3)] = "Boolean3",
+    [nameof(TempModel.DateTime1)] = "DateTime1",
+    [nameof(TempModel.SelectedItem)] = "SelectedItem",
+    [nameof(TempModel.SelectedItems)] = "SelectedItems",
+    [nameof(TempModel.SelectedStringItem)] = "SelectedStringItem"
+};
+/// <summary>
+/// 列表数据中每行下拉选项
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _subItems = new ObservableCollection<TempModel>();
+/// <summary>
+/// 字符串列表数据中每行下拉选项
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<string> _subItemStrings = new ObservableCollection<string>();
+/// <summary>
+/// 随机数生成器
+/// </summary>
+private readonly Random rand = new Random();
+/// <summary>
+/// 弹窗服务
+/// </summary>
+public AduMessageTipHost? MessageTipHost;
+/// <summary>
+/// 数据加载状态
+/// </summary>
+bool isLoaded = false;
+/// <summary>
+/// 总时间
+/// </summary>
+[ObservableProperty]
+private string _totalTime;
+
+public Stopwatch Stopwatch;
+public DataGridViewModel()
+{
+    // 开始计时
+    Stopwatch = Stopwatch.StartNew();
+}
+/// <summary>
+/// 加载
+/// </summary>
+[RelayCommand]
+void Loaded()
+{
+    if (isLoaded)
+        return;
+    isLoaded = true;
+    Task.Run(() =>
+    {
+        Application.Current.Dispatcher.Invoke(() =>
+        {
+            // 头部可见性状态
+            foreach (DataGridHeadersVisibility item in Enum.GetValues(typeof(DataGridHeadersVisibility)))
+                HeaderVisibles.Add(item);
+            SelectedHeaderVisible = DataGridHeadersVisibility.All;
+
+            // 属性中的选项
+            for (int i = 0; i < 5; i++)
+            {
+                SubItems.Add(new TempModel() { String1 = $"SubItem{i}" });
+                SubItemStrings.Add($"SubItem{i}");
+            }
+
+            //编辑示例列表加入修改记录功能 
+            EditItemsSource.CollectionChanged += EditItemsSource_CollectionChanged;
+            // 数据源
+            for (int i = 1; i <= 30; i++)
+            {
+                // 常规示例数据，前20条加入公共列表用于其他示例展示
+                if (i <= 20)
+                {
+                    CommonItems.Add(CreateTempModel(i));
+                    ItemsSource.Add(CreateTempModel(i));
+                    PerformanceItems.Add(CreateTempModel(i));
+                    LargeItems.Add(CreateTempModel(i));
+                }
+
+                // 复制粘贴的数据
+                if (i <= 5)
+                {
+                    Items1.Add(new TempModel()
+                    {
+                        Int1 = i,
+                        String1 = "追求极致",
+                        Boolean1 = false,
+                    });
+                    Items2.Add(new TempModel()
+                    {
+                        Int1 = i,
+                        String1 = "永臻完美",
+                        Boolean1 = true,
+                    });
+                }
+
+                // 编辑示例数据，初始化单选和多选属性
+                var editItem = CreateTempModel(i);
+                editItem.SelectedItem = SubItems[rand.Next(0, SubItems.Count - 1)];
+                editItem.SelectedStringItem = SubItemStrings[rand.Next(0, SubItemStrings.Count - 1)];
+                editItem.SelectedItems = new ObservableCollection<TempModel>();
+                var item1 = SubItems[rand.Next(0, SubItems.Count - 1)];
+                var item2 = SubItems.ToList().FindAll(s => s != item1)[rand.Next(0, SubItems.Count - 2)];
+                editItem.SelectedItems.Add(item1);
+                editItem.SelectedItems.Add(item2);
+                EditItemsSource.Add(editItem);
+            }
+        });
+    });
+}
+/// <summary>
+/// 构建单个对象
+/// </summary> 
+private TempModel CreateTempModel(int index)
+{
+    return new TempModel()
+    {
+        Int1 = index,
+        String1 = $"追求极致{index}",
+        String2 = $"永臻完美{index}",
+        String3 = $"AduSkin{index}",
+        Int2 = rand.Next(0, 100),
+        Int3 = rand.Next(0, 100),
+        Double1 = rand.NextDouble(),
+        Boolean1 = true,
+        Boolean2 = false,
+        Boolean3 = true,
+        DateTime1 = DateTime.Now,
+        Strings = new ObservableCollection<string>() { "C#", "Java", "C++" }
+    };
+}
+#endregion
+
+#region 编辑记录跟踪
+/// <summary>
+/// 批量修改
+/// </summary>
+[ObservableProperty]
+private bool _isBatchEditing;
+/// <summary>
+/// 批量编辑示例只追踪 EditItemsSource，新增/删除行时自动维护行级 PropertyChanged 订阅。
+/// </summary>
+private readonly HashSet<TempModel> _trackedEditItems = new();
+/// <summary>
+/// 绑定集合状态修改监控
+/// </summary> 
+private void EditItemsSource_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+{
+    if (e.Action == NotifyCollectionChangedAction.Reset)
+    {
+        // Reset 无法知道具体增删项，直接按 EditItemsSource 重建订阅。
+        RebuildTrackedEditItems();
+        return;
+    }
+
+    if (e.OldItems != null)
+    {
+        foreach (TempModel item in e.OldItems)
+            UntrackEditItem(item);
+    }
+
+    if (e.NewItems != null)
+    {
+        foreach (TempModel item in e.NewItems)
+            TrackEditItem(item);
+    }
+}
+/// <summary>
+/// 重置每个对象的修改事件
+/// </summary>
+private void RebuildTrackedEditItems()
+{
+    foreach (var item in _trackedEditItems.ToList())
+        UntrackEditItem(item);
+
+    foreach (var item in EditItemsSource)
+        TrackEditItem(item);
+}
+/// <summary>
+/// 跟踪对象属性修改
+/// </summary> 
+private void TrackEditItem(TempModel item)
+{
+    if (!_trackedEditItems.Add(item))
+        return;
+
+    if (item.SelectedItems != null)
+        item.SelectedItems.CollectionChanged += SelectedItems_CollectionChanged;
+    item.PropertyChanged += EditItem_PropertyChanged;
+}
+/// <summary>
+/// 取消跟踪数据修改
+/// </summary> 
+private void UntrackEditItem(TempModel item)
+{
+    if (!_trackedEditItems.Remove(item))
+        return;
+    if (item.SelectedItems != null)
+        item.SelectedItems.CollectionChanged -= SelectedItems_CollectionChanged;
+    item.PropertyChanged -= EditItem_PropertyChanged;
+}
+/// <summary>
+/// 单个对象属性监控
+/// </summary> 
+private void EditItem_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+{
+    if (sender is not TempModel item || string.IsNullOrWhiteSpace(e.PropertyName))
+        return;
+
+    if (!EditPropertyDisplayNames.ContainsKey(e.PropertyName) || IsBatchEditing)
+        return;
+
+    MessageTipHost?.Show($"修改了 {GetPropertyDisplayName(e.PropertyName)}", $"第 {item.Int1} 行：{FormatEditValue(CaptureEditValue(item, e.PropertyName))}", NotificationType.Success);
+}
+/// <summary>
+/// 复选列属性
+/// </summary> 
+private void SelectedItems_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+{
+    if (sender is not ObservableCollection<TempModel> selectedItems)
+        return;
+
+    if (!EditPropertyDisplayNames.ContainsKey(nameof(TempModel.SelectedItems)) || IsBatchEditing)
+        return;
+
+    var editItem = EditItemsSource.FirstOrDefault(s => s.SelectedItems == sender);
+    if (editItem == null)
+        return;
+
+    MessageTipHost?.Show($"修改了 {GetPropertyDisplayName(nameof(TempModel.SelectedItems))}", $"第 {editItem.Int1} 行：新值：{FormatEditValue(selectedItems)}", NotificationType.Success);
+}
+/// <summary>
+/// 捕获编辑值
+/// </summary> 
+private object? CaptureEditValue(TempModel item, string propertyName)
+{
+    // 复杂对象转成示例中可读的文本，避免消息提示里直接显示类型名。
+    return propertyName switch
+    {
+        nameof(TempModel.SelectedItem) => item.SelectedItem?.String1,
+        nameof(TempModel.SelectedItems) => item.SelectedItems == null
+            ? null
+            : string.Join(", ", item.SelectedItems.Select(x => x.String1)),
+        _ => typeof(TempModel).GetProperty(propertyName)?.GetValue(item)
+    };
+}
+/// <summary>
+/// 开始执行批量修改
+/// </summary>
+/// <param name="e"></param>
+public void OnBatchEditApplying(DataGridBatchEditApplyingEventArgs e)
+{
+    if (!ReferenceEquals(e.DataGrid.ItemsSource, EditItemsSource))
+        return;
+
+    // 批量编辑会触发多行 PropertyChanged，这里只打标记，让普通修改提示跳过。
+    IsBatchEditing = true;
+}
+/// <summary>
+/// 批量修改完成
+/// </summary>
+/// <param name="e"></param>
+public void OnBatchEditApplied(DataGridBatchEditAppliedEventArgs e)
+{
+    if (!ReferenceEquals(e.DataGrid.ItemsSource, EditItemsSource))
+        return;
+
+    IsBatchEditing = false;
+
+    if (e.AppliedCount > 0)
+        MessageTipHost?.Show($"批量修改了 {GetPropertyDisplayName(e.PropertyName)}", $"已修改 {e.AppliedCount} 条数据，新值：{FormatEditValue(e.Value)}", NotificationType.Success);
+}
+/// <summary>
+/// 显示数据格式
+/// </summary> 
+private static string FormatEditValue(object? value)
+{
+    return value switch
+    {
+        null => "null",
+        DateTime dateTime => dateTime.ToString("yyyy-MM-dd HH:mm:ss"),
+        double doubleValue => doubleValue.ToString("0.##"),
+        float floatValue => floatValue.ToString("0.##"),
+        decimal decimalValue => decimalValue.ToString("0.##"),
+        TempModel item => item.String1,
+        List<Object> list => $"[{string.Join(", ", list.Cast<TempModel>().Select(x => x.String1))}]",
+        ObservableCollection<TempModel> observableCollection => $"[{string.Join(", ", observableCollection.Cast<TempModel>().Select(x => x.String1))}]",
+        IList<Object> ilist => $"[{string.Join(", ", ilist.Cast<TempModel>().Select(x => x.String1))}]",
+        _ => value.ToString() ?? string.Empty
+    };
+}
+/// <summary>
+/// 获取属性显示名
+/// </summary> 
+private static string GetPropertyDisplayName(string propertyName)
+{
+    return EditPropertyDisplayNames.TryGetValue(propertyName, out var displayName) ? displayName : propertyName;
+}
+#endregion
+
+#region 示例 1 过滤/编辑/批量编辑
+[ObservableProperty]
+private ObservableCollection<TempModel> _editItemsSource = new ObservableCollection<TempModel>();
+
+[ObservableProperty]
+private TempModel _editingSelectedItem;
+
+[ObservableProperty]
+private bool _isReadOnly;
+
+[ObservableProperty]
+private IList _editingSelectedItems;
+
+[ObservableProperty]
+private bool _canDragMove;
+
+[ObservableProperty]
+private bool _isVirtualizing;
+
+[RelayCommand]
+public void AddEditingItem()
+{
+    var item = CreateTempModel(EditItemsSource.Count + 1);
+    EditItemsSource.Add(item);
+}
+
+[RelayCommand]
+public void RemoveEditingSelectedItems()
+{
+    if (EditingSelectedItems is List<object> list && list.Count > 0)
+    {
+        foreach (TempModel item in list.ToList())
+            EditItemsSource.Remove(item);
+    }
+}
+#endregion
+
+#region 示例 2 常用属性
+/// <summary>
+/// 示例2 通用数据源
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _commonItems = new ObservableCollection<TempModel>();
+/// <summary>
+/// 头部显示状态
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<DataGridHeadersVisibility> _headerVisibles = new ObservableCollection<DataGridHeadersVisibility>();
+[ObservableProperty]
+private DataGridHeadersVisibility _selectedHeaderVisible;
+
+/// <summary>
+/// 冻结列
+/// </summary>
+[ObservableProperty]
+private int _frozenColumnCount = 2;
+#endregion
+
+#region 示例 3 选择单行/多行/双击命令
+/// <summary>
+/// 示例 3 基础数据源，包含单选和多选属性
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _itemsSource = new ObservableCollection<TempModel>();
+
+/// <summary>
+/// 当前选中项
+/// </summary>
+[ObservableProperty]
+private TempModel _selectedItem;
+
+/// <summary>
+/// 选中多项
+/// </summary>
+[ObservableProperty]
+private IList _selectedItems;
+
+/// <summary>
+/// 双击列表
+/// </summary> 
+[RelayCommand]
+public void DoubleClick(TempModel param)
+{
+    AduMessageBox.Show($"Double Click {param.Int1} - {param.String1}");
+}
+/// <summary>
+/// 获取选中的多行
+/// </summary>
+[RelayCommand]
+public void GetSelectedItems()
+{
+    AduMessageBox.Show($"SelectedItems Count({SelectedItems?.Count})");
+}
+/// <summary>
+/// 设置选中多行(连续选中3行)
+/// </summary>
+[RelayCommand]
+public void SetSelectedItems()
+{
+    var selecteds = new List<TempModel>();
+    var selectedCount = Math.Min(3, ItemsSource.Count);
+    var startIndex = selectedCount == 0 ? 0 : rand.Next(0, ItemsSource.Count - selectedCount + 1);
+
+    for (int i = 0; i < selectedCount; i++)
+        selecteds.Add(ItemsSource[startIndex + i]);
+
+    SelectedItems = selecteds;
+}
+/// <summary>
+/// 移除选中多行
+/// </summary>
+[RelayCommand]
+public void RemoveSelectedItems()
+{
+    if (SelectedItems is List<object> list && list.Count > 0)
+    {
+        foreach (TempModel item in list.ToList())
+            ItemsSource.Remove(item);
+    }
+}
+/// <summary>
+/// 获取选中单行
+/// </summary>
+[RelayCommand]
+public void GetSelectedItem()
+{
+    AduMessageBox.Show($"SelectedItem ({SelectedItem?.String1})");
+}
+/// <summary>
+/// 设置选中单行(随机选中1行)
+/// </summary>
+[RelayCommand]
+public void SetSelectedItem()
+{
+    SelectedItem = ItemsSource[rand.Next(0, ItemsSource.Count - 1)];
+}
+/// <summary>
+/// 添加单行
+/// </summary>
+[RelayCommand]
+public void AddItem()
+{
+    ItemsSource.Add(CreateTempModel(ItemsSource.Count + 1));
+}
+#endregion
+
+#region 示例 4 性能测试
+/// <summary>
+/// 数据源
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _performanceItems = new ObservableCollection<TempModel>();
+/// <summary>
+/// 线程状态
+/// </summary>
+private CancellationTokenSource? cancellationTokenSource;
+/// <summary>
+/// 最大行
+/// </summary>
+[ObservableProperty]
+private int _maxRow = 500;
+/// <summary>
+/// 间隔
+/// </summary>
+[ObservableProperty]
+private int _interval = 100;
+/// <summary>
+/// 测试
+/// </summary>
+[ObservableProperty]
+private bool _isTestFlight;
+partial void OnIsTestFlightChanged(bool oldValue, bool newValue)
+{
+    if (newValue)
+    {
+        cancellationTokenSource?.Cancel();
+        cancellationTokenSource = new CancellationTokenSource();
+        int index = 0;
+        Task.Run(async () =>
+        {
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    if (PerformanceItems.Count > MaxRow)
+                        PerformanceItems.RemoveAt(0);
+                    PerformanceItems.Add(new TempModel()
+                    {
+                        Int1 = index,
+                        String1 = $"追求极致{PerformanceItems.Count}",
+                        String2 = $"永臻完美{PerformanceItems.Count}",
+                        String3 = $"AduSkin{PerformanceItems.Count}",
+                        SelectedItem = SubItems.FirstOrDefault(),
+                        SelectedItems = new ObservableCollection<TempModel> { SubItems.FirstOrDefault(), SubItems.LastOrDefault() },
+                        Int3 = rand.Next(0, 100),
+                        Int2 = rand.Next(-999, 999),
+                        Double1 = rand.NextDouble(),
+                        Boolean1 = true,
+                        Boolean2 = false,
+                        Boolean3 = true,
+                        DateTime1 = DateTime.Now,
+                    });
+                    index += 1;
+                });
+                await Task.Delay(Interval);
+            }
+        });
+    }
+    else
+        cancellationTokenSource?.Cancel();
+}
+#endregion 
+
+#region 示例 5 批量复制粘贴单元格
+/// <summary>
+/// 复制列表
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _items1 = new ObservableCollection<TempModel>();
+/// <summary>
+/// 粘贴列表
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _items2 = new ObservableCollection<TempModel>();
+/// <summary>
+/// 键盘操作
+/// </summary>
+[RelayCommand]
+private void PreviewKeyDown(KeyEventArgs e)
+{
+    if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+    {
+        DataGridExtend.PasteToGrid(e.Source as DataGrid);
+        e.Handled = true;
+    }
+    else if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+    {
+        DataGridExtend.CopySelectedCells(e.Source as DataGrid);
+        e.Handled = true;
+    }
+}
+#endregion
+
+#region 示例 6
+/// <summary>
+/// 数据源
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<TempModel> _largeItems = new ObservableCollection<TempModel>();
+#endregion

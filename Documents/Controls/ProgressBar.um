@@ -1,0 +1,106 @@
+AduSkin 的 ProgressBar 目录包含线性进度条、格子进度条、环形进度条，以及一个控制台加载辅助类。前三者是 WPF 控件，适合在界面中展示任务进度、步骤完成度、加载状态或错误状态；`AduConsoleLoading` 用于控制台程序的文本进度输出。
+
+以下默认值以对应控件的默认样式为准。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduProgressBar` | 线性进度条，支持标题、百分比提示、等待和错误状态。 | `ProgressBar` |
+| `AduGridProgressBar` | 格子进度条，把进度拆成固定数量的格子显示。 | `ProgressBar` |
+| `AduCircularProgressBar` | 环形进度条，支持动画过渡和自定义中心文本格式。 | `Control` |
+| `AduConsoleLoading` | 控制台加载和进度输出辅助类。 | `IDisposable` |
+
+## AduProgressBar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前进度值，继承自 `ProgressBar`。 | `double` | `0` |
+| `Minimum` | 最小进度值，继承自 `ProgressBar`。 | `double` | `0` |
+| `Maximum` | 最大进度值，继承自 `ProgressBar`。 | `double` | `100` |
+| `State` | 进度条状态。`Wait` 会进入不确定进度模式，`Error` 会切换为错误色。 | `ProgressBarState` | `None` |
+| `CornerRadius` | 进度条圆角。 | `CornerRadius` | `7.5` |
+| `Hint` | 进度条内显示的提示文本。为空或以 `" %"` 结尾时，`ValueChanged` 会自动写入百分比。 | `string` | `null` |
+| `ProgressBarHeight` | 进度条高度。 | `double` | `15` |
+| `TextHorizontalAlignment` | 标题文本水平对齐方式。 | `HorizontalAlignment` | `Left` |
+| `IsIndeterminate` | 是否为不确定进度模式，继承自 `ProgressBar`。 | `bool` | `False` |
+
+## AduGridProgressBar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前进度值，继承自 `ProgressBar`。 | `double` | `0` |
+| `Maximum` | 最大进度值，继承自 `ProgressBar`。 | `double` | `100` |
+| `GridCount` | 格子总数。改变后会重新生成格子。 | `int` | `20` |
+| `Hint` | 右侧提示文本。为空或以 `" %"` 结尾时，`ValueChanged` 会自动写入百分比。 | `string` | `null` |
+| `ProgressBarHeight` | 格子区域高度。 | `double` | `20` |
+| `ActiveBrush` | 已激活格子颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `InactiveBrush` | 未激活格子颜色。 | `Brush` | `PrimaryBrush30` 动态资源 |
+| `AnimationDuration` | 格子激活动画时长，单位为毫秒。 | `double` | `300` |
+
+## AduCircularProgressBar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Value` | 当前进度值。改变时会触发动画刷新。 | `double` | `0` |
+| `Minimum` | 最小进度值。 | `double` | `0` |
+| `Maximum` | 最大进度值。 | `double` | `100` |
+| `StrokeThickness` | 环形线条厚度。 | `double` | `10` |
+| `CircleSize` | 环形控件宽高尺寸。 | `double` | `100` |
+| `TextFormat` | 中心文本格式，使用百分比整数作为 `{0}`。XAML 中可写为 `"{}{0}%"`。 | `string` | `"{}{0}%"` |
+| `ProgressState` | 进度状态，当前默认模板主要保留该值供扩展样式使用。 | `ProgressBarState` | `None` |
+| `DisplayText` | 当前中心显示文本。通常由控件按 `TextFormat` 自动计算。 | `string` | `""` |
+| `ProgressStrokeDashArray` | 环形进度线段的虚线数组。通常由控件内部计算，模板绑定使用。 | `DoubleCollection` | 空集合 |
+| `IsAnimationEnabled` | 是否启用 `Value` 变化动画。 | `bool` | `True` |
+| `AnimationDuration` | 环形动画时长，单位为毫秒。 | `int` | `300` |
+| `Percentage` | 当前百分比计算属性，范围按 `Minimum`、`Maximum` 和 `Value` 计算。 | `double` | 计算值 |
+
+## ProgressBarState 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `None` | 普通进度状态。 |
+| `Error` | 错误状态。`AduProgressBar` 默认切换为错误色。 |
+| `Wait` | 等待状态。`AduProgressBar` 默认进入不确定进度模式并使用警告色。 |
+
+## 常用样式附加属性
+| 名称 | 适用控件 | 描述 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | `AduProgressBar` / `AduGridProgressBar` | 进度条标题。 | `标题` / `Header` |
+| `AduAttach:HeaderAttach.Visible` | 三个 WPF 进度条 | 是否显示标题或环形中心文本。 | `Visible` |
+| `AduAttach:HeaderAttach.Margin` | `AduProgressBar` / `AduGridProgressBar` | 标题外边距。 | `0,0,0,4` / `0,0,0,8` |
+| `AduAttach:HeaderAttach.Foreground` | `AduProgressBar` / `AduGridProgressBar` | 标题前景色。 | `NormalForeground` 动态资源 |
+| `AduAttach:BackgroundAttach.HighlightBackground` | `AduCircularProgressBar` | 环形进度高亮线条颜色。 | `PrimaryBrush` 动态资源 |
+| `AduAttach:BackgroundAttach.NormalBackground` | `AduCircularProgressBar` | 环形背景线条颜色。 | `NormalBorderBrush` 动态资源 |
+| `AduAttach:ContentAttach.Margin` | `AduGridProgressBar` | 格子之间的外边距。 | `2,0` |
+| `AduAttach:BorderAttach.CornerRadius` | `AduGridProgressBar` | 格子圆角。 | `2` |
+
+## 使用说明
+- `AduProgressBar` 和 `AduGridProgressBar` 都继承自 WPF `ProgressBar`，可以直接使用 `Value`、`Minimum`、`Maximum`、`IsIndeterminate` 等标准属性。
+- `AduProgressBar.Hint` 和 `AduGridProgressBar.Hint` 为空时会随 `ValueChanged` 自动更新为百分比文本；如果要固定自定义文案，设置一个不以 `" %"` 结尾的字符串。
+- `AduProgressBar.State=Wait` 会把 `IsIndeterminate` 设为 `True`，适合无法确认剩余时间的等待过程。
+- `AduGridProgressBar` 会按 `Value / Maximum * GridCount` 计算激活格子数，并四舍五入。
+- `AduCircularProgressBar` 不继承 WPF `ProgressBar`，但提供了同名的 `Value`、`Minimum`、`Maximum` 属性。
+- `AduCircularProgressBar.TextFormat` 在 XAML 中如果以 `{0}` 开头，需要使用 `"{}"` 转义，例如 `TextFormat="{}{0}%"`。
+- `AduCircularProgressBar.CalcProgress(double progress, double radius, double thickness)` 可用于按百分比、半径和线宽计算环形 `StrokeDashArray`，一般不需要业务代码直接调用。
+
+## AduConsoleLoading
+`AduConsoleLoading` 在构造时立即开始控制台加载动画，使用完成后应调用 `OK`、`Fail`、`End` 或 `Dispose` 结束输出。
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 控制台加载标题。 | `string` | 构造函数传入 |
+| `Interval` | 刷新间隔，单位为毫秒。 | `int` | `100` |
+| `ProgWidth` | 控制台进度条字符宽度。 | `int` | `18` |
+| `ProgTxt` | 进度旁显示的文本。 | `string` | `null` |
+| `Value` | 当前进度值。 | `double` | `0` |
+| `MaxValue` | 最大进度值。 | `double` | `100` |
+
+| 方法 | 描述 |
+| --- | --- |
+| `OK(string txt)` | 以成功颜色结束加载。 |
+| `Fail(string txt)` | 以失败颜色结束加载。 |
+| `End(string txt, ConsoleColor color)` | 使用指定颜色结束加载。 |
+| `Dispose()` | 停止后台刷新并释放资源。 |
+ 
+## 典型场景
+- 文件上传、下载、导入、导出进度。
+- 等待接口返回或后台任务执行的加载状态。
+- 仪表盘中的圆形百分比展示。
+- 构建、安装、校验等步骤型任务的格子进度展示。
+- 控制台工具中的长任务进度提示。

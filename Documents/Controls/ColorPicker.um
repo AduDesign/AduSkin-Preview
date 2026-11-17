@@ -1,0 +1,88 @@
+`AduColorPicker` 支持手动选择、内置预设和绑定预设。每种方式占一个 Tab，共用底部的色块预览、HEX 和 ARGB 文本与复制按钮。`AduColorPickerButton` 通过 Popup 显示相同的取色器，适合工具栏、属性面板和表单。
+
+以下默认值以 `AduColorPicker`、`AduColorPickerButton` 的源码和默认样式为准。两个控件的 `SelectedColor` 都默认支持双向绑定，可直接与 ViewModel 中的 `Color` 属性同步。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduColorPicker` | 颜色选择面板，支持手动选色、预设色板、HEX 编辑、预览和复制。 | `Control` |
+| `AduColorPickerButton` | 显示当前颜色的紧凑按钮，点击后弹出完整颜色选择面板。 | `Control` |
+
+## AduColorPicker 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedColor` | 当前选中的颜色，默认支持双向绑定。颜色变化时会同步更新 RGBA、HEX、预览区域和选色指示器。 | `Color` | `Colors.Red` |
+| `Hex` | 当前颜色的十六进制文本。支持 `RRGGBB` 和 `AARRGGBB`，可带或不带 `#`。 | `string` | `#FFFF0000` |
+| `SelectionModes` | 决定显示哪些选色 Tab，支持组合。 | `AduColorPickerMode` | `ManualAndBuiltInPresets` |
+| `BoundPresetColors` | 「绑定预设」Tab 的颜色源。绑定 `ObservableCollection<Color>` 时，增删色块会刷新列表。 | `IEnumerable<Color>` | `null` |
+| `Red` | 红色通道，取值范围为 0～255。 | `byte` | `255` |
+| `Green` | 绿色通道，取值范围为 0～255。 | `byte` | `0` |
+| `Blue` | 蓝色通道，取值范围为 0～255。 | `byte` | `0` |
+| `Alpha` | 透明度通道，取值范围为 0～255；0 表示完全透明，255 表示完全不透明。 | `byte` | `255` |
+| `IsShowAlpha` | 是否显示手动选择 Tab 的透明度滑条。 | `bool` | `True` |
+| `ColorChangedCommand` | 颜色变化命令接口。当前版本保留该属性，但控件内部尚未调用命令，业务代码应优先绑定 `SelectedColor`。 | `ICommand` | `null` |
+
+## AduColorPickerButton 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedColor` | 按钮当前显示和 Popup 内部选择器使用的颜色，默认支持双向绑定。 | `Color` | `Colors.Red` |
+| `SelectionModes` | 传递给 Popup 内的颜色选择器。 | `AduColorPickerMode` | `ManualAndBuiltInPresets` |
+| `BoundPresetColors` | 传递给 Popup 内颜色选择器的绑定预设。 | `IEnumerable<Color>` | `null` |
+| `DefaultColor` | 默认颜色接口。当前版本只保存该值，不会自动重置 `SelectedColor`。 | `Color` | `Colors.Red` |
+| `IsDropDownOpen` | Popup 是否打开，默认支持双向绑定。 | `bool` | `False` |
+| `ColorChangedCommand` | 传递给内部颜色选择器的颜色变化命令接口。当前版本尚未自动执行。 | `ICommand` | `null` |
+| `CornerRadius` | 颜色按钮的圆角。 | `CornerRadius` | `4` |
+
+## 事件与方法
+| 名称 | 所属控件 | 描述 |
+| --- | --- | --- |
+| `ColorChanged` | `AduColorPicker` | 颜色变化回调，参数为 `Color`。如需稳定响应界面和 ViewModel 的所有变化，建议使用 `SelectedColor` 双向绑定。 |
+| `OpenDropDown()` | `AduColorPickerButton` | 将 `IsDropDownOpen` 设置为 `True`，打开颜色面板。 |
+| `CloseDropDown()` | `AduColorPickerButton` | 将 `IsDropDownOpen` 设置为 `False`，关闭颜色面板。 |
+| `CopyRGB()` | `AduColorPicker` | 将当前颜色以 `RGB(R, G, B)` 格式复制到剪贴板。 |
+| `CopyHex()` | `AduColorPicker` | 将当前 `Hex` 文本复制到剪贴板。 |
+
+## 选色模式
+
+`AduColorPickerMode` 是一个 `[Flags]` 枚举。在 XAML 中可直接填写下表的枚举名，在 C# 中也可以用 `|` 组合。
+
+| 枚举值 | 可用的选色方式 |
+| --- | --- |
+| `None` | 仅预览和复制当前颜色 |
+| `Manual` | 手动选择 |
+| `BuiltInPresets` | 内置预设 |
+| `BoundPresets` | 绑定预设 |
+| `ManualAndBuiltInPresets` | 手动选择和内置预设，默认值 |
+| `ManualAndBoundPresets` | 手动选择和绑定预设 |
+| `BuiltInAndBoundPresets` | 内置预设和绑定预设 |
+| `All` | 手动选择、内置预设和绑定预设 |
+
+Tab 标题跟随应用通过 `LanguageManager` 设置的语言。运行时变更模式时，如果当前 Tab 被停用，会切到第一个可用 Tab。
+
+## 绑定预设
+
+在 ViewModel 中提供 `ObservableCollection<Color> PresetPalette` 和可双向绑定的 `Color SelectedColor`。以下示例只开放绑定预设。
+
+```xml
+<AduSkin:AduColorPicker
+    BoundPresetColors="{Binding PresetPalette}"
+    SelectedColor="{Binding SelectedColor, Mode=TwoWay}"
+    SelectionModes="BoundPresets" />
+```
+
+`AduColorPickerButton` 使用相同的绑定。点击色块立即写入 `SelectedColor`，并保留该色块的 Alpha。
+
+## 使用说明
+
+- 手动选择页从上到下显示色相滑条、透明度滑条与颜色区。拖动颜色区可调整饱和度和亮度。
+- 手动选择停用时，HEX 输入框为只读。仍可复制 HEX 和 ARGB，也可通过绑定更新 `SelectedColor`。
+- 六位 HEX 使用完全不透明的颜色。八位 HEX 的顺序为 `AARRGGBB`。
+- ARGB 以 `(A,R,G,B)` 格式显示，例如 `(255,255,255,255)`。两行的复制按钮分别复制各自显示的文本。
+- `AduColorPickerButton` 的 Popup 在点击外部或按钮因滚动、布局变化而移动时关闭。也可绑定 `IsDropDownOpen`，或调用 `OpenDropDown()` 和 `CloseDropDown()`。
+
+## 典型场景
+- 主题颜色、字体颜色、背景色和边框色设置。
+- 绘图、图表、标注和设计工具中的颜色选择。
+- 属性面板中输入精确的 HEX 颜色或限定可选色板。
+- 工具栏和表格单元格中的紧凑颜色按钮。
+- 需要将所选颜色双向绑定到 ViewModel 的设置页面。

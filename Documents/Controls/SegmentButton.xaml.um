@@ -1,0 +1,53 @@
+﻿<UniformGrid  Rows="3" Margin="10,0">
+    <UniformGrid.Resources>
+        <Style TargetType="AduSkin:AduSegmentButtonItem" BasedOn="{StaticResource AduSegmentButtonItem}">
+            <Setter Property="AduAttach:ForegroundAttach.SelectedForeground" Value="{DynamicResource PrimaryBrush}"/>
+        </Style>
+    </UniformGrid.Resources>
+    <AduSkin:AduSegmentButton>
+        <AduSkin:AduSegmentButtonItem Content="第一个"/>
+        <AduSkin:AduSegmentButtonItem Content="第二个"/>
+        <AduSkin:AduSegmentButtonItem Content="第三个"/>
+    </AduSkin:AduSegmentButton>
+
+    <AduSkin:AduSegmentButton Height="34">
+        <AduSkin:AduSegmentButton.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="2"/>
+                <Setter Property="Background" Value="{DynamicResource PrimaryBrush}"/>
+                <Setter Property="Margin" Value="1"/>
+            </Style>
+            <Style TargetType="AduSkin:AduSegmentButtonItem" BasedOn="{StaticResource AduSegmentButtonItem}">
+                <Setter Property="Padding" Value="0"/>
+            </Style>
+        </AduSkin:AduSegmentButton.Resources>
+        <AduSkin:AduSegmentButtonItem>
+            <Border/>
+        </AduSkin:AduSegmentButtonItem>
+        <AduSkin:AduSegmentButtonItem>
+            <UniformGrid Columns="2">
+                <Border/>
+                <Border/>
+            </UniformGrid>
+        </AduSkin:AduSegmentButtonItem>
+        <AduSkin:AduSegmentButtonItem>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <UniformGrid Columns="2">
+                    <Border/>
+                    <Border/>
+                </UniformGrid>
+                <Border Grid.Row="1"/>
+            </Grid>
+        </AduSkin:AduSegmentButtonItem>
+    </AduSkin:AduSegmentButton>
+
+    <AduSkin:AduSegmentButton>
+        <AduSkin:AduSegmentButtonItem Content="第一个"/>
+        <AduSkin:AduSegmentButtonItem Content="第二个"/>
+        <AduSkin:AduSegmentButtonItem Content="第三个"/>
+    </AduSkin:AduSegmentButton>
+</UniformGrid>

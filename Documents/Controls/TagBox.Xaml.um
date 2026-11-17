@@ -1,0 +1,94 @@
+﻿    <AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="TagBox Demo" />
+
+            <TextBlock
+                Margin="0,0,0,30"
+                FontSize="14"
+                Text="Editable tags with Ant Design style add and remove interactions" />
+
+            <Border
+                Margin="0,0,0,20"
+                Padding="16"
+                BorderBrush="{DynamicResource NormalBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Basic editable tags" />
+
+                    <AduSkin:AduTagBox
+                        HorizontalAlignment="Left"
+                        AddButtonText="New Tag"
+                        Tags="{Binding BasicTags, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+
+            <Border
+                Margin="0,0,0,20"
+                Padding="16"
+                BorderBrush="{DynamicResource NormalBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Read-only tags" />
+
+                    <AduSkin:AduTagBox
+                        HorizontalAlignment="Left"
+                        IsReadOnly="True"
+                        Tags="{Binding ReadOnlyTags, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+
+            <Border
+                Margin="0,0,0,20"
+                Padding="16"
+                BorderBrush="{DynamicResource NormalBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Add on lost focus" />
+
+                    <AduSkin:AduTagBox
+                        AddButtonText="Add skill"
+                        AddOnLostFocus="True"
+                        Tags="{Binding SkillTags, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+
+            <Border
+                Margin="0,0,0,20"
+                Padding="16"
+                BorderBrush="{DynamicResource NormalBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Duplicate tags allowed" />
+
+                    <AduSkin:AduTagBox
+                        AddButtonText="Add label"
+                        DuplicateAllowed="True"
+                        Tags="{Binding DuplicateTags, Mode=OneWay}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>

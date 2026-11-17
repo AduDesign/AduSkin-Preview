@@ -1,0 +1,23 @@
+[ObservableProperty]
+private double _minimum;
+
+[ObservableProperty]
+private double _maximum = 100;
+
+[ObservableProperty]
+private double _valueStart = 25;
+
+[ObservableProperty]
+private double _valueEnd = 75;
+
+public string SelectedRangeText => $"Selected range: {ValueStart:0.0} – {ValueEnd:0.0}";
+
+partial void OnValueStartChanged(double value)
+{
+    OnPropertyChanged(nameof(SelectedRangeText));
+}
+
+partial void OnValueEndChanged(double value)
+{
+    OnPropertyChanged(nameof(SelectedRangeText));
+}

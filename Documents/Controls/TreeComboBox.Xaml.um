@@ -1,0 +1,82 @@
+<!-- TreeComboBox Usage Examples -->
+
+<!-- Example 1: Basic Tree ComboBox with hierarchical data -->
+<AduSkin:AduTreeComboBox
+    Height="32"
+    DisplayPath="Name"
+    ChildrenPath="Children"
+    ItemsSource="{Binding TreeItemsSource}"
+    SelectedNode="{Binding SelectedNode}"
+    IsShowFullPath="True"
+    TreeMaxHeight="300" />
+
+<!-- Example 2: Tree ComboBox showing only node text (not full path) -->
+<AduSkin:AduTreeComboBox
+    Height="32"
+    DisplayPath="Name"
+    ChildrenPath="Children"
+    ItemsSource="{Binding TreeItemsSource}"
+    SelectedNode="{Binding SelectedNode}"
+    IsShowFullPath="False"
+    TreeMaxHeight="300" />
+
+<!-- Example 3: Disabled Tree ComboBox -->
+<AduSkin:AduTreeComboBox
+    Height="32"
+    DisplayPath="Name"
+    ChildrenPath="Children"
+    ItemsSource="{Binding TreeItemsSource}"
+    SelectedNode="{Binding SelectedNode}"
+    IsEnabled="False" />
+
+<!-- Example 4: Tree ComboBox with custom path separator -->
+<AduSkin:AduTreeComboBox
+    Height="32"
+    DisplayPath="Name"
+    ChildrenPath="Children"
+    ItemsSource="{Binding TreeItemsSource}"
+    SelectedNode="{Binding SelectedNode}"
+    PathSeparator=" > "
+    TreeMaxHeight="300" />
+
+<!-- ViewModel Example (C#) -->
+<!--
+public class TreeNodeModel : INotifyPropertyChanged
+{
+    public string Name { get; set; }
+    public string Value { get; set; }
+    public ObservableCollection<TreeNodeModel> Children { get; set; }
+    public bool IsExpanded { get; set; } = true;
+}
+
+public class TreeComboBoxViewModel
+{
+    public ObservableCollection<TreeNodeModel> TreeItemsSource { get; set; }
+    public TreeNodeModel SelectedNode { get; set; }
+
+    public TreeComboBoxViewModel()
+    {
+        TreeItemsSource = new ObservableCollection<TreeNodeModel>
+        {
+            new TreeNodeModel
+            {
+                Name = "Category 1",
+                Children = new ObservableCollection<TreeNodeModel>
+                {
+                    new TreeNodeModel { Name = "Sub Category 1.1" },
+                    new TreeNodeModel
+                    {
+                        Name = "Sub Category 1.2",
+                        Children = new ObservableCollection<TreeNodeModel>
+                        {
+                            new TreeNodeModel { Name = "Item 1.2.1" },
+                            new TreeNodeModel { Name = "Item 1.2.2" }
+                        }
+                    }
+                }
+            },
+            new TreeNodeModel { Name = "Category 2" }
+        };
+    }
+}
+-->

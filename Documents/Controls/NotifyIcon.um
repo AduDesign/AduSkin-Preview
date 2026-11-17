@@ -1,0 +1,59 @@
+AduNotifyIcon 是任务栏通知图标控件，基于 Windows Shell API 在系统托盘区域显示图标。控件支持图标来源、悬浮提示、右键菜单、单击、双击、Popup 延迟显示、闪烁图标、显示隐藏状态和气泡提示。
+
+以下默认值以 `AduNotifyIcon` 的源码默认值为准。控件适合用于后台运行程序、托盘常驻应用、消息提醒和快捷菜单入口。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduNotifyIcon` | 系统托盘通知图标控件。 | `Control` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Icon` | 托盘图标图像源。 | `ImageSource` | `null` |
+| `IconUri` | 图标路径，支持资源路径或普通文件路径。 | `string` | `null` |
+| `IconHandle` | 图标句柄，适合由外部代码创建图标后直接传入。 | `IntPtr` | `IntPtr.Zero` |
+| `ToolTipText` | 鼠标悬浮托盘图标时显示的提示文本。 | `string` | 空字符串 |
+| `ContextMenu` | 右键菜单。 | `ContextMenu` | `null` |
+| `Popup` | 单击时延迟显示的弹出层。 | `Popup` | `null` |
+| `ShowPopupDelay` | Popup 显示延迟，单位为毫秒。 | `int` | `500` |
+| `IsBlinking` | 是否启用闪烁。 | `bool` | `False` |
+| `BlinkInterval` | 闪烁间隔，单位为毫秒。 | `int` | `500` |
+| `BlinkIcon` | 闪烁时交替显示的图标。未设置时会在原图标和空图标之间切换。 | `ImageSource` | `null` |
+| `IsVisible` | 托盘图标是否可见。 | `bool` | `True` |
+
+## 事件
+| 名称 | 描述 | 参数 |
+| --- | --- | --- |
+| `Click` | 左键单击托盘图标时触发。若设置了 `Popup`，单击会优先显示 Popup。 | `EventArgs` |
+| `DoubleClick` | 左键双击托盘图标时触发。 | `EventArgs` |
+
+## 公开方法
+| 名称 | 描述 |
+| --- | --- |
+| `ShowBalloonTip(string title, string text, ToolTipIcon icon)` | 显示系统气泡提示，默认图标类型为 `Info`。 |
+| `HideBalloonTip()` | 隐藏气泡提示的占位方法；系统气泡通常会自动隐藏。 |
+
+## ToolTipIcon 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `None` | 无图标。 |
+| `Info` | 信息图标。 |
+| `Warning` | 警告图标。 |
+| `Error` | 错误图标。 |
+
+## 使用说明
+- 控件加载后会从所在窗口获取窗口句柄，并向系统托盘添加图标。
+- 图标加载优先级为 `IconHandle`、`IconUri`、`Icon`、系统默认图标。
+- 通过 `IconUri` 使用普通文件路径时，推荐使用图标文件；加载失败会回退到系统默认图标。
+- 右键托盘图标会打开 `ContextMenu`，控件会在菜单没有数据上下文时使用自身数据上下文。
+- 设置 `Popup` 后，左键单击会在 `ShowPopupDelay` 后把 Popup 放到屏幕工作区右下角附近。
+- `IsBlinking=True` 时会启动定时器刷新托盘图标；关闭后会恢复原图标。
+- 控件卸载时会从系统托盘删除图标，并释放内部图标句柄。
+- 该控件依赖 Windows Shell API，只适用于 Windows 桌面环境。
+
+## 典型场景
+- 后台运行的桌面应用。
+- 托盘菜单入口和快速操作入口。
+- 新消息、告警、状态变化提醒。
+- 最小化到托盘的工具软件。

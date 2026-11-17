@@ -1,0 +1,151 @@
+            <!--  Example 1: Basic Input  -->
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: Basic Input" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Four cells, each accepting a number from 0 to 255. Use a dot or Tab to move to the next segment."
+                        TextWrapping="Wrap" />
+                    <StackPanel>
+                        <AduSkin:AduIpAddress
+                            HorizontalAlignment="Left"
+                            Text="{Binding BasicAddress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock
+                            Margin="0,10,0,0"
+                            FontSize="12"
+                            Text="{Binding BasicAddress, StringFormat=Current value: {0}}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 2: Custom Appearance  -->
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 2: Custom Appearance" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Customize cell size, corner radius, font size, and font weight."
+                        TextWrapping="Wrap" />
+                    <UniformGrid Columns="2">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Compact / Bold" />
+                            <AduSkin:AduIpAddress
+                                HorizontalAlignment="Left"
+                                CellHeight="38"
+                                FontSize="12"
+                                FontWeight="Bold"
+                                Text="192.168.1.100" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Larger cells / Normal" />
+                            <AduSkin:AduIpAddress
+                                HorizontalAlignment="Left"
+                                CellCornerRadius="12"
+                                CellHeight="44"
+                                CellWidth="64"
+                                FontSize="20"
+                                FontWeight="Normal"
+                                Text="10.0.0.1" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 3: Read-only and Disabled  -->
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 3: Read-only and Disabled" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Display an address without allowing edits, or disable the control entirely."
+                        TextWrapping="Wrap" />
+                    <UniformGrid Columns="2">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Read-only" />
+                            <AduSkin:AduIpAddress HorizontalAlignment="Left" IsReadOnly="True" Text="127.0.0.1" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Disabled" />
+                            <AduSkin:AduIpAddress HorizontalAlignment="Left" IsEnabled="False" Text="255.255.255.0" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 4: Input Behavior  -->
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 4: Input Behavior" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Paste a complete IPv4 address into the first control. The second control disables paste and automatic focus movement."
+                        TextWrapping="Wrap" />
+                    <UniformGrid Columns="2">
+                        <StackPanel Margin="0,0,16,0">
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Paste and auto focus enabled" />
+                            <AduSkin:AduIpAddress HorizontalAlignment="Left" AcceptsPaste="True" AutoFocusNext="True" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Margin="0,0,0,8" FontSize="11" Text="Manual input and navigation" />
+                            <AduSkin:AduIpAddress HorizontalAlignment="Left" AcceptsPaste="False" AutoFocusNext="False" />
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+            <!--  Example 5: Completed Command  -->
+            <Border Margin="0,0,0,20" BorderThickness="1" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 5: Completed Command" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="CompletedCommand runs when all four segments are valid. Try 192.168.1.100."
+                        TextWrapping="Wrap" />
+                    <StackPanel>
+                        <AduSkin:AduIpAddress
+                            x:Name="AddressInput"
+                            HorizontalAlignment="Left"
+                            CompletedCommand="{Binding AddressCompletedCommand}"
+                            Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Margin="0,10,0,0" FontSize="12" Text="{Binding Address, StringFormat=Current value: {0}}" />
+                        <TextBlock Margin="0,8,0,0" FontSize="12" Text="{Binding IsCompleted, ElementName=AddressInput, StringFormat=Complete: {0}}" />
+                        <TextBlock Margin="0,8,0,0" FontSize="12" FontWeight="SemiBold" Text="{Binding Result}" />
+                        <StackPanel Margin="0,12,0,0" Orientation="Horizontal">
+                            <AduSkin:AduButton
+                                Padding="12,6"
+                                Command="{Binding SetAddressCommand}"
+                                Content="Set 192.168.1.100" />
+                            <AduSkin:AduButton
+                                Margin="8,0,0,0"
+                                Padding="12,6"
+                                Command="{Binding ClearAddressCommand}"
+                                Content="Clear" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>

@@ -1,0 +1,62 @@
+// WorkLayout code example
+using System.IO;
+using System.Linq;
+using System.Windows.Controls;
+using AduSkin.Controls;
+using AduSkin.Controls.Serialization;
+
+public sealed class WorkLayoutController
+{
+    public WorkLayoutController(DockingManager manager)
+    {
+        Manager = manager;
+    }
+
+    public DockingManager Manager { get; }
+
+    public LayoutDocument AddDocument(string id, string title, object content)
+    {
+        var pane = Manager.Layout.Descendents()
+            .OfType<LayoutDocumentPane>()
+            .First();
+
+        var document = new LayoutDocument
+        {
+            ContentId = id,
+            Title = title,
+            Content = content,
+        };
+        pane.Children.Add(document);
+        document.IsActive = true;
+        return document;
+    }
+
+    public LayoutAnchorable AddTool(string id, string title, object content)
+    {
+        var tool = new LayoutAnchorable
+        {
+            ContentId = id,
+            Title = title,
+            Content = content,
+        };
+        tool.AddToLayout(
+            Manager,
+            AnchorableShowStrategy.Right | AnchorableShowStrategy.Most);
+        return tool;
+    }
+
+    public void SaveLayout(string path)
+    {
+        var serializer = new XmlLayoutSerializer(Manager);
+        using var writer = new StreamWriter(path);
+        serializer.Serialize(writer);
+    }
+
+    public void RestoreLayout(string path)
+    {
+        // XML stores layout state and ContentId. Existing content is matched by ContentId.
+        var serializer = new XmlLayoutSerializer(Manager);
+        using var reader = new StreamReader(path);
+        serializer.Deserialize(reader);
+    }
+}

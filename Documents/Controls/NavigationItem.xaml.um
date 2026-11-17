@@ -1,0 +1,67 @@
+﻿    <Border
+        Width="280"
+        Padding="10" 
+        Background="{DynamicResource RegionBrush}"
+        CornerRadius="8">
+        <StackPanel>
+            <!--  System Settings Group  -->
+            <TextBlock
+                Margin="10,10,0,8"
+                FontSize="12"
+                FontWeight="SemiBold"
+                Text="SYSTEM" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Box}"
+                Content="Display"
+                GroupName="Group1"
+                IsChecked="True" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                AduAttach:PathDataAttach.PathData="{x:Null}"
+                Content="Sound"
+                GroupName="Group1" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Box}"
+                Content="Notifications"
+                GroupName="Group1" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                AduAttach:PathDataAttach.PathData="{StaticResource Icon_Box}"
+                Content="Night light"
+                GroupName="Group1" />
+
+            <!--  Personalization Group  -->
+            <TextBlock
+                Margin="10,15,0,8"
+                FontSize="12"
+                FontWeight="SemiBold"
+                Text="PERSONALIZATION" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                Content="Background"
+                GroupName="Group2" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                Content="Colors"
+                GroupName="Group2"
+                IsChecked="True" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                Content="Themes"
+                GroupName="Group2" />
+
+            <AduSkin:AduNavigationItem
+                Margin="0,2"
+                Content="Fonts"
+                GroupName="Group2" />
+        </StackPanel>
+    </Border>

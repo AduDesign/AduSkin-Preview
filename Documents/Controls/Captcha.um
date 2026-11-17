@@ -1,0 +1,158 @@
+AduCaptcha 是一个基于多个输入格的验证码输入控件。它把验证码拆成若干个 `TextBox` 单元格，支持按位数配置、单格多字符、数字/字母/混合/自定义输入、明文/暗文显示、退格回退、自动跳格、粘贴分发，以及输入完成后的命令触发。`Text` 保存真实内容，`TextMode=Password` 只改变显示，不改变验证码值。
+
+以下默认值以默认主题样式为准；`AduCaptcha` 本身继承自 `Border`，外层容器仍可直接使用 `Background`、`BorderBrush`、`BorderThickness` 和 `CornerRadius`。
+
+## 依赖属性
+### 输入与内容
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Text` | 当前验证码文本，支持双向绑定。超出容量时会自动截断。 | `string` | `""` |
+| `Length` | 验证码格子数量。设置后会重新生成对应数量的输入框。 | `int` | `6` |
+| `CellMaxLength` | 单个格子允许输入的最大字符数。 | `int` | `1` |
+| `InputType` | 基础输入类型。先做类型过滤，再叠加自定义规则。 | `AduCaptchaInputType` | `NumberOrLetter` |
+| `LetterCase` | 字母大小写归一方式。 | `AduCaptchaLetterCase` | `Normal` |
+| `AllowedCharacters` | 自定义允许字符集合。非空时，字符必须出现在该字符串中。 | `string` | `""` |
+| `InputPattern` | 自定义正则过滤，按单个字符匹配。 | `string` | `""` |
+| `Direction` | 格子排列方向。 | `DirectionType` | `Horizontal` |
+
+### 显示与样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `TextMode` | 明文或暗文显示模式。 | `AduCaptchaTextMode` | `Plain` |
+| `PasswordChar` | 暗文显示字符。 | `char` | `●` |
+| `CellWidth` | 单格宽度。 | `double` | `38` |
+| `CellHeight` | 单格高度。 | `double` | `38` |
+| `CellSpacing` | 单格间距。 | `double` | `8` |
+| `CellPadding` | 单格内部边距。 | `Thickness` | `2` |
+| `CellCornerRadius` | 单格圆角。 | `CornerRadius` | `6` |
+| `CellBackground` | 单格背景。 | `Brush` | `NormalTransparentBrush` |
+| `CellBorderBrush` | 单格边框画刷。 | `Brush` | `NormalBorderBrush` |
+| `CellMouseOverBorderBrush` | 单格鼠标悬停边框画刷。 | `Brush` | `MouseOverBorderBrush` |
+| `CellFocusedBorderBrush` | 单格获得焦点时的边框画刷。 | `Brush` | `PrimaryBrush` |
+| `CellDisabledBackground` | 单格禁用时背景。 | `Brush` | `NormalBackground` |
+| `CellStyle` | 单格 `TextBox` 使用的样式。默认指向 `AduCaptchaTextBox`。 | `Style` | `{StaticResource AduCaptchaTextBox}` |
+| `TextAlignment` | 单格文本对齐方式。 | `TextAlignment` | `Center` |
+| `Foreground` | 单格前景色。 | `Brush` | `NormalForeground` |
+| `CaretBrush` | 光标颜色。 | `Brush` | `NormalForeground` |
+| `SelectionBrush` | 选区颜色。 | `Brush` | `PrimaryBrush` |
+| `SelectionOpacity` | 选区透明度。 | `double` | `0.45` |
+| `FontFamily` | 单格字体。 | `FontFamily` | `系统默认` |
+| `FontSize` | 单格字号。 | `double` | `系统默认` |
+| `FontStyle` | 单格字体样式。 | `FontStyle` | `Normal` |
+| `FontWeight` | 单格字重。 | `FontWeight` | `系统默认` |
+| `FontStretch` | 单格字宽。 | `FontStretch` | `Normal` |
+
+### 交互行为
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsReadOnly` | 是否只读。只读时仍可显示内容，但不能编辑。 | `bool` | `False` |
+| `AcceptsPaste` | 是否允许粘贴。 | `bool` | `True` |
+| `AutoFocusNext` | 输入后是否自动跳到下一个未满的格子。 | `bool` | `True` |
+| `MoveFocusOnBackspace` | 退格后是否把焦点移到前一个格子。 | `bool` | `True` |
+| `ClearPreviousOnBackspace` | 当前格为空时按退格，是否清空前一格最后一个字符。 | `bool` | `True` |
+| `SelectAllOnFocus` | 获得焦点时是否全选当前格内容。 | `bool` | `True` |
+| `AutoFocusOnLoaded` | 加载后是否自动聚焦。 | `bool` | `False` |
+| `FocusFirstEmptyOnMouseDown` | 鼠标按下时是否优先聚焦第一个空格。 | `bool` | `True` |
+
+### 完成与命令
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `CompletedCommand` | 输入完成时执行的命令。适合做即时验证码校验。 | `ICommand` | `null` |
+| `CompletedCommandParameter` | 命令参数。为空时默认传当前 `Text`。 | `object` | `null` |
+| `IsCompleted` | 是否已完成输入。 | `bool` | `False` |
+
+## 枚举说明
+### `AduCaptchaInputType`
+| 名称 | 描述 |
+| --- | --- |
+| `Number` | 只允许数字。 |
+| `Letter` | 只允许字母。 |
+| `NumberOrLetter` | 只允许数字和字母。 |
+| `Any` | 允许所有非控制字符。 |
+| `Custom` | 只保留基础输入，后续再由 `AllowedCharacters` 和 `InputPattern` 进一步约束。 |
+
+### `AduCaptchaTextMode`
+| 名称 | 描述 |
+| --- | --- |
+| `Plain` | 直接显示输入内容。 |
+| `Password` | 以 `PasswordChar` 代替显示。 |
+
+### `AduCaptchaLetterCase`
+| 名称 | 描述 |
+| --- | --- |
+| `Normal` | 保持原样。 |
+| `Upper` | 转为大写。 |
+| `Lower` | 转为小写。 |
+
+### `DirectionType`
+| 名称 | 描述 |
+| --- | --- |
+| `Horizontal` | 横向排列。 |
+| `Vertical` | 纵向排列。 |
+
+## 事件
+| 名称 | 说明 |
+| --- | --- |
+| `TextChanged` | 任意格内容变化后触发。 |
+| `Completed` | 所有格都填满后触发。 |
+
+`Completed` 会先触发事件，再执行 `CompletedCommand`。命令参数默认是当前 `Text`。
+
+## 方法
+| 名称 | 说明 | 返回值 |
+| --- | --- | --- |
+| `Clear()` | 清空所有格子。 | - |
+| `FocusFirst()` | 聚焦第一个格子。 | `bool` |
+| `FocusLast()` | 聚焦最后一个格子。 | `bool` |
+| `FocusFirstEmpty()` | 聚焦第一个空格子；如果已经填满，则聚焦最后一格。 | `bool` |
+| `GetCellText(int index)` | 获取指定格文本，`index` 从 `0` 开始。 | `string` |
+| `SetCellText(int index, string value)` | 设定指定格文本，会按输入规则自动过滤并回写。 | - |
+
+## 样式说明
+- 控件默认样式键为 `AduCaptcha`，单格默认样式键为 `AduCaptchaTextBox`。
+- 如果只想调整单格视觉，优先改 `CellStyle`；如果只想调整外层边框，可以直接设置 `Background`、`BorderBrush`、`BorderThickness` 和 `CornerRadius`。
+- `AduCaptchaTextBox` 已经预设了边框、悬停、选中、禁用和圆角表现，直接复用时视觉会更一致。
+
+## 使用说明
+- `Length` 决定格子数量，`CellMaxLength` 决定每格可输入的最大字符数，总容量为 `Length * CellMaxLength`。
+- `InputType` 先做基础过滤，`LetterCase` 先做大小写归一，再结合 `AllowedCharacters` 和 `InputPattern` 继续筛选。
+- `InputPattern` 是按单字符匹配，不是整串匹配。
+- `TextMode=Password` 只影响显示，不影响真实 `Text`。
+- `AcceptsPaste` 为 `True` 时，粘贴内容会按顺序分发到后续格子。
+- `AutoFocusNext`、`MoveFocusOnBackspace` 和 `ClearPreviousOnBackspace` 一起决定输入和删除时的焦点流转。
+- `CompletedCommand` 适合做输入完成后的即时校验；如果需要其他参数，可以显式设置 `CompletedCommandParameter`。
+
+## 使用示例
+```xml
+<StackPanel
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"
+    Margin="20">
+
+    <!--  基础输入  -->
+    <AduSkin:AduCaptcha
+        Length="4"
+        InputType="Number"
+        Text="{Binding Code, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+    <!--  即时校验  -->
+    <AduSkin:AduCaptcha
+        Margin="0,12,0,0"
+        Length="6"
+        InputType="NumberOrLetter"
+        LetterCase="Upper"
+        CompletedCommand="{Binding VerifyCaptchaCommand}"
+        Text="{Binding VerificationCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+    <TextBlock
+        Margin="0,10,0,0"
+        Text="{Binding VerificationResult}" />
+</StackPanel>
+```
+
+## 典型场景
+- 登录、注册、短信验证码输入。
+- 图片验证码或图形验证码的人工录入。
+- 需要输入完成后立即执行命令校验的场景。
+- 分段口令、激活码、校验码等多格输入场景。

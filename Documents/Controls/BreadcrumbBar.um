@@ -1,0 +1,148 @@
+AduBreadcrumbBar 是一个基于 WPF `ItemsControl` 的面包屑导航栏控件，用于展示层级路径、文件路径、页面路径或业务导航链。它会把数据项容器自动生成为 `AduBreadcrumbItem`，并在数据项为 `BreadcrumbNode` 时自动映射节点标题、路径、子节点、图标和当前位置状态。
+
+AduBreadcrumbItem 是面包屑导航中的单个节点控件，基于 WPF `ContentControl` 实现。它可以由 `AduBreadcrumbBar` 自动生成和管理，也可以单独使用在自定义布局中。
+
+以下默认值以当前依赖属性注册值和默认样式为准；继承自 WPF `ItemsControl`、`ContentControl`、`Control` 的属性只列出常用部分。
+
+## AduBreadcrumbBar 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SelectedPath` | 当前选中的节点路径。设置后会根据 `BreadcrumbNode.Path` 更新节点的 `IsCurrentLocation`，并刷新已生成的 `AduBreadcrumbItem` 容器。 | `string` | `null` |
+| `Separator` | 节点之间显示的分隔符。由 `AduBreadcrumbBar` 自动传递给每个 `AduBreadcrumbItem`；第一项隐藏分隔符，后续项显示。 | `object` | `>` |
+| `IconWidth` | 节点图标宽度。自动映射到 `AduAttach:PathDataAttach.Width`。 | `double` | `16` |
+| `IconHeight` | 节点图标高度。自动映射到 `AduAttach:PathDataAttach.Height`。 | `double` | `16` |
+| `DropDownMinWidth` | 节点下拉面板最小宽度。自动映射到 `AduAttach:PanelAttach.MinWidth`。 | `double` | `150` |
+| `HoverBackground` | 预留的节点悬停背景属性。当前默认模板主要使用资源 `MouseOverBackground` 处理悬停背景。 | `Brush` | `null` |
+| `SelectedBackground` | 当前节点背景色。设置后当前节点会使用该背景；为空时使用默认样式表现。 | `Brush` | `null` |
+| `NodeClickCommand` | 点击非当前位置节点时执行的命令。命令参数为对应的 `BreadcrumbNode`。 | `ICommand` | `null` |
+
+## AduBreadcrumbBar 路由事件
+| 名称 | 描述 | 事件处理类型 | 参数 |
+| --- | --- | --- | --- |
+| `NodeClick` | 点击非当前位置节点后触发。控件会先同步 `SelectedPath`，再触发事件。 | `RoutedPropertyChangedEventHandler<BreadcrumbNode>` | 新值为被点击的 `BreadcrumbNode` |
+| `DropDownOpened` | 节点下拉面板打开时触发。 | `RoutedPropertyChangedEventHandler<BreadcrumbNode>` | 新值为打开下拉的 `BreadcrumbNode` |
+
+## AduBreadcrumbBar 常用 ItemsControl 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 面包屑节点数据源。推荐使用 `IEnumerable<BreadcrumbNode>` 或 `ObservableCollection<BreadcrumbNode>`。 | `IEnumerable` | `null` |
+| `Items` | 直接声明或添加的节点集合。可以放入 `BreadcrumbNode`、字符串或已经构造好的 `AduBreadcrumbItem`。 | `ItemCollection` | 空集合 |
+| `ItemTemplate` | 自定义数据模板。通常不需要设置；设置后应注意不要破坏默认容器生成逻辑。 | `DataTemplate` | `null` |
+| `ItemContainerStyle` | 自定义生成的 `AduBreadcrumbItem` 容器样式。 | `Style` | `null` |
+| `ItemsPanel` | 面包屑项布局面板。默认横向排列。 | `ItemsPanelTemplate` | 横向 `StackPanel` |
+| `Background` | 导航栏背景。 | `Brush` | `Transparent` |
+| `BorderThickness` | 导航栏边框厚度。 | `Thickness` | `0` |
+| `Padding` | 导航栏内边距。 | `Thickness` | `4,2` |
+
+## AduBreadcrumbItem 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Path` | 节点路径。点击命令默认使用该路径作为参数。 | `string` | `null` |
+| `Header` | 节点显示标题。默认模板显示该文本。 | `string` | `null` |
+| `IsCurrentLocation` | 是否为当前位置。为 `True` 时节点会被禁用，避免重复点击。 | `bool` | `False` |
+| `IsDropDownOpen` | 下拉面板是否打开。绑定到默认模板中的下拉按钮和弹出层。 | `bool` | `False` |
+| `Children` | 子节点集合。默认模板使用它作为下拉列表数据源。 | `IList<BreadcrumbNode>` | `null` |
+| `HoverBackground` | 预留的悬停背景属性。当前默认模板悬停背景主要使用资源 `MouseOverBackground`。 | `Brush` | `null` |
+| `Separator` | 节点左侧分隔符内容。 | `object` | `>` |
+| `SeparatorVisibility` | 节点左侧分隔符可见性。单独使用时默认隐藏；由 `AduBreadcrumbBar` 管理时首项隐藏、后续项显示。 | `Visibility` | `Collapsed` |
+| `ClickCommand` | 点击节点时执行的命令。命令参数为 `Path`。 | `ICommand` | `null` |
+| `DropDownItemCommand` | 下拉项选择命令预留属性。当前默认模板尚未将下拉列表项点击自动绑定到该命令。 | `ICommand` | `null` |
+
+## AduBreadcrumbItem 路由事件
+| 名称 | 描述 | 事件处理类型 | 参数 |
+| --- | --- | --- | --- |
+| `Click` | 点击非当前位置节点时触发。 | `RoutedEventHandler` | 事件源为当前 `AduBreadcrumbItem` |
+| `DropDownOpened` | `IsDropDownOpen` 变为 `True` 时触发。 | `RoutedEventHandler` | 事件源为当前 `AduBreadcrumbItem` |
+
+## AduBreadcrumbItem 常用属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `HasChildren` | 只读辅助属性，判断 `Children` 是否不为空且数量大于 0。默认模板用它控制下拉箭头显示。 | `bool` | 根据 `Children.Count` 计算 |
+| `Content` | 继承自 `ContentControl` 的内容属性。当前默认模板主要显示 `Header`，通常不依赖 `Content`。 | `object` | `null` |
+| `Foreground` | 标题和图标前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 节点背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderBrush` | 节点边框画刷。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderThickness` | 节点边框厚度。 | `Thickness` | `1` |
+| `Padding` | 节点内容内边距。 | `Thickness` | `8,4,4,4` |
+| `MinHeight` | 节点最小高度。 | `double` | `28` |
+| `Cursor` | 鼠标指针样式。 | `Cursor` | `Hand` |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认关闭系统焦点框。 | `Style` | `null` |
+
+## BreadcrumbNode 数据模型
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 节点显示标题。自动映射到 `AduBreadcrumbItem.Header`。 | `string` | `null` |
+| `Path` | 节点完整路径。用于 `SelectedPath` 匹配和点击命令参数。 | `string` | 构造函数未传 path 时等于 `Header` |
+| `Icon` | 图片图标。当前默认面包屑模板未直接使用该属性。 | `ImageSource` | `null` |
+| `PathIcon` | 几何图标。优先映射到 `AduAttach:PathDataAttach.PathData`。 | `Geometry` | `null` |
+| `IconData` | 几何路径字符串。`PathIcon` 为空时，`AduBreadcrumbBar` 会尝试用 `Geometry.Parse` 转换。 | `string` | `null` |
+| `Children` | 子节点集合。自动映射到 `AduBreadcrumbItem.Children`，用于下拉面板展示。 | `IList<BreadcrumbNode>` | 空列表 |
+| `IsCurrentLocation` | 是否为当前位置。当前节点会被禁用，避免重复点击。 | `bool` | `False` |
+| `Parent` | 父节点引用。通过 `AddChild` 添加子节点时自动设置。 | `BreadcrumbNode` | `null` |
+| `HasChildren` | 是否存在子节点。只读属性，用于判断是否显示下拉箭头。 | `bool` | 根据 `Children.Count` 计算 |
+
+## 图标附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 节点图标几何路径。默认模板中的图标绑定该附加属性。`AduBreadcrumbBar` 会优先使用 `BreadcrumbNode.PathIcon`，其次尝试解析 `BreadcrumbNode.IconData`。 | `Geometry` | `Icon_Add` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 节点图标宽度。 | `double` | `16` |
+| `AduAttach:PathDataAttach.Height` | 节点图标高度。 | `double` | `16` |
+| `AduAttach:PathDataAttach.Margin` | 图标与标题之间的间距。 | `Thickness` | `0,0,4,0` |
+| `AduAttach:PathDataAttach.Visibility` | 节点图标可见性。 | `Visibility` | `Visible` |
+
+## 下拉面板附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PanelAttach.MinWidth` | 下拉面板最小宽度。由 `AduBreadcrumbBar.DropDownMinWidth` 自动设置时会覆盖该值。 | `double` | `100` |
+| `AduAttach:PanelAttach.MaxWidth` | 下拉面板最大宽度。 | `double` | `800` |
+| `AduAttach:PanelAttach.MaxHeight` | 下拉面板最大高度。 | `double` | `300` |
+| `AduAttach:BorderAttach.CornerRadius` | 节点和下拉按钮圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BorderAttach.MouseOverBorderBrush` | 节点悬停时边框画刷。 | `Brush` | `MouseOverBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.MouseOverBorderThickness` | 节点悬停时边框厚度。 | `Thickness` | `1` |
+
+## 自动容器映射
+| 数据项类型 | 生成行为 |
+| --- | --- |
+| `BreadcrumbNode` | 自动创建 `AduBreadcrumbItem`，并映射 `Header`、`Path`、`Children`、`IsCurrentLocation`、`PathIcon` 或 `IconData`。 |
+| `AduBreadcrumbItem` | 作为自身容器使用，不再重新创建容器。适合少量手工组合节点。 |
+| 其它对象 | 使用 `ToString()` 作为 `Header` 和 `Path`，作为简单文本节点显示。 |
+
+## 状态表现
+| 状态 | 触发条件 | 默认表现 |
+| --- | --- | --- |
+| 普通节点 | `IsCurrentLocation=False` | 可点击，点击后触发节点点击事件或命令。 |
+| 当前节点 | `IsCurrentLocation=True` | 节点禁用，不响应重复点击，前景色使用 `PrimaryForeground`。 |
+| 下拉打开 | `IsDropDownOpen=True` | 弹出下拉面板，并触发 `DropDownOpened`。 |
+| 有子节点 | `Children.Count > 0` | 显示下拉箭头，可打开下拉面板展示子节点。 |
+| 无子节点 | `Children` 为空或数量为 0 | 隐藏下拉箭头。 |
+| 无图标 | `PathIcon` 和 `IconData` 均为空或 `IconData` 无法解析 | 节点图标隐藏。 |
+| 分隔符 | 节点索引大于 0 | 显示 `Separator`；第一项隐藏分隔符。 |
+| 悬停 | `IsMouseOver=True` | 节点背景和边框切换为悬停资源。 |
+| 禁用 | `IsEnabled=False` | 整体透明度使用 `DisableOpacity` 动态资源。 |
+
+## 使用说明
+- 完整面包屑导航场景中，推荐把 `AduBreadcrumbBar.ItemsSource` 绑定到 `BreadcrumbNode` 集合，由 `AduBreadcrumbBar` 自动生成 `AduBreadcrumbItem`。
+- 不设置 `SelectedPath` 时，集合变化后 `AduBreadcrumbBar` 会默认把最后一个 `BreadcrumbNode` 标记为当前位置。
+- 设置 `SelectedPath` 时，`AduBreadcrumbBar` 会按 `BreadcrumbNode.Path` 精确匹配；匹配到的节点成为当前位置，其它节点取消当前位置状态。
+- 点击非当前位置节点时，`AduBreadcrumbBar` 会把 `SelectedPath` 更新为该节点的 `Path`，然后触发 `NodeClick` 并执行 `NodeClickCommand`。
+- `AduBreadcrumbBar.NodeClickCommand` 的参数是 `BreadcrumbNode`，不是路径字符串。需要路径时从参数的 `Path` 属性读取。
+- 单独使用 `AduBreadcrumbItem` 时，通常需要设置 `Header` 和 `Path`。`Header` 用于显示，`Path` 用于 `ClickCommand` 参数。
+- `AduBreadcrumbItem.ClickCommand` 的参数是 `Path` 字符串；如果需要完整节点对象作为命令参数，优先使用 `AduBreadcrumbBar.NodeClickCommand`。
+- `IsCurrentLocation=True` 会把节点设为不可点击状态。需要从当前位置切换回普通状态时，应同时把 `IsCurrentLocation` 设为 `False` 并确保 `IsEnabled=True`。
+- `SeparatorVisibility` 默认是 `Collapsed`，所以单独使用 `AduBreadcrumbItem` 不会自动显示分隔符。由 `AduBreadcrumbBar` 管理时，第一项隐藏分隔符，后续项显示分隔符。
+- `Separator` 是 `object`，可以使用字符串，也可以使用自定义内容对象；默认模板通过 `ContentPresenter` 显示它。
+- `PathIcon` 优先级高于 `IconData`。如果二者都设置，会使用 `PathIcon`。
+- `IconData` 必须是合法的 WPF `Geometry` 路径字符串；解析失败时控件会隐藏该节点图标。
+- `Children` 用于默认下拉面板展示；下拉箭头是否显示由 `HasChildren` 决定。
+- `IsDropDownOpen=True` 会触发 `DropDownOpened`，适合在打开下拉时懒加载子节点。
+- 当前默认下拉面板主要负责展示 `BreadcrumbNode.Children`。下拉列表项选择尚未自动转换为 `SelectedPath` 更新、`NodeClick` 或 `DropDownItemCommand`，如需要完整下拉项导航，需要在控件模板或后续控件逻辑中补充选择处理。
+- `HoverBackground` 当前属于预留属性，默认模板悬停背景主要来自 `MouseOverBackground` 动态资源。
+- 如果需要完全控制分隔符、节点模板或命令参数，可以直接使用 `AduBreadcrumbItem` 与普通 `ItemsControl` 手工组合。
+
+## 典型场景
+- 文件路径、目录路径、资源管理器地址栏。
+- Web 页面层级、后台系统菜单层级、配置页路径。
+- 业务对象层级，例如组织、项目、模块、详情页。
+- 需要点击任意上级节点快速跳转的导航链。
+- 需要每级节点带下级候选项的层级导航。
+- 需要特殊分隔符、特殊节点排列或局部自定义交互的导航链。

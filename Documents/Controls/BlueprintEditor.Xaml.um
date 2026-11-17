@@ -1,0 +1,116 @@
+<!--  Example 1: Function editor with shipped samples  -->
+<Border
+	Height="640"
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel
+			Grid.Row="0"
+			Margin="10"
+			Orientation="Horizontal">
+			<AduSkin:AduComboBox
+				Width="240"
+				Height="26"
+				ItemsSource="{Binding SampleNames}"
+				SelectedIndex="{Binding SelectedSampleIndex, Mode=TwoWay}"
+				ToolTip="从随程序发布的 JSON 配置选择展示示例" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding LoadSampleCommand}"
+				Content="加载示例" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding ShowFunctionBlueprintCommand}"
+				Content="独立函数" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding ShowClassBlueprintCommand}"
+				Content="类蓝图" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding ExportBlueprintCommand}"
+				Content="导出" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding ImportBlueprintCommand}"
+				Content="导入" />
+			<TextBlock
+				Margin="12,0,0,0"
+				VerticalAlignment="Center"
+				Text="{Binding SampleStatus}" />
+		</StackPanel>
+
+		<blueprint:BlueprintEditor
+			x:Name="BlueprintCanvas"
+			Grid.Row="1"
+			Asset="{Binding CurrentAsset}"
+			AutoWatchValues="False"
+			Graph="{Binding Graph, Mode=TwoWay}"
+			Options="{Binding EditorOptions}"
+			ShowDebugPanel="{Binding ShowDebugPanel}" />
+
+		<StackPanel
+			Grid.Row="2"
+			Margin="10"
+			HorizontalAlignment="Right"
+			Orientation="Horizontal">
+			<AduSkin:AduComboBox
+				Width="150"
+				Height="26"
+				DisplayMemberPath="DisplayName"
+				ItemsSource="{Binding RecoveryVersions}"
+				SelectedItem="{Binding SelectedRecoveryVersion, Mode=TwoWay}"
+				ToolTip="选择要恢复的自动快照版本" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding RestoreRecoveryCommand}"
+				Content="恢复快照" />
+			<AduSkin:AduButton
+				Margin="8,0,0,0"
+				Command="{Binding ClearRecoveryCommand}"
+				Content="清除快照" />
+			<TextBlock
+				Margin="12,0,0,0"
+				VerticalAlignment="Center"
+				Foreground="#FFFFB74D"
+				Text="{Binding RecoveryStatus}" />
+		</StackPanel>
+	</Grid>
+</Border>
+
+<!--  Example 2: Class blueprint editor  -->
+<Border
+	Height="520"
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<blueprint:BlueprintEditor
+		x:Name="ClassBlueprintEditor"
+		Asset="{Binding ClassBlueprint}"
+		AutoWatchValues="True"
+		Graph="{Binding Graph, Mode=TwoWay}"
+		Options="{Binding EditorOptions}"
+		ParentClassCandidates="{Binding ParentClassCandidates}"
+		SelectedParentClass="{Binding SelectedParentClass, Mode=TwoWay}"
+		ShowDebugPanel="True" />
+</Border>
+
+<!--  Example 3: Read-only preview  -->
+<Border
+	Height="420"
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<blueprint:BlueprintEditor
+		Asset="{Binding PreviewAsset}"
+		Graph="{Binding PreviewGraph}"
+		IsNodeReadOnly="True"
+		ShowDebugPanel="False" />
+</Border>

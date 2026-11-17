@@ -1,0 +1,5 @@
+﻿<UniformGrid Rows="3">
+    <AduSkin:AduButton Content="默认窗口" Margin="4" Command="{Binding OpenDefaultWindowCommand}"/>
+    <AduSkin:AduButton Content="无边框窗口" Margin="4" Command="{Binding OpenBorderLessWindowCommand}"/>
+    <AduSkin:AduButton Content="自定义标题栏" Margin="4" Command="{Binding OpenBigTitleWindowCommand}"/>
+</UniformGrid>

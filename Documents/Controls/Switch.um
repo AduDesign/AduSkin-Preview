@@ -1,0 +1,55 @@
+AduSwitch 是一个开关控件，继承自 WPF `ToggleButton`。它使用滑块式外观展示开关状态，切换 `IsChecked` 时会进入打开或关闭的视觉状态动画。
+
+以下默认值以 `AduSwitch` 的默认样式为准。控件适合启用/禁用、开/关、显示/隐藏等二元状态设置。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `TextHorizontalAlignment` | 文本水平对齐方式。源码公开该属性，当前默认模板主要由内容区域布局决定。 | `HorizontalAlignment` | `Left` |
+| `CornerRadius` | 滑块圆角。 | `CornerRadius` | `10` |
+| `BackgroundCornerRadius` | 开关背景圆角。 | `CornerRadius` | `12` |
+| `BackgroundWidth` | 背景宽度。源码已注册，默认模板主要使用 `AduAttach:BackgroundAttach.Width`。 | `double` | `40` |
+| `BackgroundHeight` | 背景高度。源码已注册，默认模板主要使用 `AduAttach:BackgroundAttach.Height`。 | `double` | `40` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 开关左侧文本或内容。为空时隐藏内容列。 | `object` | `null` |
+| `IsChecked` | 开关是否打开。 | `bool?` | `False` |
+| `IsEnabled` | 是否启用控件。禁用时默认降低透明度。 | `bool` | `True` |
+| `Height` | 控件高度。 | `double` | `24` |
+| `Cursor` | 鼠标指针。 | `Cursor` | `Hand` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Foreground` | 内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 关闭状态背景和滑块默认颜色。 | `Brush` | `NormalForeground50` 动态资源 |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 打开状态背景颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 滑块宽度。 | `double` | `20` |
+| `AduAttach:PathDataAttach.Height` | 滑块高度。 | `double` | `20` |
+| `AduAttach:PathDataAttach.Margin` | 滑块边距。 | `Thickness` | `2` |
+| `AduAttach:BackgroundAttach.Width` | 开关背景宽度。 | `double` | `40` |
+| `AduAttach:BackgroundAttach.Height` | 开关背景高度。 | `double` | `24` |
+| `AduAttach:ContentAttach.Margin` | 内容区边距。 | `Thickness` | `0,0,4,0` |
+
+## 视觉状态
+| 名称 | 描述 |
+| --- | --- |
+| `Open` | 进入打开状态动画。 |
+| `OpenLoaded` | 加载时直接显示打开状态。 |
+| `Close` | 进入关闭状态动画。 |
+| `CloseLoaded` | 加载时直接显示关闭状态。 |
+
+## 使用说明
+- 使用 `IsChecked` 绑定开关状态。
+- 加载完成后，控件会根据当前 `IsChecked` 进入 `OpenLoaded` 或 `CloseLoaded` 状态。
+- 切换为选中时，滑块移动到右侧，背景使用选中色。
+- 内容为空时，模板会隐藏左侧内容列，只保留开关本体。
+- 需要调整尺寸时，优先使用 `AduAttach:BackgroundAttach.Width`、`AduAttach:BackgroundAttach.Height` 和 `AduAttach:PathDataAttach.Width/Height`。
+
+## 典型场景
+- 设置项启用/禁用。
+- 功能开关、通知开关、自动保存开关。
+- 表格或表单中的布尔值编辑。
+- 需要明显二元状态反馈的操作项。

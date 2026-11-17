@@ -1,0 +1,12 @@
+[ObservableProperty]
+private bool _isNotificationsEnabled = true;
+
+[ObservableProperty]
+private bool? _approvalState;
+
+public string NotificationsStateText => IsNotificationsEnabled ? "Notifications enabled" : "Notifications disabled";
+
+partial void OnIsNotificationsEnabledChanged(bool value)
+{
+    OnPropertyChanged(nameof(NotificationsStateText));
+}

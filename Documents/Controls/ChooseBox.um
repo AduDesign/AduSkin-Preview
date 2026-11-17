@@ -1,0 +1,62 @@
+AduChooseBox 是一个用于文件、文件夹和保存路径选择的输入控件，继承自 WPF `TextBox`。它把文本输入框和选择按钮合并在一起，点击右侧按钮会按 `ChooseType` 打开对应的选择逻辑，并把结果写回 `Text`。
+
+以下默认值以 `AduChooseBox` 的默认样式为准。控件适合用于路径选择、单文件选择、多文件选择和多文件夹选择等场景。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ChooseType` | 选择类型，决定按钮点击后打开文件、文件夹还是保存对话逻辑。 | `ChooseType` | `SingleFile` |
+| `ChooseButtonWidth` | 右侧选择按钮宽度。 | `double` | `20` |
+| `Filter` | 文件过滤器。 | `string` | `All File (*.*) l*.*` |
+| `Header` | 对话框标题。当前选择器内部使用。 | `string` | `选择` |
+| `InitialDirectory` | 初始目录。 | `string` | `null` |
+| `DefaultFileName` | 保存文件时的默认文件名。 | `string` | `文件` |
+| `DefaultExt` | 保存文件时的默认扩展名。 | `string` | `""` |
+| `ChooseButtonStyle` | 右侧选择按钮样式。 | `Style` | `null` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Text` | 当前选中的文件路径、文件夹路径或路径列表。 | `string` | `""` |
+| `IsEnabled` | 是否启用控件。 | `bool` | `True` |
+| `HorizontalContentAlignment` | 文本内容对齐方式。 | `HorizontalAlignment` | `Stretch` |
+| `VerticalContentAlignment` | 文本内容垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `CaretBrush` | 输入光标颜色。 | `Brush` | `NormalForeground` 动态资源 |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 输入框背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderBrush` | 输入框边框。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `Foreground` | 输入文字颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderThickness` | 边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 控件圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 鼠标悬浮背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `AduAttach:PathDataAttach.PathData` | 右侧按钮图标。会随 `ChooseType` 自动切换。 | `Geometry` | `Icon_File` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 右侧按钮图标宽度。 | `double` | `11` |
+| `AduAttach:PathDataAttach.Margin` | 右侧按钮图标边距。 | `Thickness` | `0,0,8,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 右侧按钮图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:InputAttach.InputHint` | 输入提示文本。 | `string` | `ChooseInputHint` 动态资源 |
+
+## ChooseType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `SingleFile` | 选择单个文件。 |
+| `MultiFile` | 选择多个文件。 |
+| `Folder` | 选择单个文件夹。 |
+| `MultiFolder` | 选择多个文件夹。 |
+| `SaveFile` | 选择保存文件路径。 |
+
+## 使用说明
+- `Text` 保存的是当前选择结果，可直接绑定到 ViewModel。
+- `ChooseType` 会影响按钮图标和点击后的选择逻辑。
+- `Filter` 适用于文件选择和保存文件；文件夹选择时影响较小。
+- `InitialDirectory` 当前实现里更多是作为选择起点参考，默认使用 `Text` 作为初始路径。
+- `ChooseButtonStyle` 只影响右侧按钮外观，不影响选择逻辑。
+- `Text` 为空时，模板会显示输入提示。
+
+## 典型场景
+- 单文件、多个文件和文件夹路径输入。
+- 导入、导出、备份、保存位置选择。
+- 需要避免用户手动输入路径错误的配置界面。
+- 资源选择、目录选择和工程路径选择。

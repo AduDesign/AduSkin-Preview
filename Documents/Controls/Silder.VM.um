@@ -1,0 +1,14 @@
+﻿[RelayCommand]
+public void Refresh()
+{ 
+    IntValue += 1;
+}
+
+[ObservableProperty]
+private int _intValue = 1;
+
+[ObservableProperty]
+private int _intMin = 0;
+
+[ObservableProperty]
+private int _intMax = 100;

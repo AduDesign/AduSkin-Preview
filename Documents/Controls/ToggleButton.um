@@ -1,0 +1,67 @@
+AduToggleButton 是一个带 AduSkin 默认样式的切换按钮，继承自 WPF `ToggleButton`。它支持普通内容、图标内容、选中态图标切换、不同图标布局和选中背景样式。
+
+以下默认值以 `AduToggleButton` 的默认样式为准。控件适合播放/暂停、开关状态、工具栏选中状态和可切换选项。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduToggleButton` | 保持选中状态并使用 AduSkin 图标、背景和边框视觉的二态或三态按钮。 | `ToggleButton` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 按钮内容。为空时图标边距会清零。 | `object` | `null` |
+| `IsChecked` | 是否选中。 | `bool?` | `False` |
+| `IsThreeState` | 是否允许 `False`、`True`、`null` 三种状态。 | `bool` | `False` |
+| `Command` | 点击时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 传递给命令的参数。 | `object` | `null` |
+| `IsPressed` | 是否处于按下状态。 | `bool` | `False` |
+| `IsEnabled` | 是否启用控件。 | `bool` | `True` |
+| `Width` | 默认宽度。 | `double` | `100` |
+| `Height` | 默认高度。 | `double` | `30` |
+| `Padding` | 内容边距。 | `Thickness` | `0` |
+
+## 样式附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 未选中图标。 | `Geometry` | `Icon_Play` 动态资源 |
+| `AduAttach:PathDataAttach.SelectedPathData` | 选中图标。 | `Geometry` | `Icon_Pause` 动态资源 |
+| `AduAttach:PathDataAttach.Visibility` | 图标可见性。 | `Visibility` | `Collapsed` |
+| `AduAttach:PathDataAttach.Width` | 图标宽度。 | `double` | `12` |
+| `AduAttach:PathDataAttach.Margin` | 图标边距。会随布局自动调整。 | `Thickness` | 随布局变化 |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 未选中图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 选中图标颜色。 | `Brush` | `PrimaryBrush90` 动态资源 |
+| `AduAttach:PathBrushAttach.MouseOverPathBrush` | 鼠标悬浮图标颜色。 | `Brush` | `PrimaryBrush90` 动态资源 |
+| `AduAttach:PathBrushAttach.PressedPathBrush` | 鼠标按下图标颜色。 | `Brush` | `PrimaryBrush70` 动态资源 |
+| `AduAttach:LayoutAttach.IconLayout` | 图标相对内容的位置。 | `Direction` | `Left` |
+| `AduAttach:BackgroundAttach.SelectedBackground` | 选中背景。 | `Brush` | `SelectedBackground` 动态资源 |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 鼠标悬浮背景。 | `Brush` | `MouseOverBackground` 动态资源 |
+| `AduAttach:BackgroundAttach.PressedBackground` | 鼠标按下背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:BorderAttach.CornerRadius` | 按钮圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BorderAttach.SelectedBorderBrush` | 选中边框颜色。 | `Brush` | `SelectedBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.SelectedBorderThickness` | 选中边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.PressedBorderBrush` | 按下边框颜色。 | `Brush` | `PressedBorderBrush` 动态资源 |
+
+## 事件
+| 名称 | 描述 |
+| --- | --- |
+| `Checked` | `IsChecked` 变为 `True` 时触发。 |
+| `Unchecked` | `IsChecked` 变为 `False` 时触发。 |
+| `Indeterminate` | 三态模式下 `IsChecked` 变为 `null` 时触发。 |
+| `Click` | 用户单击按钮时触发。 |
+
+## 使用说明
+- `IsChecked=True` 时，模板会切换到 `SelectedPathData`、选中图标色、选中背景和选中边框。
+- `AduAttach:PathDataAttach.Visibility` 默认为 `Collapsed`，需要显示图标时应改为 `Visible`。
+- `AduAttach:LayoutAttach.IconLayout` 支持 `Left`、`Right`、`Top`、`Bottom`。
+- `IsChecked` 默认支持双向绑定，可直接绑定 ViewModel 中的 `bool` 或 `bool?` 属性。
+- 设置 `IsThreeState=True` 后，可通过连续点击在三种状态之间切换。
+- `Command` 与 `IsChecked` 可以同时使用：按钮先完成点击交互，再由命令处理业务动作。
+- 按下状态会优先使用按下背景、按下边框和按下图标色。
+- 禁用时模板会降低整体透明度。
+
+## 典型场景
+- 播放/暂停、展开/收起、锁定/解锁等二态按钮。
+- 工具栏中可选中的模式按钮。
+- 需要图标和文本组合的切换按钮。
+- 选项卡式或状态保持型操作按钮。

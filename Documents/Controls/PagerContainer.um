@@ -1,0 +1,50 @@
+AduPagerContainer 是一个分页内容容器，继承自 `ItemsControl`。它一次显示一个数据项，支持上一页、下一页按钮、页码指示和左右滑动切换动画，可用于轮播式内容、向导步骤和分页卡片。
+
+以下默认值以 `AduPagerContainer` 的源码和默认样式为准。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `CurrentIndex` | 当前显示项的索引。 | `int` | `0` |
+| `SelectedItem` | 当前显示的数据项。 | `object` | `null` |
+| `Type` | 分页容器显示模式，默认支持双向绑定。 | `PageContainerType` | `Normal` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 分页数据源。 | `IEnumerable` | `null` |
+| `Items` | 直接添加的分页项集合。 | `ItemCollection` | 空集合 |
+| `ItemTemplate` | 每页内容模板。 | `DataTemplate` | `null` |
+| `Background` | 容器背景。 | `Brush` | WPF 默认值 |
+| `BorderBrush` | 容器边框颜色。 | `Brush` | WPF 默认值 |
+| `BorderThickness` | 容器边框厚度。 | `Thickness` | WPF 默认值 |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `Normal` | 默认模式，显示标题、左右切换按钮、内容区和页码指示。 |
+| `Mini` | 迷你模式，使用更紧凑的内容与切换按钮布局。 |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 默认模式下的标题内容。 | `object` | `Header` |
+| `AduAttach:HeaderAttach.VerticalAlignment` | 标题垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `AduAttach:HeaderAttach.HorizontalAlignment` | 标题水平对齐方式。 | `HorizontalAlignment` | WPF 默认值 |
+| `AduAttach:BorderAttach.CornerRadius` | 内容裁剪区域圆角。 | `CornerRadius` | `10` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 上一页、下一页按钮图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+
+## 使用说明
+- 通过 `ItemsSource` 或 `Items` 提供分页内容。
+- `CurrentIndex` 控制当前页，范围应位于 `0` 到 `Items.Count - 1` 之间。
+- `SelectedItem` 会随 `CurrentIndex` 更新，便于读取当前页数据。
+- 点击上一页、下一页按钮会递增或递减 `CurrentIndex`。
+- 切换相邻页时会播放约 `350ms` 的左右滑动动画。
+- 数据源变化时，控件会将 `CurrentIndex` 重置为 `0`；当集合为空时，`CurrentIndex` 会变为 `-1`。
+- 动画进行中，上一页和下一页按钮会临时禁用，避免重复触发切换。
+
+## 典型场景
+- 图片、卡片或公告轮播。
+- 分步向导和引导页。
+- 小型数据集的分页浏览。
+- 首页看板中的分页模块。

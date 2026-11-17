@@ -1,0 +1,67 @@
+﻿[ObservableProperty]
+private ObservableCollection<ChatModel> _messages = new ObservableCollection<ChatModel>();
+
+[ObservableProperty]
+private ChatModel _selectedMessage;
+
+[ObservableProperty]
+private string _message;
+
+private BitmapImage header1 = new BitmapImage(new Uri($"pack://application:,,,/Resources/Cover/1.png", UriKind.RelativeOrAbsolute));
+
+private BitmapImage header2 = new BitmapImage(new Uri($"pack://application:,,,/Resources/Cover/2.png", UriKind.RelativeOrAbsolute));
+
+public ChatViewModel()
+{
+
+    Messages.Add(new ChatModel()
+    {
+        ReceptionType = ReceptionType.Receiver,
+        Content = "能做工业软件吗？",
+        UserName = "AntDesign",
+        Header = header2
+    });
+    Messages.Add(new ChatModel()
+    {
+        ReceptionType = ReceptionType.Sender,
+        Content = "能的。",
+        UserName = "AduSkin",
+        Header = header1
+    });
+
+    Messages.Add(new ChatModel()
+    {
+        ReceptionType = ReceptionType.Receiver,
+        Content = "有黑/白色主题吗？",
+        UserName = "AntDesign",
+        Header = header2
+    }); Messages.Add(new ChatModel()
+    {
+        ReceptionType = ReceptionType.Sender,
+        Content = "有的。",
+        UserName = "AduSkin",
+        Header = header1
+    });
+}
+
+[RelayCommand]
+public void Send()
+{
+    Messages.Add(new ChatModel()
+    {
+        ReceptionType = ReceptionType.Sender,
+        Content = Message,
+        UserName = "AduSkin",
+        Header = header1
+    });
+    var reply = new ChatModel()
+    {
+        ReceptionType = ReceptionType.Receiver,
+        Content = $"[回复]:{Guid.NewGuid()}",
+        UserName = "AntDesign",
+        Header = header2
+    };
+    Messages.Add(reply);
+    SelectedMessage = reply;
+    Message = "";
+}

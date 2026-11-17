@@ -1,0 +1,14 @@
+[ObservableProperty]
+public ObservableCollection<Tuple<int, string, string>> _itemsSource = new ObservableCollection<Tuple<int, string, string>>();
+
+public TimeLineViewModel()
+{
+	ItemsSource.Add(new Tuple<int, string, string>(1, "2019", "初出茅庐"));
+	ItemsSource.Add(new Tuple<int, string, string>(2, "2020", "逐步成长"));
+	ItemsSource.Add(new Tuple<int, string, string>(3, "2021", "铜头铁臂"));
+	ItemsSource.Add(new Tuple<int, string, string>(4, "2022", "值得一战"));
+	ItemsSource.Add(new Tuple<int, string, string>(5, "2023", "深藏不露"));
+	ItemsSource.Add(new Tuple<int, string, string>(6, "2024", "名不虚传"));
+	ItemsSource.Add(new Tuple<int, string, string>(7, "2025", "炉火纯青"));
+	ItemsSource.Add(new Tuple<int, string, string>(8, "2026", "神乎其技")); 
+}

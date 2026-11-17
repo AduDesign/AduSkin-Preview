@@ -1,0 +1,126 @@
+﻿ <UniformGrid Rows="4">
+    <StackPanel Margin="5,10">
+        <TextBlock
+            Margin="0,0,0,8"
+            FontSize="11"
+            Text="TopLeft Ticks" />
+        <AduSkin:AduSlider
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            RepeatButtonWidth="4"
+            TickFrequency="10"
+            TickPlacement="TopLeft"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel Margin="5,10">
+        <TextBlock
+            Margin="0,0,0,8"
+            FontSize="11"
+            Text="No Ticks (AutoHide)" />
+        <AduSkin:AduSlider
+            IsAutoHideThumb="True"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            RepeatButtonWidth="4"
+            TickFrequency="10"
+            TickPlacement="None"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel Margin="5,10">
+        <TextBlock
+            Margin="0,0,0,8"
+            FontSize="11"
+            Text="Both Ticks (Snap)" />
+        <AduSkin:AduSlider
+            IsSnapToTickEnabled="True"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            TickFrequency="10"
+            TickPlacement="Both"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel Margin="5,10">
+        <TextBlock
+            Margin="0,0,0,8"
+            FontSize="11"
+            Text="BottomRight Ticks" />
+        <AduSkin:AduSlider
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            TickFrequency="10"
+            TickPlacement="BottomRight"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+</UniformGrid>
+
+                <UniformGrid Columns="4">
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock
+            Margin="0,0,0,8"
+            HorizontalAlignment="Center"
+            FontSize="11"
+            Text="TopLeft" />
+        <AduSkin:AduSlider
+            Height="200"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            Orientation="Vertical"
+            TickFrequency="10"
+            TickPlacement="TopLeft"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock
+            Margin="0,0,0,8"
+            HorizontalAlignment="Center"
+            FontSize="11"
+            Text="No Ticks (Snap)" />
+        <AduSkin:AduSlider
+            Height="200"
+            IsAutoHideThumb="True"
+            IsSnapToTickEnabled="True"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            Orientation="Vertical"
+            TickFrequency="10"
+            TickPlacement="None"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock
+            Margin="0,0,0,8"
+            HorizontalAlignment="Center"
+            FontSize="11"
+            Text="Both Ticks (Snap)" />
+        <AduSkin:AduSlider
+            Height="200"
+            IsSnapToTickEnabled="True"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            Orientation="Vertical"
+            TickFrequency="10"
+            TickPlacement="Both"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+
+    <StackPanel HorizontalAlignment="Center">
+        <TextBlock
+            Margin="0,0,0,8"
+            HorizontalAlignment="Center"
+            FontSize="11"
+            Text="BottomRight" />
+        <AduSkin:AduSlider
+            Height="200"
+            Maximum="{Binding IntMax}"
+            Minimum="{Binding IntMin}"
+            Orientation="Vertical"
+            TickFrequency="10"
+            TickPlacement="BottomRight"
+            Value="{Binding IntValue}" />
+    </StackPanel>
+</UniformGrid>

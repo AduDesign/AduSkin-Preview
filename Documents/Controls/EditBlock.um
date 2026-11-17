@@ -1,0 +1,85 @@
+EditBlock 是一组默认展示文本、按需进入编辑状态的控件，适合详情页、配置面板和紧凑表单。统一示例见 Demo 的 EditBlock 页面。
+
+## 控件与交互
+
+| 控件 | 编辑内容 | 进入编辑 | 结束编辑 |
+| --- | --- | --- | --- |
+| `AduEditableTextBlock` | 文本 | 双击，或聚焦后按 Enter | 单行模式按 Enter、Esc 或失焦 |
+| `AduEditableComboBox` | 下拉单选 | 单击，或 Enter / F2 / Space | 关闭下拉框 |
+| `AduEditableIntegerUpDown` | 整数 | 单击，或 Enter / F2 / Space | Enter、Esc 或焦点离开整个控件 |
+| `AduEditableDoubleUpDown` | 小数 | 单击，或 Enter / F2 / Space | Enter、Esc 或焦点离开整个控件 |
+| `AduEditableDatePicker` | 日期 | 单击，或 Enter / F2 / Space | 关闭日历或 Esc；默认单日期模式选中日期即关闭 |
+
+这些控件的 `IsEditing` 默认均为 `False`，支持双向绑定。使用 `IsEnabled="False"` 可禁用交互。文本控件另有 `IsEditable`，用于禁止进入编辑；下拉框继承的 `IsEditable` 表示允许输入下拉文本，两者含义不同。
+
+## 主要属性
+
+| 控件 | 属性 | 说明 |
+| --- | --- | --- |
+| 文本 | `Text` | 文本值，默认双向绑定 |
+| 文本 | `IsEditable` | 是否允许进入编辑，默认 True |
+| 文本 | `AcceptsReturn` | 是否允许换行，默认 False；True 时 Enter 输入换行 |
+| 文本 | `TextWrapping`、`TextTrimming`、`MaxLength` | 换行、截断和输入长度 |
+| 下拉框 | `ItemsSource` | 选项集合 |
+| 下拉框 | `SelectedItem` / `SelectedValue` | 选中项或选中值 |
+| 下拉框 | `DisplayMemberPath` / `SelectedValuePath` | 对象选项的显示字段、值字段 |
+| 下拉框 | `IsShowFilterBox` | 是否显示筛选框，默认 False |
+| 数值 | `Value` | int / double，默认双向绑定 |
+| 数值 | `Minimum` / `Maximum` | 默认样式限制范围为 0–100 |
+| 数值 | `LimitMode` | Both、MinimumOnly、MaximumOnly、None，默认 Both |
+| 数值 | `Increment` | 增减步进，默认 1 |
+| 数值 | `AllowSpin` / `IndicatorButtonVisible` | 是否允许步进、是否显示按钮，默认 True |
+| 小数 | `DecimalPlaces` | 显示小数位数，默认 2 |
+| 日期 | `SelectedDate` | DateTime?，建议显式设置 Mode=TwoWay |
+| 日期 | `DateStringFormat` | 日期格式，默认 yyyy年MM月dd日 |
+| 日期 | `Type` | 继承 AduDatePicker 的日期选择类型，默认 SingleDate |
+| 日期 | `IsShowConfirm` | 是否需要确认后关闭，默认 False |
+| 日期 | `IsShowShortCuts` | 是否显示日期快捷选项，默认 False |
+
+## XAML 用法
+
+先通过应用主题加载默认样式：
+
+```xml
+<Application.Resources>
+    <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <AduSkin:AduSkinTheme ThemeType="Light" />
+        </ResourceDictionary.MergedDictionaries>
+    </ResourceDictionary>
+</Application.Resources>
+```
+
+上面的 `AduSkin` 命名空间使用 `https://github.com/aduskin`。页面也可使用 `clr-namespace:AduSkin.Controls;assembly=AduSkin`。
+
+```xml
+<AduSkin:AduEditableTextBlock
+    Text="{Binding Name2, Mode=TwoWay}" />
+
+<AduSkin:AduEditableComboBox
+    ItemsSource="{Binding StatusOptions}"
+    SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+    IsShowFilterBox="True" />
+
+<AduSkin:AduEditableIntegerUpDown
+    Minimum="0" Maximum="100" Increment="1"
+    Value="{Binding Quantity, Mode=TwoWay}" />
+
+<AduSkin:AduEditableDoubleUpDown
+    Minimum="0" Maximum="1000" Increment="0.1" DecimalPlaces="2"
+    Value="{Binding Amount, Mode=TwoWay}" />
+
+<AduSkin:AduEditableDatePicker
+    Width="240" DateStringFormat="yyyy-MM-dd"
+    SelectedDate="{Binding SelectedDate, Mode=TwoWay}" />
+```
+
+## 编辑与提交
+
+- 文本、下拉选择和合法数值可能在编辑过程中就更新绑定值；结束编辑不表示一次事务提交。
+- Esc 不会回滚到进入编辑前的值。数值控件会恢复最近的有效值并结束编辑；日期控件关闭日历并保留当前选择。
+- 数值输入在失焦、Enter 或步进操作时执行原控件的提交校验。超出范围的输入按 Minimum、Maximum、LimitMode 处理。
+- 数值编辑时支持 Up / Down 和 PageUp / PageDown；后两者使用 10 倍 Increment。
+- 小数展示沿用输入框的格式化结果，例如 DecimalPlaces=2 时显示 12.30。
+- 日期展示沿用原日期选择器输入框的格式化结果；空日期仍有可点击区域。
+- DateTime 或日期范围模式的绑定方式沿用 AduDatePicker，详见 DatePicker 文档。

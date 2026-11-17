@@ -1,0 +1,63 @@
+﻿private Random random = new Random();
+
+[ObservableProperty]
+private ObservableCollection<AduPieSeries> _itemsSource = new ObservableCollection<AduPieSeries>();
+
+[ObservableProperty]
+private ObservableCollection<string> _labels = new ObservableCollection<string>();
+
+[ObservableProperty]
+private bool _isDrawingGrid = true;
+
+[ObservableProperty]
+private bool _isDrawingAxes = true;
+
+[ObservableProperty]
+private bool _isDrawingLegend = true;
+
+public PieChartViewModel()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Generate()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Clear()
+{
+    ItemsSource.Clear();
+    Labels.Clear();
+}
+
+private void GenerateSampleData()
+{
+    Clear();
+
+    // 添加第一个系列
+    var series1 = new AduPieSeries
+    {
+        Name = "战士1",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 70, 210, 210)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 70, 210, 210)),
+        Value = 120
+    };
+    var series2 = new AduPieSeries
+    {
+        Name = "战士2",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 153, 0)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 255, 153, 0)),
+        Value = 33
+    };
+    var series3 = new AduPieSeries
+    {
+        Name = "战士3",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 238, 121, 111)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 238, 121, 111)),
+        Value = 23
+    };
+    ItemsSource.Add(series1);
+    ItemsSource.Add(series2);
+    ItemsSource.Add(series3);
+} 

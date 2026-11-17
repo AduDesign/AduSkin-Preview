@@ -1,0 +1,208 @@
+﻿<!--  Example 1: Default PagerContainer  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Default Style (Normal)" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Default PagerContainer with horizontal navigation buttons"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduPagerContainer
+			Height="240"
+			Margin="0,10"
+			CurrentIndex="{Binding SelectedIndex, Mode=TwoWay}"
+			ItemsSource="{Binding ItemsSource}">
+			<AduSkin:AduPagerContainer.ItemTemplate>
+				<DataTemplate>
+					<Border
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						CornerRadius="4">
+						<Border.Background>
+							<ImageBrush ImageSource="{Binding String1}" Stretch="UniformToFill" />
+						</Border.Background>
+						<Border Background="{DynamicResource NormalBlack30}">
+							<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+								<TextBlock
+									FontSize="24"
+									FontWeight="Bold"
+									Foreground="White"
+									Text="{Binding Title}" />
+								<TextBlock
+									Margin="0,10,0,0"
+									FontSize="14"
+									Foreground="White"
+									Text="{Binding Description}" />
+							</StackPanel>
+						</Border>
+					</Border>
+				</DataTemplate>
+			</AduSkin:AduPagerContainer.ItemTemplate>
+		</AduSkin:AduPagerContainer>
+
+		<StackPanel
+			Margin="0,0,0,0"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal">
+			<AduSkin:AduPathIconButton
+				Width="40"
+				Height="40"
+				Margin="0,0,10,0"
+				AduAttach:BorderAttach.CornerRadius="20"
+				AduAttach:PathDataAttach.PathData="{DynamicResource Icon_LeftArrow}"
+				AduAttach:PathDataAttach.Width="6"
+				BorderThickness="1"
+				Command="{Binding PreviousCommand}" />
+			<AduSkin:AduPathIconButton
+				Width="40"
+				Height="40"
+				AduAttach:BorderAttach.CornerRadius="20"
+				AduAttach:PathDataAttach.PathData="{DynamicResource Icon_RightArrow}"
+				AduAttach:PathDataAttach.Width="6"
+				BorderThickness="1"
+				Command="{Binding NextCommand}" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Mini PagerContainer  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Mini Style" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Mini style with compact navigation buttons and page indicator at bottom"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduPagerContainer
+			Height="200"
+			Margin="0,10"
+			CurrentIndex="{Binding SelectedIndex, Mode=TwoWay}"
+			ItemsSource="{Binding ItemsSource}"
+			Type="Mini">
+			<AduSkin:AduPagerContainer.ItemTemplate>
+				<DataTemplate>
+					<Border
+						HorizontalAlignment="Stretch"
+						VerticalAlignment="Stretch"
+						CornerRadius="4">
+						<Border.Background>
+							<ImageBrush ImageSource="{Binding String1}" Stretch="UniformToFill" />
+						</Border.Background>
+						<Border Background="{DynamicResource NormalBlack30}">
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="20"
+								FontWeight="Bold"
+								Foreground="White"
+								Text="{Binding Title}" />
+						</Border>
+					</Border>
+				</DataTemplate>
+			</AduSkin:AduPagerContainer.ItemTemplate>
+		</AduSkin:AduPagerContainer>
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<AduSkin:AduPathIconButton
+				Width="40"
+				Height="40"
+				Margin="0,0,10,0"
+				AduAttach:BorderAttach.CornerRadius="20"
+				AduAttach:PathDataAttach.PathData="{DynamicResource Icon_LeftArrow}"
+				AduAttach:PathDataAttach.Width="6"
+				BorderThickness="1"
+				Command="{Binding PreviousCommand}" />
+			<AduSkin:AduPathIconButton
+				Width="40"
+				Height="40"
+				AduAttach:BorderAttach.CornerRadius="20"
+				AduAttach:PathDataAttach.PathData="{DynamicResource Icon_RightArrow}"
+				AduAttach:PathDataAttach.Width="6"
+				BorderThickness="1"
+				Command="{Binding NextCommand}" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Dynamic Add/Remove Pages  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: Dynamic Pages" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Add or remove pages dynamically at runtime"
+			TextWrapping="Wrap" />
+
+		<StackPanel
+			Margin="0,10,0,15"
+			HorizontalAlignment="Center"
+			Orientation="Horizontal">
+			<AduSkin:AduFormBox Header="Type">
+				<AduSkin:AduComboBox ItemsSource="{Binding Types}" SelectedItem="{Binding SelectedType}" />
+			</AduSkin:AduFormBox>
+			<AduSkin:AduButton
+				Margin="5,0,0,0"
+				Padding="10,5"
+				Command="{Binding AddCommand}"
+				Content="Add Page" />
+			<AduSkin:AduButton
+				Margin="5,0,0,0"
+				Padding="10,5"
+				Command="{Binding RemoveCommand}"
+				Content="Remove Page" />
+		</StackPanel>
+
+		<AduSkin:AduPagerContainer
+			Height="200"
+			CurrentIndex="{Binding SelectedIndex, Mode=TwoWay}"
+			ItemsSource="{Binding ItemsSource}"
+			Type="{Binding SelectedType}">
+			<AduSkin:AduPagerContainer.ItemTemplate>
+				<DataTemplate>
+					<Border Height="200">
+						<Border.Background>
+							<ImageBrush ImageSource="{Binding String1}" Stretch="UniformToFill" />
+						</Border.Background>
+						<Border Background="{DynamicResource NormalBlack30}">
+							<TextBlock
+								HorizontalAlignment="Center"
+								VerticalAlignment="Center"
+								FontSize="20"
+								FontWeight="Bold"
+								Foreground="White"
+								Text="{Binding Title}" />
+						</Border>
+					</Border>
+				</DataTemplate>
+			</AduSkin:AduPagerContainer.ItemTemplate>
+		</AduSkin:AduPagerContainer>
+	</StackPanel>
+</Border>

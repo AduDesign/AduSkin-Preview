@@ -1,0 +1,299 @@
+﻿    <AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <!--  Title  -->
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="Text Highlight Demo" />
+
+            <TextBlock
+                Margin="0,0,0,30"
+                FontSize="14"
+                Text="Highlight matching text in TextBlock controls for search functionality" />
+
+            <!--  Search Box  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20,0">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Search" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="Enter a keyword to highlight matching text in examples below"
+                        TextWrapping="Wrap" />
+
+                    <AduSkin:AduTextBox
+                        Width="300"
+                        HorizontalAlignment="Left"
+                        Text="{Binding SearchKeyword, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 1: Background Highlight  -->
+            <Border
+                Margin="0,0,0,0"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel Margin="20">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: Background Highlight" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Default yellow background highlight"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="Hello World, Welcome to AduSkin WPF Control Library" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 2: Custom Background Color  -->
+            <Border
+                Margin="0,0,0,0"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel Margin="20,0">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 2: Custom Background Color" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Custom green background highlight"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightBrush="LightGreen"
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="The quick brown fox jumps over the lazy dog" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 3: Background with Foreground  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 3: Background with Foreground" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Purple background with white text"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightBrush="Purple"
+                        AduAttach:TextBlockHighlightAttach.HighlightForeground="White"
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="AduSkin is a beautiful WPF control library" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 4: Underline Style  -->
+            <StackPanel Margin="20,0">
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Example 4: Underline Style" />
+
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="12"
+                    Opacity=".6"
+                    Text="Blue underline highlight"
+                    TextWrapping="Wrap" />
+
+                <TextBlock
+                    AduAttach:TextBlockHighlightAttach.HighlightBrush="Blue"
+                    AduAttach:TextBlockHighlightAttach.HighlightStyle="Underline"
+                    AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                    FontSize="14"
+                    Text="Hello World, Welcome to AduSkin WPF Control Library" />
+            </StackPanel>
+
+            <!--  Example 5: Strikethrough Style  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 5: Strikethrough Style" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Red strikethrough highlight"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightBrush="Red"
+                        AduAttach:TextBlockHighlightAttach.HighlightStyle="Strikethrough"
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="The quick brown fox jumps over the lazy dog" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 6: Underline + Strikethrough Style  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20,0">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 6: Underline + Strikethrough" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Green underline and strikethrough"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightBrush="Green"
+                        AduAttach:TextBlockHighlightAttach.HighlightStyle="UnderlineStrikethrough"
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="AduSkin is a beautiful WPF control library" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 7: Foreground Only (No Decoration)  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 7: Foreground Only" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Red text color only, no background or decoration"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightForeground="Red"
+                        AduAttach:TextBlockHighlightAttach.HighlightStyle="None"
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        FontSize="14"
+                        Text="CaseSensitive CASESENSITIVE casesensitive" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 8: Case Sensitive  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20,0">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 8: Case Sensitive" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Only matches exact case (try 'case' vs 'Case')"
+                        TextWrapping="Wrap" />
+
+                    <TextBlock
+                        AduAttach:TextBlockHighlightAttach.HighlightText="{Binding SearchKeyword}"
+                        AduAttach:TextBlockHighlightAttach.IsIgnoreCase="False"
+                        FontSize="14"
+                        Text="CaseSensitive CASESENSITIVE casesensitive" />
+                </StackPanel>
+            </Border>
+
+            <!--  Example 9: In ListBox  -->
+            <Border BorderThickness="1" CornerRadius="8">
+                <StackPanel Margin="20">
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 9: In ListBox" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Opacity=".6"
+                        Text="Highlight text in a list of items"
+                        TextWrapping="Wrap" />
+
+                    <AduSkin:AduListBox
+                        Height="150"
+                        AduAttach:ContainerAttach.ContainerType="UniformGrid"
+                        ItemsSource="{Binding Items}">
+                        <AduSkin:AduListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    AduAttach:TextBlockHighlightAttach.HighlightBrush="Yellow"
+                                    AduAttach:TextBlockHighlightAttach.HighlightText="{Binding DataContext.SearchKeyword, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    FontSize="14"
+                                    Text="{Binding Name}" />
+                            </DataTemplate>
+                        </AduSkin:AduListBox.ItemTemplate>
+                    </AduSkin:AduListBox>
+                </StackPanel>
+            </Border>
+
+            <!--  Features Info  -->
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource NormalBlue}"
+                    Text="💡 Features:" />
+
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource NormalBlue}"
+                    TextWrapping="Wrap">
+                    <Run Text="• Multiple highlight styles: Background, Underline, Strikethrough, Underline+Strikethrough, Foreground only" />
+                    <LineBreak />
+                    <Run Text="• Customizable background and foreground colors" />
+                    <LineBreak />
+                    <Run Text="• Case-sensitive and case-insensitive matching" />
+                    <LineBreak />
+                    <Run Text="• Works with TextBlock, ListBox, and other ItemsControls" />
+                    <LineBreak />
+                    <Run Text="• Enable/disable highlight functionality" />
+                    <LineBreak />
+                    <Run Text="• Customizable font weight for highlighted text" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>

@@ -1,0 +1,49 @@
+﻿<!--  Example 1: Basic TreeView  -->
+<Border
+    Margin="0,0,0,20"
+    BorderThickness="1"
+    CornerRadius="8">
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Text="Example 1: Basic TreeView" />
+
+        <TextBlock
+            Margin="0,0,0,10"
+            FontSize="12"
+            Text="Simple tree view with default item template"
+            TextWrapping="Wrap" />
+
+        <AduSkin:AduTreeView
+            MaxHeight="200"
+            AduSkin:TreeViewExtend.SelectedItem="{Binding SelectedItem}"
+            ItemsSource="{Binding Nodes}" />
+    </StackPanel>
+</Border>
+
+<!--  Example 2: Custom TreeView with Item Template  -->
+<Border
+    Margin="0,0,0,20"
+    BorderThickness="1"
+    CornerRadius="8">
+    <StackPanel>
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Text="Example 2: TreeView with Custom Item Template" />
+
+        <TextBlock
+            Margin="0,0,0,15"
+            FontSize="12"
+            Text="Tree view using a custom item template for enhanced display"
+            TextWrapping="Wrap" />
+
+        <AduSkin:AduTreeView
+            MaxHeight="200"
+            ItemTemplate="{StaticResource PropertyItemNode}"
+            ItemsSource="{Binding Nodes}" />
+    </StackPanel>
+</Border>

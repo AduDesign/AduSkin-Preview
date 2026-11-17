@@ -1,0 +1,86 @@
+AduCounter 是一个计数器控件，支持数字计数和时钟计时两种模式，可用于倒计时、正计时、游戏式数字切换、流程等待、验证码倒计时等场景。
+
+控件内置开始、暂停、继续、停止、重置等控制方法，支持完成事件和完成命令，适合在 MVVM 场景中响应计数结束。数字切换时支持多种过渡动画，并可控制只播放切入、只播放切出或同时播放切入切出动画。
+
+以下默认值以 `AduCounter` 默认样式和依赖属性注册值为准；继承自 WPF `Control` 的属性只列出常用部分。
+
+## AduCounter 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Mode` | 计数显示模式。`Number` 表示按整数数字计数，`Clock` 表示按时间格式计时。 | `CountdownMode` | `Number` |
+| `StartNumber` | 数字模式的起始数字。`Direction` 为 `Auto` 时，会和 `EndNumber` 一起决定数字递增或递减方向。 | `int` | `3` |
+| `EndNumber` | 数字模式的结束数字。计数到该值后触发完成逻辑。 | `int` | `0` |
+| `Step` | 数字模式每次切换的步长。设置为 `0` 时会被修正为 `1`，负数会按绝对值处理。 | `int` | `1` |
+| `Direction` | 计数方向。`Auto` 表示数字模式根据 `StartNumber` 和 `EndNumber` 自动判断方向，时钟模式默认倒计时；`Down` 表示递减或倒计时；`Up` 表示递增或正计时。 | `CountdownDirection` | `Auto` |
+| `CurrentNumber` | 当前数字值。数字模式下会随着计数过程变化，支持双向绑定。 | `int` | `3` |
+| `Duration` | 时钟模式的总时长。倒计时时从该值递减到 `0`，正计时时从 `0` 递增到该值。 | `TimeSpan` | `00:00:10` |
+| `RemainingTime` | 当前剩余或当前已计时间。时钟模式下会随着计时过程变化，支持双向绑定。 | `TimeSpan` | `00:00:10` |
+| `Interval` | 计数切换间隔。用于控制数字切换频率和时钟刷新频率。小于等于 `0` 时会被修正为 `1` 毫秒。 | `TimeSpan` | `00:00:01` |
+| `ClockFormat` | 时钟模式的时间显示格式。格式无效时回退为 `mm\:ss`。 | `string` | `mm\:ss` |
+| `AutoStart` | 控件加载后是否自动开始计数。 | `bool` | `False` |
+| `IsRunning` | 当前是否处于运行状态。该属性由控件内部维护。 | `bool` | `False` |
+| `IsPaused` | 当前是否处于暂停状态。该属性由控件内部维护。 | `bool` | `False` |
+| `DisplayText` | 当前实际显示文本。由 `Mode`、当前数字或当前时间自动计算。 | `string` | `string.Empty` |
+| `TransitionDuration` | 数字或时间文本切换动画时长。为 `0` 时不播放动画。 | `TimeSpan` | `00:00:00.420` |
+| `TransitionType` | 文本切换动画类型。支持 `FadeScale`、`Fade`、`Scale`、`SlideUp`、`SlideDown`、`None`、`Custom`。 | `CountdownTransitionType` | `FadeScale` |
+| `TransitionPhase` | 文本切换动画阶段。`EnterOnly` 只播放新值切入，`ExitOnly` 只播放旧值切出，`EnterAndExit` 同时播放旧值切出和新值切入。 | `CountdownTransitionPhase` | `EnterAndExit` |
+| `IsAnimationEnabled` | 是否启用文本切换动画。关闭后直接显示新值。 | `bool` | `True` |
+| `EnterScale` | `FadeScale` 和 `Scale` 动画中新值切入时的初始缩放比例。 | `double` | `1.35` |
+| `ExitScale` | `FadeScale` 和 `Scale` 动画中旧值切出时的目标缩放比例。 | `double` | `0.45` |
+| `TextEffectBrush` | 旧值切出文本使用的画刷。通常用于让旧值和新值具有不同视觉层级。 | `Brush` | `PrimaryBrush` |
+| `CompletedCommand` | 计数完成后执行的命令。命令参数优先使用 `CompletedCommandParameter`，未设置时传入控件自身。 | `ICommand` | `null` |
+| `CompletedCommandParameter` | 计数完成命令的参数。 | `object` | `null` |
+
+## 动画类型说明
+| 名称 | 描述 |
+| --- | --- |
+| `FadeScale` | 默认动画。旧值渐隐并缩小，新值渐显并缩放到正常大小，适合游戏式倒计时。 |
+| `Fade` | 只播放透明度变化，不改变文本缩放和位置。 |
+| `Scale` | 只播放缩放变化，不改变透明度。 |
+| `SlideUp` | 旧值向上滚出并淡出，新值从下方向上滚入并淡入。 |
+| `SlideDown` | 旧值向下滚出并淡出，新值从上方向下滚入并淡入。 |
+| `None` | 不播放切换动画，直接显示新值。 |
+| `Custom` | 预留自定义动画类型。当前行为与直接切换一致。 |
+
+## 计数方向说明
+| 名称 | 数字模式 | 时钟模式 |
+| --- | --- | --- |
+| `Auto` | 根据 `StartNumber` 和 `EndNumber` 自动判断递增或递减。 | 默认按倒计时处理。 |
+| `Down` | 从较大值向较小值递减，直到 `EndNumber`。 | 从 `Duration` 递减到 `0`。 |
+| `Up` | 从较小值向较大值递增，直到 `EndNumber`。 | 从 `0` 递增到 `Duration`。 |
+
+## 常用 Control 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Foreground` | 当前值文本颜色。 | `Brush` | `PrimaryBrush` |
+| `Background` | 控件背景。 | `Brush` | `Transparent` |
+| `BorderBrush` | 控件边框画刷。 | `Brush` | `null` |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `0` |
+| `FontSize` | 文本字号。 | `double` | `88` |
+| `FontWeight` | 文本字重。 | `FontWeight` | `Black` |
+| `FontFamily` | 文本字体。 | `FontFamily` | `Segoe UI` |
+| `MinWidth` | 控件最小宽度。 | `double` | `120` |
+| `MinHeight` | 控件最小高度。 | `double` | `100` |
+| `Padding` | 控件内部边距。 | `Thickness` | `0` |
+| `HorizontalContentAlignment` | 文本水平对齐方式。 | `HorizontalAlignment` | `Center` |
+| `VerticalContentAlignment` | 文本垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `SnapsToDevicePixels` | 是否对齐设备像素。 | `bool` | `False` |
+
+## 路由事件
+| 名称 | 描述 | 事件类型 |
+| --- | --- | --- |
+| `Started` | 调用 `Start` 并进入运行状态后触发。 | `RoutedEventHandler` |
+| `Paused` | 调用 `Pause` 并成功暂停后触发。 | `RoutedEventHandler` |
+| `Resumed` | 调用 `Resume` 并继续运行后触发。 | `RoutedEventHandler` |
+| `Stopped` | 调用 `Stop` 并停止运行后触发。 | `RoutedEventHandler` |
+| `Tick` | 每次计数更新后触发。 | `RoutedEventHandler` |
+| `Completed` | 计数到达结束值或结束时间后触发。 | `RoutedEventHandler` |
+
+## 公开方法
+| 名称 | 描述 |
+| --- | --- |
+| `Start` | 重置到初始值并开始计数。 |
+| `Pause` | 暂停当前计数。仅在运行中且未暂停时生效。 |
+| `Resume` | 从暂停状态继续计数。 |
+| `Stop` | 停止当前计数，并清除运行和暂停状态。 |
+| `Reset` | 重置到初始值并停止计数。 |

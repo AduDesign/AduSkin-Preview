@@ -1,0 +1,42 @@
+﻿<Grid> 
+    <AduSkin:AduToggleButton AduAttach:PathDataAttach.PathData="{DynamicResource Icon_See}" AduAttach:PathDataAttach.Width="40" Width="60"
+                                AduAttach:PathDataAttach.SelectedPathData="{DynamicResource Icon_NotSee}" IsChecked="True" Name="ButtonVisibilitySwitch" Margin="0,0,0,30" Panel.ZIndex="22"/>
+    <UniformGrid Visibility="{Binding IsChecked,ElementName=ButtonVisibilitySwitch,Converter={StaticResource BooleanToVisibility}}" Columns="3" Opacity=".4">
+        <AduSkin:AduTransitionContainer>
+            <Label Content="Right2Left"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Left2Right">
+            <Label Content="Left2Right"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Bottom2Top">
+            <Label Content="Bottom2Top"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Top2Bottom">
+            <Label Content="Top2Bottom"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Right2LeftWithFade">
+            <Label Content="Right2LeftWithFade"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Left2RightWithFade">
+            <Label Content="Left2RightWithFade"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Bottom2TopWithFade">
+            <Label Content="Bottom2TopWithFade"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Top2BottomWithFade">
+            <Label Content="Top2BottomWithFade"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionType="Right2LeftWithFade">
+            <Label Content="Right2LeftWithFade"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionStoryboard="{StaticResource Custom1Transition}">
+            <Label Content="Custom1"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionStoryboard="{StaticResource Custom2Transition}">
+            <Label Content="Custom2"/>
+        </AduSkin:AduTransitionContainer>
+        <AduSkin:AduTransitionContainer TransitionStoryboard="{StaticResource Custom3Transition}">
+            <Label Content="Custom3"/>
+        </AduSkin:AduTransitionContainer>
+    </UniformGrid> 
+</Grid>

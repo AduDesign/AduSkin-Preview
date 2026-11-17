@@ -1,0 +1,85 @@
+AduButton 是一个基于 WPF `Button` 的按钮控件，提供统一的 AduSkin 默认样式、按钮类型外观，以及点击时打开 `ContextMenu` 的下拉菜单能力。它保留 `Button` 原有的命令、点击事件、默认按钮、取消按钮等交互能力。
+
+以下默认值以 `AduButton` 的默认样式为准；继承自 WPF `Button`、`ContentControl`、`Control` 的属性只列出常用部分。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Type` | 按钮外观类型。默认样式会根据该值切换模板、背景色、前景色、边框和透明按钮表现。 | `ButtonType` | `Primary` |
+
+`Type` 的依赖属性注册默认值为 `Transparent`，但默认样式会将其设置为 `Primary`。未应用默认样式时，以依赖属性注册默认值为准。
+
+## ButtonType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Primary` | 主要按钮，使用基础按钮模板，适合主操作。 |
+| `Default` | 默认按钮，使用带 VisualState 过渡的模板，适合普通操作。 |
+| `Ghost` | 幽灵按钮，默认保持背景和边框，鼠标悬停时使用附加属性设置的背景和边框。 |
+| `Transparent` | 透明按钮，背景使用透明画刷，边框厚度为 `0`，适合工具栏、图标区或弱化操作。 |
+| `Text` | 文本按钮，背景透明、无边框，使用偏灰色文本和边框色。 |
+| `Info` | 信息按钮，背景使用 `InfoBrush`，前景使用白色。 |
+| `Success` | 成功按钮，背景使用 `SuccessBrush`，前景使用白色。 |
+| `Error` | 错误按钮，背景使用 `ErrorBrush`，前景使用白色。 |
+| `Warning` | 警告按钮，背景使用 `WarnBrush`，前景使用白色。 |
+| `Yes` | 枚举保留值。当前默认样式未提供独立触发器。 |
+| `No` | 枚举保留值。当前默认样式未提供独立触发器。 |
+| `Dashed` | 枚举保留值。当前默认样式未提供独立触发器。 |
+
+## 常用 Button 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 按钮内容，可为文本或任意 WPF 内容。 | `object` | `ButtonContent` 动态资源 |
+| `Command` | 点击按钮时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 命令参数。 | `object` | `null` |
+| `CommandTarget` | 命令目标元素。 | `IInputElement` | `null` |
+| `Click` | 点击按钮时触发的事件。 | `RoutedEventHandler` | - |
+| `IsDefault` | 是否作为窗口默认按钮，默认按钮可响应 `Enter`。 | `bool` | `False` |
+| `IsCancel` | 是否作为窗口取消按钮，取消按钮可响应 `Esc`。 | `bool` | `False` |
+| `IsEnabled` | 是否启用按钮。禁用时默认降低透明度。 | `bool` | `True` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Width` | 默认按钮宽度。 | `double` | `100` |
+| `Height` | 默认按钮高度。 | `double` | `30` |
+| `Background` | 按钮背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `Foreground` | 按钮文字或内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 按钮边框画刷。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 按钮边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 按钮圆角。默认模板使用该附加属性控制外层边框圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | `Ghost` 模板鼠标悬停时使用的背景画刷。 | `Brush` | `MouseOverBackground` 动态资源 |
+| `AduAttach:BorderAttach.MouseOverBorderBrush` | `Ghost` 模板鼠标悬停时使用的边框画刷。 | `Brush` | `MouseOverBorderBrush` 动态资源 |
+| `HorizontalContentAlignment` | 内容水平对齐方式。 | `HorizontalAlignment` | `Center` |
+| `VerticalContentAlignment` | 内容垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `Cursor` | 鼠标悬停时的指针样式。 | `Cursor` | `Hand` |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认样式关闭系统焦点框。 | `Style` | `null` |
+
+## 下拉菜单附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:MenuAttach.DropDownMenu` | 点击按钮时要打开的下拉菜单。为空时按钮只执行普通点击逻辑。 | `ContextMenu` | `null` |
+| `AduAttach:MenuAttach.IsDropDownOpen` | 下拉菜单打开状态参考值。点击时控件会根据该值设置菜单 `IsOpen`。 | `bool` | `False` |
+| `AduAttach:MenuAttach.Placement` | 下拉菜单相对按钮的弹出位置。 | `PlacementMode` | `Bottom` |
+| `AduAttach:MenuAttach.HorizontalOffset` | 下拉菜单水平偏移。 | `double` | `-20` |
+| `AduAttach:MenuAttach.VerticalOffset` | 下拉菜单垂直偏移。 | `double` | `-20` |
+
+## 模板说明
+| 名称 | 使用场景 | 交互表现 |
+| --- | --- | --- |
+| `Button` | `Primary`、`Info`、`Success`、`Error`、`Warning` 等基础色块按钮。 | 鼠标悬停、按下和禁用状态通过透明度变化表现；`IsDefaulted=True` 时边框使用 `PrimaryBrush`。 |
+| `Default` | `Default` 和 `Transparent` 类型。 | 使用 VisualState 处理 `Normal`、`MouseOver`、`Pressed` 状态，禁用时降低整体透明度。 |
+| `Ghost` | `Ghost` 类型。 | 鼠标悬停时切换到 `MouseOverBackground` 和 `MouseOverBorderBrush`。 |
+
+## 使用说明
+- `AduButton` 继承自 `Button`，可以直接使用 `Command`、`CommandParameter`、`Click`、`IsDefault`、`IsCancel` 等标准按钮能力。
+- `Type` 只控制默认样式下的视觉表现，不改变命令执行或路由事件行为。
+- 点击时会先执行 `Button.OnClick` 的标准逻辑，再检查 `AduAttach:MenuAttach.DropDownMenu`。如果设置了下拉菜单，控件会把菜单的 `PlacementTarget` 设置为自身，并应用 `Placement`、`HorizontalOffset`、`VerticalOffset`。
+- `Ghost` 类型的悬停背景和边框来自附加属性，可在单个按钮上单独覆盖。
+- `Transparent` 和 `Text` 适合弱化操作，但仍然保留按钮点击、命令和禁用状态。
+- `Yes`、`No`、`Dashed` 当前只是 `ButtonType` 枚举成员，默认样式没有单独视觉定义；如需特殊外观，需要在项目样式中补充触发器。
+
+## 典型场景
+- 页面或对话框中的确认、取消、提交、保存等操作按钮。
+- 工具栏中的透明按钮或文本按钮。
+- 需要成功、警告、错误、信息语义色的状态操作。
+- 点击后展示更多操作项的下拉菜单按钮。

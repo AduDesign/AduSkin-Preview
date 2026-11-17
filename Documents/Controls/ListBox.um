@@ -1,0 +1,89 @@
+AduListBox 是基于 `ListBox` 的增强列表控件，提供多种项目容器布局、横向和纵向排列、空状态占位、加载占位、选中项滚动定位以及拖拽框选能力。适合用于普通列表、图标列表、文件列表、导航候选项、多选列表和大数据量列表展示。
+
+以下默认值以 `AduListBox` 默认样式为准；继承自 WPF `ListBox` 的属性只列出页面示例和模板中常用的部分。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 数据源集合。 | `IEnumerable` | `null` |
+| `SelectedItem` | 当前选中项。 | `object` | `null` |
+| `SelectedIndex` | 当前选中项索引。 | `int` | `-1` |
+| `SelectionMode` | 选择模式，可设置为 `Single`、`Multiple`、`Extended`。 | `SelectionMode` | `Single` |
+| `ItemTemplate` | 列表项数据模板。 | `DataTemplate` | `null` |
+| `ItemContainerStyle` | 列表项容器样式。 | `Style` | `null` |
+| `ItemsPanel` | 项目面板模板。默认样式会根据容器类型自动设置。 | `ItemsPanelTemplate` | `按容器类型自动设置` |
+| `EnableRectangleSelection` | 是否启用拖拽框选。开启后可在列表空白区域拖出选择矩形，适合多选场景。 | `bool` | `False` |
+| `Background` | 控件背景色。 | `Brush` | `NormalTransparentBrush` |
+| `BorderBrush` | 控件边框色。 | `Brush` | `NormalBorderBrush` |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `0` |
+| `Padding` | 内置滚动区域的内边距。 | `Thickness` | `0` |
+| `ScrollViewer.CanContentScroll` | 是否使用逻辑滚动。虚拟化布局下由样式自动设置为 `True`。 | `bool` | `False` |
+| `ScrollViewer.HorizontalScrollBarVisibility` | 水平滚动条显示方式。 | `ScrollBarVisibility` | `Disabled` |
+| `ScrollViewer.VerticalScrollBarVisibility` | 垂直滚动条显示方式。 | `ScrollBarVisibility` | `Auto` |
+| `VirtualizingPanel.IsVirtualizing` | 是否启用虚拟化。需要配合 `VirtualizingStackPanel` 容器类型才会生效。 | `bool` | `True` |
+| `VirtualizingPanel.VirtualizationMode` | 虚拟化模式。 | `VirtualizationMode` | `Recycling` |
+| `VirtualizingPanel.ScrollUnit` | 虚拟化滚动单位。 | `ScrollUnit` | `Pixel` |
+| `VirtualizingStackPanel.IsVirtualizingWhenGrouping` | 分组时是否继续启用虚拟化。 | `bool` | `True` |
+
+## 附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:ContainerAttach.ContainerType` | 项目容器类型，决定 `ItemsPanel` 使用哪种布局面板。 | `ContainerType` | `StackPanel` |
+| `AduAttach:LayoutAttach.DirectionType` | 项目排列方向。 | `DirectionType` | `Vertical` |
+| `AduAttach:LayoutAttach.Columns` | `UniformGrid` 容器类型下的列数。 | `int` | `4` |
+| `AduSkin:ListBoxExtend.ScrollPositionType` | 选中项变化时滚动到的位置。 | `ScrollPosition` | `Normal` |
+| `AduAttach:BorderAttach.CornerRadius` | 控件整体圆角。 | `CornerRadius` | `10` |
+| `AduAttach:BorderAttach.MouseOverBorderBrush` | 列表项悬浮时的边框色。 | `Brush` | `MouseOverBorderBrush` |
+| `AduAttach:BorderAttach.SelectedBorderBrush` | 列表项选中时的边框色。 | `Brush` | `SelectedBorderBrush` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 列表项悬浮时的背景色。 | `Brush` | `MouseOverBackground` |
+| `AduAttach:BackgroundAttach.SelectedBackground` | 列表项选中时的背景色。 | `Brush` | `SelectedBackground` |
+| `AduAttach:PlaceHolderAttach.PlaceHolderVisible` | 空状态占位层的可见性。数据为空时默认样式会自动显示。 | `Visibility` | `Collapsed` |
+| `AduAttach:PlaceHolderAttach.PathData` | 空状态或加载状态显示的图标路径。 | `Geometry` | `Icon_Empty` |
+| `AduAttach:PlaceHolderAttach.Message` | 空状态或加载状态显示的提示文本。 | `string` | `PlaceHolderMessage` |
+| `AduAttach:PlaceHolderAttach.PlaceHolderBrush` | 占位图标和文本颜色。 | `Brush` | `NormalForeground10` |
+| `AduAttach:PlaceHolderAttach.IsLoading` | 是否显示加载占位状态。 | `bool` | `False` |
+
+## ContainerType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `StackPanel` | 普通线性列表布局，支持纵向或横向排列，不启用虚拟化。 |
+| `VirtualizingStackPanel` | 虚拟化线性列表布局，适合数据量较大的纵向或横向列表。 |
+| `WrapPanel` | 自动换行布局，适合图标、标签、文件缩略图等不定列流式排列。 |
+| `UniformGrid` | 等宽等高网格布局，通过 `AduAttach:LayoutAttach.Columns` 控制列数。 |
+
+## DirectionType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Vertical` | 纵向主轴排列。 |
+| `Horizontal` | 横向主轴排列。 |
+
+## ScrollPosition 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Normal` | 不主动调整滚动位置，使用默认选择行为。 |
+| `Start` | 选中项滚动到可视区域起点。 |
+| `Center` | 选中项滚动到可视区域中间。 |
+| `End` | 选中项滚动到可视区域终点。 |
+
+## 使用说明
+- 默认容器类型为 `StackPanel`，适合普通列表；需要大数据量性能时，应将 `AduAttach:ContainerAttach.ContainerType` 设置为 `VirtualizingStackPanel`。
+- 仅设置 `VirtualizingPanel.IsVirtualizing=True` 或 `VirtualizingPanel.VirtualizationMode=Recycling` 不一定能启用虚拟化，实际项目面板必须是 `VirtualizingStackPanel`。
+- `VirtualizingStackPanel` 容器类型会自动把 `ScrollViewer.CanContentScroll` 设置为 `True`，并使用回收模式虚拟化。
+- `WrapPanel` 和 `UniformGrid` 用于视觉排布，不提供默认虚拟化能力；数据量较大时应优先考虑 `VirtualizingStackPanel`。
+- `AduAttach:LayoutAttach.DirectionType` 会影响 `StackPanel`、`VirtualizingStackPanel` 和 `WrapPanel` 的排列方向。
+- `AduAttach:LayoutAttach.Columns` 只在 `UniformGrid` 容器类型下控制列数，对其它容器类型没有实际布局作用。
+- `AduSkin:ListBoxExtend.ScrollPositionType` 设置为 `Start`、`Center` 或 `End` 后，选中项变化时会执行平滑滚动定位。
+- 开启 `EnableRectangleSelection` 后，拖拽框选只处理当前已生成的列表项；与虚拟化同时使用时，未生成的不可见项不会参与框选计算。
+- 拖拽框选更适合 `Multiple` 或 `Extended` 选择模式；单选模式下只会保留框选区域内最后命中的项目。
+- 数据为空时，默认样式会显示空状态占位；设置 `AduAttach:PlaceHolderAttach.IsLoading=True` 时会切换为加载占位图标和提示文本。
+- 需要自定义列表项外观时，优先使用 `ItemTemplate` 定义内容，使用 `ItemContainerStyle` 调整 `AduListBoxItem` 的尺寸、边距和对齐方式。
+- 横向列表需要根据内容和宿主尺寸设置合适的水平滚动条策略，避免项目被裁切后无法访问。
+
+## 典型场景
+- 普通业务数据列表、菜单候选列表、设置项列表。
+- 文件、图片、图标等支持多选和框选的资源列表。
+- 需要横向滚动的标签、时间轴、步骤候选项。
+- 大数据量单列或单行列表，使用 `VirtualizingStackPanel` 提升加载和滚动性能。
+- 空数据时需要统一占位图标和提示文案的列表区域。
+- 选择项变化后需要自动滚动到起点、中点或终点的列表。
+- 需要在普通线性列表、流式布局和固定列网格之间切换展示方式的配置型界面。

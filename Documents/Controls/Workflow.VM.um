@@ -1,0 +1,209 @@
+using AduSkin.Extensions.Workflow;
+using AduSkin.Extensions.Workflow.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Reflection;
+using System.Windows;
+
+public partial class WorkflowViewModel : ObservableObject
+{
+    [ObservableProperty]
+    private WorkflowGraph _graph;
+
+    [ObservableProperty]
+    private WorkflowDesignerOptions _options = new WorkflowDesignerOptions
+    {
+        IsNodePanelPinned = false,
+        IsPropertyPanelPinned = false,
+        ShowGrid = true,
+        ShowMiniMap = true,
+        SnapToGrid = true
+    };
+
+    public ObservableCollection<WorkflowSampleItem> Samples { get; } = new()
+    {
+        new("顺序数据传递", "01-sequential-data.workflow.json"),
+        new("条件分支", "02-condition.workflow.json"),
+        new("并行汇聚", "03-parallel-join.workflow.json"),
+        new("水平布局", "04-horizontal.workflow.json")
+    };
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(LoadSampleCommand))]
+    private WorkflowSampleItem? _selectedSample;
+
+    [ObservableProperty]
+    private string _sampleStatus = "请选择一个工作流示例";
+
+    public WorkflowViewModel()
+    {
+        // 内置节点由 Workflow 程序集自动注册；这里只需要扫描宿主自定义节点。
+        WorkflowNodeRegistry.ScanAssembly(Assembly.GetExecutingAssembly());
+        Graph = CreateOrderWorkflow();
+        SelectedSample = Samples.FirstOrDefault();
+    }
+
+    private bool CanLoadSample() => SelectedSample != null;
+
+    [RelayCommand(CanExecute = nameof(CanLoadSample))]
+    private async Task LoadSampleAsync()
+    {
+        if (SelectedSample == null) return;
+
+        var path = Path.Combine(
+            AppContext.BaseDirectory,
+            "Resources",
+            "WorkflowSamples",
+            SelectedSample.FileName);
+
+        if (!File.Exists(path))
+        {
+            SampleStatus = $"示例文件不存在：{path}";
+            return;
+        }
+
+        try
+        {
+            // 每次都从文件创建新图，避免复用已被编辑过的节点实例。
+            Graph = WorkflowSerializer.Deserialize(await File.ReadAllTextAsync(path));
+            SampleStatus = $"已加载：{SelectedSample.Name}";
+        }
+        catch (Exception exception)
+        {
+            SampleStatus = $"加载失败：{exception.Message}";
+        }
+    }
+
+    private static WorkflowGraph CreateOrderWorkflow()
+    {
+        var graph = new WorkflowGraph
+        {
+            Name = "订单处理",
+            LayoutDirection = WorkflowLayoutDirection.TopToBottom
+        };
+
+        var start = new StartWorkflowNode { Position = new Point(440, 30) };
+        var create = new CreateOrderWorkflowNode { Position = new Point(410, 150) };
+        var process = new ProcessOrderWorkflowNode { Position = new Point(410, 290) };
+        var end = new EndWorkflowNode { Position = new Point(440, 440) };
+
+        process.InputBindings["OrderNo"] = new WorkflowValueBinding
+        {
+            SourceKind = WorkflowValueSourceKind.NodeOutput,
+            SourceNodeId = create.Id,
+            OutputName = "OrderNo",
+            Required = true
+        };
+
+        foreach (var node in new WorkflowNode[] { start, create, process, end })
+            graph.AddNode(node);
+
+        Connect(graph, start.Ports.Single(x => x.Name == "Out"),
+            create.Ports.Single(x => x.Side == WorkflowPortSide.Top));
+        Connect(graph, create.Ports.Single(x => x.Side == WorkflowPortSide.Bottom),
+            process.Ports.Single(x => x.Side == WorkflowPortSide.Top));
+        Connect(graph, process.Ports.Single(x => x.Side == WorkflowPortSide.Bottom),
+            end.Ports.Single(x => x.Name == "In"));
+
+        graph.Comments.Add(new WorkflowComment
+        {
+            Title = "订单处理区域",
+            Text = "Process 节点通过 NodeOutput 绑定读取 Create 节点的订单号。",
+            Bounds = new Rect(350, 115, 300, 310)
+        });
+
+        return graph;
+    }
+
+    private static void Connect(
+        WorkflowGraph graph,
+        WorkflowPort source,
+        WorkflowPort target)
+    {
+        if (!graph.TryConnect(source, target, out var error))
+            throw new InvalidOperationException(error);
+    }
+}
+
+public sealed record WorkflowSampleItem(string Name, string FileName);
+
+[WorkflowNode("sample.create-order", "创建订单", "订单", 10, "Icon_CreateOrder")]
+public sealed class CreateOrderWorkflowNode : WorkflowNode
+{
+    public CreateOrderWorkflowNode()
+    {
+        Title = "创建订单";
+        AddFlowPorts();
+        DefineOutput("OrderNo", typeof(string), "订单号");
+        DefineOutput("Amount", typeof(decimal), "订单金额");
+    }
+
+    public override string TypeId => "sample.create-order";
+
+    public override async Task<WorkflowNodeResult> ExecuteAsync(
+        WorkflowNodeExecutionContext context,
+        CancellationToken cancellationToken)
+    {
+        await Task.Delay(300, cancellationToken);
+        return WorkflowNodeResult.Success(
+            new Dictionary<string, object?>
+            {
+                ["OrderNo"] = $"ADU-{DateTime.Now:HHmmss}",
+                ["Amount"] = 299m
+            });
+    }
+}
+
+[WorkflowNode("sample.process-order", "处理订单", "订单", 20, "Icon_Task")]
+public sealed class ProcessOrderWorkflowNode : WorkflowNode
+{
+    public ProcessOrderWorkflowNode()
+    {
+        Title = "处理订单";
+        AddFlowPorts();
+        DefineInput("OrderNo", typeof(string), true, "订单号");
+        DefineOutput("Result", typeof(string), "处理结果");
+    }
+
+    public override string TypeId => "sample.process-order";
+
+    public string OperationName { get; set; } = "订单入库";
+
+    public override async Task<WorkflowNodeResult> ExecuteAsync(
+        WorkflowNodeExecutionContext context,
+        CancellationToken cancellationToken)
+    {
+        var orderNo = context.Get<string>("OrderNo")
+            ?? throw new InvalidOperationException("缺少订单号。");
+
+        await Task.Delay(600, cancellationToken);
+        return WorkflowNodeResult.Success(
+            new Dictionary<string, object?>
+            {
+                ["Result"] = $"{OperationName}：{orderNo}"
+            });
+    }
+
+    public override IDictionary<string, string> SaveState() =>
+        new Dictionary<string, string>
+        {
+            [nameof(OperationName)] = OperationName
+        };
+
+    public override void LoadState(IReadOnlyDictionary<string, string> state)
+    {
+        if (state.TryGetValue(nameof(OperationName), out var value))
+            OperationName = value;
+    }
+}
+
+// 无界面运行示例：
+// var json = await File.ReadAllTextAsync(path);
+// var graph = WorkflowSerializer.Deserialize(json);
+// var runner = new WorkflowRunner { MaxConcurrency = 4 };
+// var result = await runner.RunAsync(
+//     graph,
+//     new Dictionary<string, object?> { ["Operator"] = "Admin" },
+//     cancellationToken);

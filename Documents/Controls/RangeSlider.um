@@ -1,0 +1,69 @@
+AduRangeSlider 是双端点范围滑块控件，用于在最小值和最大值之间选择一个连续区间。控件支持水平和垂直布局、刻度显示、刻度吸附、点击轨道移动端点、方向反转、自动提示以及双向数据绑定。
+
+以下默认值以 `AduRangeSlider` 的默认样式和源码默认值为准。控件适合用于价格区间、时间范围、筛选条件、图表缩放窗口和阈值设置等场景。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduRangeSlider` | 通过两个滑块头选择 `ValueStart` 到 `ValueEnd` 的数值区间。 | `TwoWayRangeBase` |
+| `TwoWayRangeBase` | 提供范围边界、双端点值、步长和 `ValueChanged` 事件。 | `Control` |
+
+## 范围属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Minimum` | 可选择范围的最小值。 | `double` | `0` |
+| `Maximum` | 可选择范围的最大值；小于 `Minimum` 时会被限制为 `Minimum`。 | `double` | `10` |
+| `ValueStart` | 区间起始值，默认双向绑定并限制在 `Minimum` 到 `ValueEnd` 之间。 | `double` | `0` |
+| `ValueEnd` | 区间结束值，默认双向绑定并限制在 `ValueStart` 到 `Maximum` 之间。 | `double` | `0` |
+| `SmallChange` | 小步长命令每次调整的数值。 | `double` | `1` |
+| `LargeChange` | 点击轨道区域或执行大步长命令时调整的数值。 | `double` | `1` |
+
+## 布局与交互属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Orientation` | 滑块方向，可选 `Horizontal` 或 `Vertical`。 | `Orientation` | `Horizontal` |
+| `IsDirectionReversed` | 是否反转数值增加方向。 | `bool` | `False` |
+| `IsMoveToPointEnabled` | 点击非滑块头区域时，是否将距离最近的端点移动到点击位置。 | `bool` | `False` |
+| `Delay` | 按住轨道 RepeatButton 后首次重复执行前的延迟，默认跟随系统键盘设置。 | `int` | 系统键盘延迟 |
+| `Interval` | 按住轨道 RepeatButton 时连续执行命令的间隔，默认跟随系统键盘设置。 | `int` | 系统键盘速度 |
+
+## 刻度属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsSnapToTickEnabled` | 是否将端点吸附到最近刻度。 | `bool` | `False` |
+| `TickFrequency` | 未设置 `Ticks` 时的等距刻度间隔。 | `double` | `1` |
+| `Ticks` | 自定义刻度集合；设置后优先于 `TickFrequency`，不要求按大小排序。 | `DoubleCollection` | 空集合 |
+| `TickPlacement` | 刻度线位置，可选 `None`、`TopLeft`、`BottomRight` 或 `Both`。 | `TickPlacement` | `None` |
+
+## 提示属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AutoToolTipPlacement` | 拖动时自动数值提示的位置，可选 `None`、`TopLeft` 或 `BottomRight`。 | `AutoToolTipPlacement` | `None` |
+| `AutoToolTipPrecision` | 自动数值提示保留的小数位数。 | `int` | `1` |
+| `AduAttach:TooltipAttach.Visibility` | 是否在滑块头模板中持续显示数值提示。 | `Visibility` | `Collapsed` |
+| `AduAttach:TooltipAttach.Placement` | 持续提示的位置；水平方向常用 `Top`、`Bottom`，垂直方向常用 `Left`、`Right`。 | `PlacementType` | `LeftTop` |
+| `AduAttach:StringFormatAttach.StringFormat` | 持续提示的数值格式，例如 `#0.00`。 | `string` | 未设置 |
+
+## 路由事件
+| 名称 | 描述 | 事件参数 |
+| --- | --- | --- |
+| `ValueChanged` | 任一端点发生有效变化时触发；端点交换或边界连锁调整只报告一次完整区间变化。 | `RoutedPropertyChangedEventArgs<DoubleRange>` |
+
+`DoubleRange.OldValue` 和 `DoubleRange.NewValue` 均包含 `Start`、`End` 两个值。
+
+## 使用说明
+- 始终满足 `Minimum <= ValueStart <= ValueEnd <= Maximum`。外部赋值越过另一端时，当前端点会停在另一端。
+- 拖动端点穿过另一端时，两个端点会交换并继续拖动，所选区间始终保持有序。
+- 同时初始化两个端点时，建议先设置 `ValueEnd`，再设置 `ValueStart`；XAML 示例也采用这一顺序。
+- `Ticks` 非空时优先使用自定义刻度；否则使用 `TickFrequency` 生成等距刻度。
+- `Minimum` 和 `Maximum` 始终作为合法端点，即使 `Maximum` 不正好落在 `TickFrequency` 上。
+- `TickPlacement` 只控制刻度线显示；需要吸附时还应设置 `IsSnapToTickEnabled=True`。
+- `AutoToolTipPlacement` 是拖动期间的临时提示；附加的 `TooltipAttach` 用于始终可见的滑块头提示，两者可以按场景择一使用。
+- `ValueStart`、`ValueEnd` 默认使用双向绑定，MVVM 场景通常无需显式指定 `Mode=TwoWay`。
+- `IsDirectionReversed=True` 会同时影响轨道布局、点击位置换算和拖动方向。
+
+## 典型场景
+- 商品价格、日期跨度、年龄和评分范围筛选。
+- 折线图、时间轴和媒体片段的可见窗口选择。
+- 告警上下限、允许误差和设备运行区间设置。
+- 需要显示刻度并限制为离散值的参数配置。

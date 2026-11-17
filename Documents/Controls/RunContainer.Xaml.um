@@ -1,0 +1,56 @@
+﻿<!--  水平文本走马灯  -->
+<AduSkin:AduRunContainer
+	x:Name="horizontalMarquee"
+	Margin="0,20"
+	Direction="RightToLeft"
+	FadeEdgeThickness="40"
+	IsAutoScroll="{Binding IsAutoScroll}"
+	ItemsSource="{Binding TextItems}"
+	OpacityMask="{DynamicResource LeftToRightFade}"
+	Speed="{Binding Speed}">
+	<AduSkin:AduRunContainer.ItemTemplate>
+		<DataTemplate>
+			<Border Padding="20,0" VerticalAlignment="Center">
+				<StackPanel Orientation="Horizontal">
+					<TextBlock
+						VerticalAlignment="Center"
+						FontSize="14"
+						Foreground="{DynamicResource PrimaryBrush}"
+						Text="{Binding Title}" />
+					<TextBlock
+						Margin="10,0,0,0"
+						VerticalAlignment="Center"
+						FontSize="12"
+						Foreground="{DynamicResource GrayBrush2}"
+						Text="{Binding Content}"
+						TextTrimming="CharacterEllipsis" />
+				</StackPanel>
+			</Border>
+		</DataTemplate>
+	</AduSkin:AduRunContainer.ItemTemplate>
+</AduSkin:AduRunContainer>
+
+<!--  控制按钮  -->
+<StackPanel Margin="0,0,0,15" Orientation="Horizontal">
+	<AduSkin:AduToggleButton
+		Width="40"
+		Height="40"
+		Margin="4"
+		AduAttach:BorderAttach.CornerRadius="8"
+		AduAttach:LayoutAttach.IconLayout="Left"
+		AduAttach:PathDataAttach.PathData="{StaticResource Icon_Play}"
+		AduAttach:PathDataAttach.SelectedPathData="{StaticResource Icon_Pause}"
+		AduAttach:PathDataAttach.Width="10"
+		IsChecked="{Binding IsAutoScroll}" />
+	<TextBlock
+		Margin="10,0,0,0"
+		VerticalAlignment="Center"
+		Text="速度:" />
+	<AduSkin:AduSlider
+		Width="100"
+		Margin="5,0"
+		Maximum="200"
+		Minimum="10"
+		Value="{Binding Speed}" />
+	<TextBlock VerticalAlignment="Center" Text="{Binding Speed, StringFormat={}{0:F0}}" />
+</StackPanel>

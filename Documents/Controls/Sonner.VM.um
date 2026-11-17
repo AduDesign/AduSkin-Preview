@@ -1,0 +1,105 @@
+﻿#region 默认
+[RelayCommand]
+public void OpenDefault()
+{
+    AduToastService.Show("文件已保存成功", "系统通知");
+}
+[RelayCommand]
+public void OpenSuccess()
+{
+    AduToastService.ShowSuccess("文件已保存成功", "系统通知");
+}
+[RelayCommand]
+public void OpenError()
+{
+    AduToastService.ShowError("无法连接到服务器", "网络错误");
+}
+[RelayCommand]
+public void OpenWarning()
+{
+    AduToastService.ShowWarning("磁盘空间仅剩10%", "存储警告");
+}
+
+/// <summary>
+/// 手动关闭模式示例 - Toast 不会自动关闭，需点击关闭按钮
+/// </summary>
+[RelayCommand]
+public void OpenManualClose()
+{
+    AduToastService.ShowManual("这是一条手动关闭的通知，请点击右上角关闭按钮", "提示", StatusType.Default);
+}
+#endregion
+
+#region 手动关闭
+
+[RelayCommand]
+public void OpenManualSuccess()
+{
+    AduToastService.ShowSuccessManual("保存成功（手动关闭）", "成功");
+}
+
+[RelayCommand]
+public void OpenManualError()
+{
+    AduToastService.ShowErrorManual("操作失败（手动关闭）", "错误");
+}
+
+[RelayCommand]
+public void OpenManualWarning()
+{
+    AduToastService.ShowWarningManual("警告信息（手动关闭）", "警告");
+}
+#endregion
+
+#region 倒计时
+/// <summary>
+/// 自定义时长示例 - 10秒后自动关闭
+/// </summary>
+[RelayCommand]
+public void OpenDuration10s()
+{
+    AduToastService.ShowWithDuration("10秒后自动关闭", "自定义时长", StatusType.Default, 10000);
+}
+
+/// <summary>
+/// 短时长示例 - 7秒后自动关闭
+/// </summary>
+[RelayCommand]
+public void OpenDuration7s()
+{
+    AduToastService.ShowWithDuration("7秒后自动关闭", "短时通知", StatusType.Default, 7000);
+}
+
+/// <summary>
+/// 短时长示例 - 5秒后自动关闭
+/// </summary>
+[RelayCommand]
+public void OpenDuration5s()
+{
+    AduToastService.ShowWithDuration("5秒后自动关闭", "短时通知", StatusType.Success, 5000, tag: "关闭回调", new Action<object>(a =>
+    {
+
+    }));
+}
+
+/// <summary>
+/// 短时长示例 - 3秒后自动关闭
+/// </summary>
+[RelayCommand]
+public void OpenDuration3s()
+{
+    AduToastService.ShowWithDuration("3秒后自动关闭", "短时通知", StatusType.Error, 3000);
+}
+
+/// <summary>
+/// 完整参数示例
+/// </summary>
+[RelayCommand]
+public void OpenFullOptions()
+{
+    AduToastService.Show("消息内容", "完整参数示例", StatusType.Warning, ToastCloseMode.AutoClose, 8000, tag: "关闭回调", new Action<object>(a =>
+    {
+
+    }));
+}
+#endregion

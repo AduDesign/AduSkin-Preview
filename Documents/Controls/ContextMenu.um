@@ -1,0 +1,50 @@
+AduContextMenu 是一个带 AduSkin 默认外观的右键菜单控件，继承自 WPF `ContextMenu`。它默认把子项容器生成为 `AduMenuItem`，并提供圆角、阴影、滚动和统一菜单项样式。
+
+以下默认值以 `AduContextMenu` 和 `AduMenuItem` 的默认样式为准。控件适合右键菜单、按钮下拉菜单和更多操作菜单。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduContextMenu` | 上下文菜单容器。 | `ContextMenu` |
+| `AduMenuItem` | 菜单项容器，支持图标、子菜单和勾选态。 | `MenuItem` |
+| `AduSeparator` | 菜单分隔线。 | `Separator` |
+
+## AduContextMenu 样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BackgroundAttach.PanelBackground` | 菜单面板背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `AduAttach:BorderAttach.BorderBrush` | 菜单边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.BorderThickness` | 菜单边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 菜单圆角。 | `CornerRadius` | `6` |
+| `MinHeight` | 菜单最小高度。 | `double` | `10` |
+| `HorizontalOffset` | 菜单水平偏移。 | `double` | `-20` |
+| `VerticalOffset` | 菜单垂直偏移。 | `double` | `-20` |
+| `Padding` | 菜单内边距。 | `Thickness` | `0` |
+
+## AduMenuItem 属性和样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Icon` | 菜单项图标内容。为空时隐藏图标区域。 | `object` | `null` |
+| `Header` | 菜单项标题。 | `object` | `null` |
+| `InputGestureText` | 快捷键提示文本。 | `string` | `""` |
+| `IsCheckable` | 是否可勾选。 | `bool` | `False` |
+| `IsChecked` | 勾选状态。 | `bool` | `False` |
+| `Foreground` | 菜单项前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 菜单项悬浮背景。 | `Brush` | `MouseOverBackground` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 图标区域宽度。 | `double` | `20` |
+| `AduAttach:PathDataAttach.Margin` | 图标区域边距。 | `Thickness` | `8,0,0,0` |
+| `MinWidth` | 菜单项最小宽度。 | `double` | `200` |
+| `Height` | 菜单项高度。 | `double` | `32` |
+
+## 使用说明
+- `AduContextMenu` 内部子项默认使用 `AduMenuItem`。
+- `AduMenuItem` 有子项时会使用带子菜单箭头的模板。
+- `IsCheckable=True` 且 `IsChecked=True` 时，菜单项右侧显示勾选图标。
+- `Icon` 为空时图标列隐藏。
+- 子菜单弹出位置为右侧，菜单面板带阴影和滚动区域。
+
+## 典型场景
+- 右键操作菜单。
+- 按钮、SplitButton、工具栏上的下拉操作菜单。
+- 带快捷键提示和图标的命令列表。
+- 多级选项菜单和可勾选菜单项。

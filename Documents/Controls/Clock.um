@@ -1,0 +1,54 @@
+AduClock 是可缩放模拟时钟控件，用于绘制圆形表盘、刻度、数字、时针、分针、秒针和可选数字时间。控件支持经典、现代、极简三种表盘风格，也支持运行状态、手动时间和秒针平滑模式。
+
+以下默认值以 `AduClock` 的默认样式和源码默认值为准。控件适合用于桌面工具、监控大屏、时间展示组件和状态面板。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduClock` | 模拟时钟控件。 | `Control` |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ClockType` | 时钟样式类型。 | `AduClockType` | `Classic` |
+| `Time` | 当前显示时间。`IsRunning=True` 时会由控件自动更新为当前系统时间。 | `DateTime` | 当前时间 |
+| `IsRunning` | 是否自动运行并更新当前时间。 | `bool` | `True` |
+| `SmoothSecondHand` | 是否启用平滑秒针。启用后计时器约每 40 毫秒刷新一次。 | `bool` | `False` |
+| `ShowNumbers` | 是否显示表盘数字。 | `bool` | `True` |
+| `ShowTicks` | 是否显示刻度。 | `bool` | `True` |
+| `ShowSecondHand` | 是否显示秒针。 | `bool` | `True` |
+| `ShowDigitalTime` | 是否在表盘下方显示数字时间。 | `bool` | `False` |
+| `DigitalTimeFormat` | 数字时间格式。为空时按 `HH:mm:ss` 处理。 | `string` | `HH:mm:ss` |
+| `DialPadding` | 表盘到控件边缘的内缩距离。 | `double` | `12` |
+| `MajorTickBrush` | 主刻度画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `MinorTickBrush` | 次刻度画刷。 | `Brush` | `NormalForeground30` 动态资源 |
+| `NumberBrush` | 表盘数字画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `HourHandBrush` | 时针画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `MinuteHandBrush` | 分针画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `SecondHandBrush` | 秒针画刷。 | `Brush` | `WarnBrush` 动态资源 |
+| `CenterBrush` | 中心圆点画刷。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 表盘背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `BorderBrush` | 表盘边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 表盘边框厚度。 | `Thickness` | `1` |
+
+## AduClockType 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Classic` | 经典样式，显示完整刻度和数字。 |
+| `Modern` | 现代样式，强调主刻度和内圈线条。 |
+| `Minimal` | 极简样式，默认隐藏秒针，只显示简化刻度和部分数字。 |
+
+## 使用说明
+- `IsRunning=True` 时，控件加载后会自动使用系统当前时间更新 `Time`。
+- 如果需要显示固定时间或由外部控制时间，设置 `IsRunning=False` 后再设置 `Time`。
+- `SmoothSecondHand=True` 会提高刷新频率，秒针移动更平滑，但渲染频率也更高。
+- 控件按当前实际宽高中的较小值绘制圆形表盘，因此非正方形区域中会自动居中适配。
+- `ClockType=Minimal` 默认不显示秒针，并只显示 3、6、9、12 等关键数字。
+- `ShowDigitalTime=True` 时，数字时间显示在表盘下半部分。
+- `DigitalTimeFormat` 使用标准日期时间格式字符串。
+
+## 典型场景
+- 桌面应用中的当前时间展示。
+- 监控大屏、值班系统、控制台界面。
+- 需要不同视觉风格的时钟组件。
+- 显示固定业务时间、倒放时间或外部时间源。

@@ -1,0 +1,11 @@
+﻿<UniformGrid Columns="3" Rows="3">
+    <AduSkin:AduStatusIcon StatusType="None"/>
+    <AduSkin:AduStatusIcon StatusType="Info"/>
+    <AduSkin:AduStatusIcon StatusType="Error"/>
+    <AduSkin:AduStatusIcon StatusType="Warning"/>
+    <AduSkin:AduStatusIcon StatusType="None"/>
+    <AduSkin:AduStatusIcon StatusType="Info"/>
+    <AduSkin:AduStatusIcon StatusType="Error"/>
+    <AduSkin:AduStatusIcon StatusType="Warning"/>
+    <AduSkin:AduStatusIcon StatusType="None"/> 
+</UniformGrid>

@@ -1,0 +1,99 @@
+AduToast 是一个 Toast 通知控件，支持标题、消息、状态类型、自动关闭倒计时、手动关闭、自定义内容和关闭回调。配合 `AduToastContainer` 与 `AduToastService` 使用时，可以在窗口指定位置显示排队通知。
+
+以下默认值以 `AduToast`、`AduToastContainer` 的源码和默认样式为准。
+
+## 控件类型
+| 名称 | 描述 |
+| --- | --- |
+| `AduToast` | 单条 Toast 通知。 |
+| `AduToastContainer` | Toast 宿主容器，负责排队、显示数量限制、自动关闭和关闭动画。 |
+| `AduToastService` | 静态服务入口，用于向已初始化的容器显示 Toast。 |
+
+## AduToast 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Title` | Toast 标题。 | `string` | `null` |
+| `Message` | Toast 消息正文。 | `string` | `null` |
+| `Type` | 状态类型，影响图标和强调色。 | `StatusType` | `Default` |
+| `CloseMode` | 关闭模式。 | `ToastCloseMode` | `AutoClose` |
+| `Duration` | 自动关闭时长，单位毫秒，仅自动关闭模式有效。 | `int` | `10000` |
+| `IconBrush` | 图标颜色。 | `Brush` | `null` |
+| `Tag` | 自定义数据，会传递给关闭回调。 | `object` | `null` |
+
+## AduToastContainer 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MaxToasts` | 同时显示的最大 Toast 数量。 | `int` | `3` |
+| `ToastDuration` | 容器默认自动关闭时长，Toast 自身 `Duration` 无效或小于等于 `0` 时使用。 | `int` | `10000` |
+| `Position` | Toast 显示位置。 | `ToastPosition` | `TopRight` |
+| `Toasts` | 当前显示的 Toast 集合。 | `ObservableCollection<AduToast>` | 空集合 |
+
+## 事件和回调
+| 名称 | 所属类型 | 描述 |
+| --- | --- | --- |
+| `Closing` | `AduToast` | 点击关闭按钮时触发，参数为 `Tag`。 |
+| `OnClosed` | `AduToast` | 关闭回调属性，参数为 `Tag`。 |
+| `onClosed` | `AduToastService` / `AduToastContainer` | 服务或容器入队时传入的关闭回调。 |
+| `IsClosing` | `AduToast` | 是否正在关闭中，用于防止重复触发关闭。 |
+
+## 服务方法
+| 名称 | 描述 |
+| --- | --- |
+| `Initialize(container)` | 初始化全局 Toast 容器。 |
+| `Show(...)` | 显示普通 Toast，可指定消息、标题、类型、关闭模式、时长、标签和关闭回调。 |
+| `Show(toast, onClosed)` | 显示已创建的 Toast 实例。 |
+| `ShowCustom(content, ...)` | 显示自定义内容 Toast。 |
+| `ShowManual(...)` | 显示手动关闭 Toast。 |
+| `ShowWithDuration(...)` | 显示指定自动关闭时长的 Toast。 |
+| `ShowSuccess(...)` | 显示成功 Toast。 |
+| `ShowError(...)` | 显示错误 Toast。 |
+| `ShowWarning(...)` | 显示警告 Toast。 |
+| `ShowSuccessManual(...)` | 显示手动关闭的成功 Toast。 |
+| `ShowErrorManual(...)` | 显示手动关闭的错误 Toast。 |
+| `ShowWarningManual(...)` | 显示手动关闭的警告 Toast。 |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `ToastCloseMode.AutoClose` | 倒计时自动关闭，并显示倒计时进度区域。 |
+| `ToastCloseMode.ManualClose` | 不自动关闭，需要点击关闭按钮或由容器关闭。 |
+| `StatusType.Default` | 默认信息样式。 |
+| `StatusType.Success` | 成功样式。 |
+| `StatusType.Warning` | 警告样式。 |
+| `StatusType.Error` | 错误样式。 |
+| `ToastPosition.TopLeft` | 左上角显示。 |
+| `ToastPosition.TopCenter` | 顶部居中显示。 |
+| `ToastPosition.TopRight` | 右上角显示。 |
+| `ToastPosition.BottomLeft` | 左下角显示。 |
+| `ToastPosition.BottomCenter` | 底部居中显示。 |
+| `ToastPosition.BottomRight` | 右下角显示。 |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MinHeight` | Toast 最小高度。 | `double` | `30` |
+| `MinWidth` | Toast 最小宽度。 | `double` | `200` |
+| `MaxWidth` | Toast 最大宽度。 | `double` | `400` |
+| `Foreground` | 文本和关闭按钮前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | Toast 背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `BorderBrush` | Toast 边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | Toast 边框厚度。 | `Thickness` | `1` |
+| `Padding` | Toast 内边距。 | `Thickness` | `10,6` |
+| `Margin` | Toast 外边距。 | `Thickness` | `0,3` |
+| `AduAttach:BorderAttach.CornerRadius` | Toast 圆角。 | `CornerRadius` | `10` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 图标和倒计时强调色。 | `Brush` | 按 `Type` 选择 |
+
+## 使用说明
+- 通常先在窗口中放置并初始化 `AduToastContainer`，再通过 `AduToastService` 显示 Toast。
+- `MaxToasts` 限制同时显示数量，超出的 Toast 会进入队列，前面的 Toast 关闭后继续显示。
+- `CloseMode=AutoClose` 时会启动倒计时，并在到期后播放退出动画再移除。
+- `CloseMode=ManualClose` 时不会启动自动关闭计时。
+- 设置 `Content` 后会显示自定义内容；未设置 `Content` 时显示默认标题、图标和消息结构。
+- `Tag` 会传递给关闭事件和关闭回调，便于识别来源或携带业务数据。
+- `Position` 通过容器对齐方式控制显示方位。
+
+## 典型场景
+- 操作结果提示。
+- 后台任务完成、失败或警告通知。
+- 需要排队显示的多条系统消息。
+- 带自定义内容的轻量通知卡片。

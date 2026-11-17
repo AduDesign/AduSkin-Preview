@@ -1,0 +1,237 @@
+#region DockWorkspace 动态布局
+private DockWorkspace? _workspace;
+private string? _savedLayout;
+// JSON 不保存 Content；保留最近一次保存的项目，供关闭后恢复使用。
+private Dictionary<string, DockItem> _savedItems = new(StringComparer.Ordinal);
+private int _documentNumber = 2;
+
+[ObservableProperty]
+private DockLayout _workspaceLayout = CreateWorkspaceLayout();
+
+[ObservableProperty]
+private bool _isLayoutLocked;
+
+[ObservableProperty]
+private bool _autoHideAffectsActiveItemOnly;
+
+[ObservableProperty]
+private string _statusText = "Ready";
+
+[RelayCommand]
+private void WorkspaceLoaded(RoutedEventArgs e)
+{
+    _workspace = e.Source as DockWorkspace ?? e.OriginalSource as DockWorkspace;
+    if (_workspace != null) _workspace.ItemResolver = ResolveSavedItem;
+}
+
+[RelayCommand]
+private void WorkspaceUnloaded(RoutedEventArgs e)
+{
+    var workspace = e.Source as DockWorkspace ?? e.OriginalSource as DockWorkspace;
+    if (ReferenceEquals(_workspace, workspace))
+    {
+        if (workspace != null && workspace.ItemResolver == ResolveSavedItem)
+            workspace.ItemResolver = null;
+        _workspace = null;
+    }
+}
+
+private DockItem? ResolveSavedItem(string id) =>
+    _savedItems.TryGetValue(id, out var item) ? item : null;
+
+[RelayCommand]
+private void AddDocument()
+{
+    if (_workspace == null || IsLayoutLocked)
+        return;
+
+    var number = ++_documentNumber;
+    _workspace.AddDocument(new DockItem
+    {
+        Id = $"document-{number}",
+        Title = $"Document {number}",
+        Kind = DockItemKind.Document,
+        Content = new TextBlock
+        {
+            Margin = new Thickness(16),
+            Text = $"Dynamic document {number}",
+        },
+    });
+    StatusText = $"Document {number} added";
+}
+
+[RelayCommand]
+private void FloatActiveItem()
+{
+    if (_workspace?.ActiveItem is not { CanFloat: true } item || IsLayoutLocked)
+        return;
+
+    _workspace.Float(item);
+    StatusText = $"{item.Title} floated";
+}
+
+[RelayCommand]
+private void AutoHideLeftTools()
+{
+    if (_workspace == null || IsLayoutLocked)
+        return;
+
+    var panes = _workspace.Layout.DockedPanes
+        .Where(pane => pane.Kind == DockItemKind.Tool && pane.Side == DockSide.Left)
+        .ToArray();
+
+    using (_workspace.Operations.BeginUpdate())
+    {
+        foreach (var pane in panes)
+            _workspace.AutoHide(pane);
+    }
+    StatusText = $"{panes.Length} panes moved to auto-hide";
+}
+
+[RelayCommand]
+private void PinAutoHiddenPanes()
+{
+    if (_workspace == null || IsLayoutLocked)
+        return;
+
+    var panes = _workspace.Layout.AutoHidePanes.ToArray();
+    using (_workspace.Operations.BeginUpdate())
+    {
+        foreach (var pane in panes)
+            _workspace.Pin(pane);
+    }
+    StatusText = $"{panes.Length} panes restored";
+}
+
+[RelayCommand]
+private void SaveLayout()
+{
+    if (_workspace == null)
+        return;
+
+    _savedLayout = _workspace.SaveLayout();
+    _savedItems = _workspace.Layout.AllItems.ToDictionary(item => item.Id, StringComparer.Ordinal);
+    StatusText = "Layout saved in memory";
+}
+
+[RelayCommand]
+private void RestoreLayout()
+{
+    if (_workspace == null || IsLayoutLocked || string.IsNullOrWhiteSpace(_savedLayout))
+        return;
+
+    _workspace.LoadLayout(_savedLayout);
+    WorkspaceLayout = _workspace.Layout;
+    StatusText = "Layout restored";
+}
+
+[RelayCommand]
+private void ResetLayout()
+{
+    if (IsLayoutLocked)
+        return;
+
+    WorkspaceLayout = CreateWorkspaceLayout();
+    StatusText = "Layout reset";
+}
+
+[RelayCommand]
+private void ActiveItemChanged()
+{
+    StatusText = _workspace?.ActiveItem == null
+        ? "No active item"
+        : $"Active: {_workspace.ActiveItem.Title}";
+}
+
+[RelayCommand]
+private void ItemClosing(DockItemClosingEventArgs e)
+{
+    // 示例：带未保存标记的页面不允许直接关闭。
+    if (e.Item.IsDirty)
+    {
+        e.Cancel = true;
+        StatusText = $"Save {e.Item.Title} before closing";
+    }
+}
+
+private static DockLayout CreateWorkspaceLayout()
+{
+    var leftTools = CreateToolPane(
+        "LeftTools",
+        DockSide.Left,
+        "Toolbox",
+        "toolbox",
+        new TextBlock { Margin = new Thickness(12), Text = "Toolbox content" });
+
+    var documents = new DockPane
+    {
+        Id = "Documents",
+        Kind = DockItemKind.Document,
+        Length = 3,
+        MinLength = 320,
+    };
+    documents.Items.Add(CreateDocument("Welcome", "document-welcome", "Welcome to DockWorkspace"));
+    documents.Items.Add(CreateDocument("Editor", "document-editor", "Editable document content"));
+    documents.SelectedItem = documents.Items[0];
+
+    var rightTools = CreateToolPane(
+        "RightTools",
+        DockSide.Right,
+        "Properties",
+        "properties",
+        new TextBlock { Margin = new Thickness(12), Text = "Properties content" });
+
+    var root = new DockSplitNode
+    {
+        Id = "Root",
+        Orientation = Orientation.Horizontal,
+    };
+    root.Children.Add(leftTools);
+    root.Children.Add(documents);
+    root.Children.Add(rightTools);
+
+    return new DockLayout { Root = root };
+}
+
+private static DockPane CreateToolPane(
+    string paneId,
+    DockSide side,
+    string title,
+    string itemId,
+    object content)
+{
+    var pane = new DockPane
+    {
+        Id = paneId,
+        Kind = DockItemKind.Tool,
+        Side = side,
+        Length = 1,
+        MinLength = 180,
+    };
+    pane.Items.Add(new DockItem
+    {
+        Id = itemId,
+        Title = title,
+        Kind = DockItemKind.Tool,
+        CanClose = false,
+        Content = content,
+    });
+    pane.SelectedItem = pane.Items[0];
+    return pane;
+}
+
+private static DockItem CreateDocument(string title, string id, string content)
+{
+    return new DockItem
+    {
+        Id = id,
+        Title = title,
+        Kind = DockItemKind.Document,
+        Content = new TextBlock
+        {
+            Margin = new Thickness(16),
+            Text = content,
+        },
+    };
+}
+#endregion

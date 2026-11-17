@@ -1,0 +1,65 @@
+AduTextBox 是一个增强型文本输入框，继承自 WPF `TextBox`。它在标准输入框基础上增加了标题、图标、按钮、提示弹窗、多行模式、自动滚动到底部等能力。
+
+以下默认值以 `AduTextBox` 的默认样式为准。控件适合普通输入、搜索框、带标题表单输入、日志输入和需要尾部操作按钮的输入场景。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Title` | 左侧标题文本。为空时隐藏标题列。 | `string` | `""` |
+| `TitleMinWidth` | 左侧标题最小宽度。 | `double` | `80` |
+| `TitleForeground` | 标题颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `PopupHint` | 校验或提示弹窗文本。 | `string` | `""` |
+| `ButtonTitle` | 右侧文本按钮标题。为空时隐藏按钮列。 | `string` | `""` |
+| `Icon` | 左侧图标显示开关。为空时隐藏图标列；实际路径图标由 `AduAttach:PathDataAttach.PathData` 决定。 | `ImageSource` | `null` |
+| `MultipleLine` | 是否启用多行输入。为 `True` 时允许换行并启用文本换行。 | `bool` | `False` |
+| `IsPassWordBox` | 是否按密码框样式隐藏内容区域。当前默认模板仅隐藏内容宿主并关闭输入法。 | `bool` | `False` |
+| `IsAutoScrollToBottom` | 多行文本变化时是否自动滚动到底部。 | `bool` | `False` |
+| `ScrollThrottleMs` | 自动滚动节流间隔，单位毫秒。 | `int` | `50` |
+| `IsOpenPopupHint` | 是否打开提示弹窗。失去键盘焦点时会自动关闭。 | `bool` | `False` |
+
+## 命令和事件
+| 名称 | 描述 |
+| --- | --- |
+| `ButtonClickCommand` | 右侧按钮使用的路由命令。 |
+| `ButtonClick` | 右侧按钮点击时触发的事件。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Text` | 输入文本。 | `string` | `""` |
+| `AcceptsReturn` | 是否接受回车换行。`MultipleLine=True` 时自动设为 `True`。 | `bool` | `False` |
+| `TextWrapping` | 文本换行方式。`MultipleLine=True` 时自动设为 `Wrap`。 | `TextWrapping` | `NoWrap` |
+| `VerticalContentAlignment` | 文本垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `CaretBrush` | 光标颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `IsEnabled` | 是否启用控件。 | `bool` | `True` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 输入框背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 输入文字颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 聚焦或悬浮时强调边框。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `BorderThickness` | 边框厚度。 | `Thickness` | `1` |
+| `Padding` | 文本区内边距。 | `Thickness` | `4,2` |
+| `Height` | 控件高度。 | `double` | `30` |
+| `AduAttach:BorderAttach.CornerRadius` | 输入框圆角。 | `CornerRadius` | `6` |
+| `AduAttach:BackgroundAttach.MouseOverBackground` | 鼠标悬浮背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `AduAttach:InputAttach.InputHint` | 空文本提示。 | `string` | `TextBoxInputHint` 动态资源 |
+| `AduAttach:PathDataAttach.PathData` | 左侧路径图标。 | `Geometry` | `Icon_Search` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 路径图标宽度。 | `double` | `12` |
+| `AduAttach:PathDataAttach.Margin` | 路径图标边距。 | `Thickness` | `8,0,2,0` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 路径图标颜色。 | `Brush` | `NormalPathBrush` 动态资源 |
+
+## 使用说明
+- `Title`、`Icon`、`ButtonTitle` 为空时，对应区域会自动隐藏。
+- 需要显示左侧图标时，除设置 `Icon` 为非空外，还应通过 `AduAttach:PathDataAttach.PathData` 指定实际图标路径。
+- `ButtonTitle` 非空时显示右侧按钮，点击后触发 `ButtonClick`。
+- `Validation.HasError=True` 时，模板会把首个错误内容写入 `PopupHint` 并打开提示弹窗。
+- `MultipleLine=True` 时，自动启用回车换行和文本换行。
+- `IsAutoScrollToBottom=True` 且 `MultipleLine=True` 时，文本变化后会按 `ScrollThrottleMs` 节流滚动到底部。
+
+## 典型场景
+- 表单输入、搜索输入和过滤条件输入。
+- 带左侧标题或图标的紧凑输入项。
+- 带右侧操作按钮的输入框。
+- 多行日志、消息或备注输入。

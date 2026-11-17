@@ -1,0 +1,8 @@
+<AduSkin:DefectMapControl
+    MapWidth="1.5"
+    MaxLength="{Binding MaxLength}"
+    ZoomMode="{Binding ZoomMode}" />
+
+<AduSkin:DefectListControl
+    ItemsSource="{Binding Defects}"
+    MapControl="{Binding ElementName=Map}" />

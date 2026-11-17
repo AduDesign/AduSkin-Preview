@@ -1,0 +1,137 @@
+﻿<!--  Example 1: Time Picker  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Time Picker" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select time with hour, minute, and second precision"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Select Time">
+			<AduSkin:AduTimePicker SelectedTime="{Binding SelectedTime}" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: DateTime Picker with Custom Format  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: DateTime Picker with Custom Format" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select date and time with customizable format and themed backgrounds"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Date &amp; Time (yyyy/MM/dd)">
+			<AduSkin:AduDatePicker
+				AduAttach:BackgroundAttach.HighlightBackground="{DynamicResource HighlightBackground}"
+				AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+				AduAttach:BackgroundAttach.PanelBackground="{DynamicResource PanelBackground}"
+				AduAttach:BackgroundAttach.SelectedBackground="{DynamicResource SelectedBackground}"
+				AduAttach:ForegroundAttach.HighlightForeground="{DynamicResource HighlightForeground}"
+				AduAttach:ForegroundAttach.MouseOverForeground="{DynamicResource MouseOverForeground}"
+				AduAttach:ForegroundAttach.SelectedForeground="{DynamicResource SelectedForeground}"
+				DateStringFormat="yyyy/MM/dd"
+				SelectedDateTime="{Binding SelectedDateTime}"
+				Type="DateTime" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: DateTime Picker with Shortcuts  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: DateTime Picker with Shortcuts" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Date picker with quick selection shortcuts (Today, Yesterday, etc.)"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="With Shortcuts">
+			<AduSkin:AduDatePicker
+				IsShowConfirm="False"
+				IsShowShortCuts="True"
+				SelectedDateTime="{Binding SelectedDateTime}" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Date Range Picker Without Shortcuts  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 4: Date Range Picker (No Shortcuts)" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select a date range by choosing start and end dates"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduFormBox Header="Date Range (yyyy/MM/dd)">
+			<AduSkin:AduDatePicker
+				DateStringFormat="yyyy/MM/dd"
+				IsShowShortCuts="False"
+				SelectedDateEnd="{Binding SelectedDateEnd}"
+				SelectedDateStart="{Binding SelectedDateStart}"
+				Type="SingleDateRange" />
+		</AduSkin:AduFormBox>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Date Range Picker with Shortcuts  -->
+<StackPanel Margin="0,0,0,20">
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 5: Date Range Picker (With Shortcuts)" />
+
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="12"
+		Text="Date range picker with quick selection shortcuts for common ranges"
+		TextWrapping="Wrap" />
+
+	<AduSkin:AduFormBox Header="Date Range with Shortcuts">
+		<AduSkin:AduDatePicker
+			DateStringFormat="yyyy/MM/dd"
+			IsShowShortCuts="True"
+			SelectedDateEnd="{Binding SelectedDateEnd}"
+			SelectedDateStart="{Binding SelectedDateStart}"
+			Type="SingleDateRange" />
+	</AduSkin:AduFormBox>
+</StackPanel>

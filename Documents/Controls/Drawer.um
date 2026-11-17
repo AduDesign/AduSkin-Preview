@@ -1,0 +1,63 @@
+AduDrawer 是一个抽屉面板控件，继承自 WPF `ContentControl`。它把主内容和抽屉内容放在同一个控件内，支持从左、右、上、下四个方向滑入，带遮罩、背景模糊、动画、点击遮罩关闭和 Esc 关闭。
+
+以下默认值以 `AduDrawer` 的默认样式为准。控件适合侧边栏、筛选面板、详情面板、设置面板和移动端风格的抽屉导航。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsOpen` | 抽屉是否打开，默认支持双向绑定。 | `bool` | `False` |
+| `Placement` | 抽屉弹出方向。 | `Direction` | `Right` |
+| `DrawerSize` | 抽屉尺寸。左右抽屉表示宽度，上下抽屉表示高度；`NaN` 表示自适应。 | `double` | `NaN` |
+| `DrawerContent` | 抽屉内容。 | `object` | `null` |
+| `DrawerContentTemplate` | 抽屉内容模板。 | `DataTemplate` | `null` |
+| `DrawerContentTemplateSelector` | 抽屉内容模板选择器。 | `DataTemplateSelector` | `null` |
+| `DrawerContentStringFormat` | 抽屉内容字符串格式。 | `string` | `null` |
+| `OverlayBrush` | 遮罩画刷。 | `Brush` | `#66000000` |
+| `OverlayOpacity` | 遮罩透明度，会被限制在 `0` 到 `1`。 | `double` | `1` |
+| `CloseOnOverlayClick` | 点击遮罩是否关闭抽屉。 | `bool` | `True` |
+| `CloseOnEscape` | 按 Esc 是否关闭抽屉。 | `bool` | `True` |
+| `IsBlurEnabled` | 抽屉打开时是否模糊主内容。 | `bool` | `True` |
+| `BlurRadius` | 主内容模糊半径。负数会修正为 `0`。 | `double` | `8` |
+| `AnimationDuration` | 开关动画时长，单位毫秒。负数会修正为 `0`。 | `int` | `260` |
+
+## 路由事件
+| 名称 | 描述 |
+| --- | --- |
+| `Opened` | 抽屉打开动画完成或立即打开后触发。 |
+| `Closed` | 抽屉关闭动画完成或立即关闭后触发。 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Content` | 主内容区域。 | `object` | `null` |
+| `ContentTemplate` | 主内容模板。 | `DataTemplate` | `null` |
+| `HorizontalContentAlignment` | 抽屉内容水平对齐方式。 | `HorizontalAlignment` | `Stretch` |
+| `VerticalContentAlignment` | 抽屉内容垂直对齐方式。 | `VerticalAlignment` | `Stretch` |
+| `Padding` | 抽屉面板内边距。 | `Thickness` | `24` |
+| `Foreground` | 默认前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 主容器背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderBrush` | 抽屉面板边框。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 抽屉面板边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 抽屉面板圆角。 | `CornerRadius` | `8` |
+
+## Direction 枚举
+| 名称 | 描述 |
+| --- | --- |
+| `Left` | 从左侧滑入。 |
+| `Right` | 从右侧滑入。 |
+| `Top` | 从顶部滑入。 |
+| `Bottom` | 从底部滑入。 |
+
+## 使用说明
+- 使用 `IsOpen` 控制抽屉打开和关闭。
+- `Placement=Left/Right` 时，`DrawerSize` 控制抽屉宽度；`Placement=Top/Bottom` 时控制抽屉高度。
+- `DrawerSize` 为 `NaN` 时，抽屉按内容自适应，但不会超过根容器尺寸。
+- 打开时会显示遮罩层，并根据 `IsBlurEnabled` 对主内容应用模糊。
+- `AnimationDuration=0` 时不播放动画，直接切换状态。
+- 点击遮罩和按 Esc 是否关闭分别由 `CloseOnOverlayClick`、`CloseOnEscape` 控制。
+
+## 典型场景
+- 侧边导航和移动端抽屉菜单。
+- 筛选条件、详情信息和设置面板。
+- 不跳转页面的辅助编辑区域。
+- 需要遮罩和背景模糊的临时操作面板。

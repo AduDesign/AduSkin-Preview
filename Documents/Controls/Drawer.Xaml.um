@@ -1,0 +1,114 @@
+<!--  Example 1: Directions and sizes  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<Grid MinHeight="420">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+
+		<StackPanel>
+			<TextBlock
+				Margin="0,0,0,15"
+				FontSize="18"
+				FontWeight="SemiBold"
+				Text="Example 1: Open from each side" />
+
+			<TextBlock
+				Margin="0,0,0,15"
+				FontSize="12"
+				Text="Use DrawerSize for fixed width or height. Leave it as auto for content-based sizing."
+				TextWrapping="Wrap" />
+
+			<WrapPanel>
+				<AduSkin:AduButton
+					Margin="0,0,8,8"
+					Command="{Binding OpenLeftAutoCommand}"
+					Content="Left Auto" />
+				<AduSkin:AduButton
+					Margin="0,0,8,8"
+					Command="{Binding OpenRightFixedCommand}"
+					Content="Right 360" />
+				<AduSkin:AduButton
+					Margin="0,0,8,8"
+					Command="{Binding OpenTopAutoCommand}"
+					Content="Top Auto" />
+				<AduSkin:AduButton
+					Margin="0,0,8,8"
+					Command="{Binding OpenBottomFixedCommand}"
+					Content="Bottom 240" />
+			</WrapPanel>
+		</StackPanel>
+
+		<UniformGrid
+			Grid.Row="1"
+			Columns="2"
+			Rows="2">
+			<Border
+				Margin="0,10,10,0"
+				Padding="18"
+				Background="{DynamicResource PanelBackground}"
+				BorderBrush="{DynamicResource NormalBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						FontSize="16"
+						FontWeight="SemiBold"
+						Text="Current placement" />
+					<TextBlock
+						Margin="0,8,0,0"
+						Foreground="{DynamicResource HighlightForeground}"
+						Text="{Binding Placement}" />
+				</StackPanel>
+			</Border>
+
+			<Border
+				Margin="0,10,0,0"
+				Padding="18"
+				Background="{DynamicResource PanelBackground}"
+				BorderBrush="{DynamicResource NormalBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="8">
+				<StackPanel>
+					<TextBlock
+						FontSize="16"
+						FontWeight="SemiBold"
+						Text="Current size" />
+					<TextBlock
+						Margin="0,8,0,0"
+						Foreground="{DynamicResource HighlightForeground}"
+						Text="{Binding DrawerSizeText}" />
+				</StackPanel>
+			</Border>
+
+			<Border
+				Margin="0,10,10,0"
+				Padding="18"
+				Background="{DynamicResource PanelBackground}"
+				BorderBrush="{DynamicResource NormalBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="8">
+				<TextBlock
+					Foreground="{DynamicResource HighlightForeground}"
+					Text="Click the overlay or press Esc to close the drawer."
+					TextWrapping="Wrap" />
+			</Border>
+
+			<Border
+				Margin="0,10,0,0"
+				Padding="18"
+				Background="{DynamicResource PanelBackground}"
+				BorderBrush="{DynamicResource NormalBorderBrush}"
+				BorderThickness="1"
+				CornerRadius="8">
+				<TextBlock
+					Foreground="{DynamicResource HighlightForeground}"
+					Text="The page content stays inside the drawer host so the blur applies only to this preview area."
+					TextWrapping="Wrap" />
+			</Border>
+		</UniformGrid>
+	</Grid>
+</Border>

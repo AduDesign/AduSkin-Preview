@@ -1,0 +1,40 @@
+[ObservableProperty]
+private ScaleNavigationDemoItem? _selectedItem;
+
+public ObservableCollection<ScaleNavigationDemoItem> NavigationItems { get; } = new();
+
+public ScaleNavigationRailViewModel()
+{
+    for (var i = 1; i <= 36; i++)
+    {
+        NavigationItems.Add(new ScaleNavigationDemoItem
+        {
+            Index = i,
+            Title = $"Section {i:00}",
+            Preview = "Hover preview for this navigation item.",
+            Description = $"Content for section {i:00}."
+        });
+    }
+
+    SelectedItem = NavigationItems[14];
+}
+
+[RelayCommand]
+private void Navigate(ScaleNavigationDemoItem item)
+{
+    SelectedItem = item;
+}
+
+private void OnNavigationItemClick(object sender, RoutedPropertyChangedEventArgs<object> e)
+{
+    Dispatcher.BeginInvoke(new Action(() => ContentListBox.ScrollIntoView(e.NewValue)),
+        DispatcherPriority.Loaded);
+}
+
+public class ScaleNavigationDemoItem
+{
+    public int Index { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string Preview { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+}

@@ -1,0 +1,42 @@
+using AduSkin.Controls;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media;
+
+public partial class BarChartViewModel : ObservableObject
+{
+    public ObservableCollection<string> Months { get; } = new ObservableCollection<string>
+        { "一月", "二月", "三月", "四月", "五月", "六月" };
+    public ObservableCollection<string> Stores { get; } = new ObservableCollection<string>
+        { "杭州店", "上海店", "北京店", "深圳店", "成都店", "苏州店" };
+    public ObservableCollection<AduBarSeries> ProductSeries { get; } = new ObservableCollection<AduBarSeries>
+    {
+        new AduBarSeries { Name = "产品1", SeriesColor = Color.FromRgb(96, 165, 250),
+            Values = new ObservableCollection<double> { 15, 34, 42, 20, 13, 28 } },
+        new AduBarSeries { Name = "产品2", SeriesColor = Color.FromRgb(210, 118, 238),
+            Values = new ObservableCollection<double> { 36, 88, 26, 50, 23, 62 } }
+    };
+    public ObservableCollection<AduBarSeries> RankingSeries { get; } = new ObservableCollection<AduBarSeries>
+    {
+        new AduBarSeries { Name = "销售额", SeriesColor = Color.FromRgb(58, 181, 160),
+            Values = new ObservableCollection<double> { 68, 92, 83, 76, 45, 57 } }
+    };
+
+    [ObservableProperty] private bool _showGrid = true;
+    [ObservableProperty] private bool _showLegend = true;
+    [ObservableProperty] private bool _showValues = true;
+    [ObservableProperty] private bool _isDrawingXAxisValues = true;
+    [ObservableProperty] private bool _isDrawingYAxisValues = true;
+    private readonly Random _random = new Random();
+
+    [RelayCommand]
+    private void Update()
+    {
+        foreach (var series in ProductSeries.Concat(RankingSeries))
+            for (int i = 0; i < series.Values.Count; i++)
+                series.Values[i] = _random.Next(10, 101);
+    }
+}

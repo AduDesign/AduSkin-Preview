@@ -1,0 +1,32 @@
+﻿public PageViewModel()
+{
+    for (int i = 0; i < 99; i++)
+    {
+        _sources.Add((i + 1).ToString());
+    }
+    var total = _sources.Count;
+    PageCount = total % DataCountPerPage == 0 ? total / DataCountPerPage : total / DataCountPerPage + 1;
+
+    PageIndex = 1;
+    PageUpdated(new FunctionEventArgs<int>(PageIndex));
+}
+private List<string> _sources = new List<string>();
+
+[ObservableProperty]
+private ObservableCollection<string> _itemsSource = new ObservableCollection<string>();
+
+[ObservableProperty]
+private int _dataCountPerPage = 10;
+
+[ObservableProperty]
+private int _pageIndex = 0;
+
+[ObservableProperty]
+private int _pageCount = 0;
+
+[RelayCommand]
+public void PageUpdated(FunctionEventArgs<int> info)
+{
+    ItemsSource.Clear();
+    _sources.Skip((info.Info - 1) * 10).Take(10).ToList().ForEach(s => ItemsSource.Add(s));
+}

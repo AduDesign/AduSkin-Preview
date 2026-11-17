@@ -1,0 +1,189 @@
+<!--  Example 1: Basic Range  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Basic Range" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Select a start and end value in a continuous range"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduRangeSlider
+			Margin="20,10"
+			Maximum="100"
+			Minimum="0"
+			ValueEnd="75"
+			ValueStart="25" />
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Tick Marks and Snapping  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Tick Marks and Snapping" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Snap both endpoints to a fixed interval and click the track to move the nearest endpoint"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduRangeSlider
+			Margin="20,10"
+			AutoToolTipPlacement="TopLeft"
+			AutoToolTipPrecision="0"
+			IsMoveToPointEnabled="True"
+			IsSnapToTickEnabled="True"
+			Maximum="100"
+			TickFrequency="10"
+			TickPlacement="Both"
+			ValueEnd="80"
+			ValueStart="20" />
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Custom Ticks and Persistent Values  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Custom Ticks and Persistent Values" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Use an explicit tick collection and keep formatted values visible above the thumbs"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduRangeSlider
+			Margin="20,20"
+			AduAttach:StringFormatAttach.StringFormat="#0.00"
+			AduAttach:TooltipAttach.Placement="Top"
+			AduAttach:TooltipAttach.Visibility="Visible"
+			IsSnapToTickEnabled="True"
+			Maximum="100"
+			Ticks="0,15,35,60,100"
+			TickPlacement="BottomRight"
+			ValueEnd="60"
+			ValueStart="15" />
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Vertical and Reversed  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Vertical and Reversed" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Compare the normal vertical direction with a reversed range"
+			TextWrapping="Wrap" />
+
+		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+			<StackPanel Margin="30,0">
+				<TextBlock
+					Margin="0,0,0,8"
+					HorizontalAlignment="Center"
+					Text="Normal" />
+				<AduSkin:AduRangeSlider
+					Height="200"
+					AutoToolTipPlacement="BottomRight"
+					IsSnapToTickEnabled="True"
+					Maximum="10"
+					Orientation="Vertical"
+					TickFrequency="1"
+					TickPlacement="BottomRight"
+					ValueEnd="8"
+					ValueStart="2" />
+			</StackPanel>
+
+			<StackPanel Margin="30,0">
+				<TextBlock
+					Margin="0,0,0,8"
+					HorizontalAlignment="Center"
+					Text="Reversed" />
+				<AduSkin:AduRangeSlider
+					Height="200"
+					AutoToolTipPlacement="TopLeft"
+					IsDirectionReversed="True"
+					IsSnapToTickEnabled="True"
+					Maximum="10"
+					Orientation="Vertical"
+					TickFrequency="1"
+					TickPlacement="TopLeft"
+					ValueEnd="8"
+					ValueStart="2" />
+			</StackPanel>
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Two-way Binding  -->
+<Border
+	Margin="0,0,0,20"
+	Padding="0"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel Margin="0,0,0,20">
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Two-way Binding" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Bind both endpoints to a view model and display the selected interval"
+			TextWrapping="Wrap" />
+
+		<TextBlock
+			HorizontalAlignment="Center"
+			Text="{Binding SelectedRangeText}" />
+
+		<AduSkin:AduRangeSlider
+			Margin="20,10"
+			AutoToolTipPlacement="BottomRight"
+			AutoToolTipPrecision="1"
+			IsMoveToPointEnabled="True"
+			IsSnapToTickEnabled="True"
+			Maximum="{Binding Maximum}"
+			Minimum="{Binding Minimum}"
+			TickFrequency="5"
+			TickPlacement="BottomRight"
+			ValueEnd="{Binding ValueEnd}"
+			ValueStart="{Binding ValueStart}" />
+	</StackPanel>
+</Border>

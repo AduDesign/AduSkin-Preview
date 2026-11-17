@@ -1,0 +1,44 @@
+﻿[RelayCommand]
+public void OpenDefaultWindow()
+{
+    new AduWindow() { Title = "默认窗口" }.Show();
+}
+
+[RelayCommand]
+public void OpenBorderLessWindow()
+{
+    var newWindow = new AduWindow() { Title = "AduSkin" };
+    //Header Property
+    HeaderAttach.SetBackground(newWindow, new SolidColorBrush(Color.FromArgb(0, 0, 0, 0)));
+    HeaderAttach.SetMargin(newWindow, new Thickness(10));
+    HeaderAttach.SetFontSize(newWindow, 0);
+    HeaderAttach.SetIconWidth(newWindow, 0);
+
+    newWindow.Show();
+}
+
+[RelayCommand]
+public void OpenBigTitleWindow()
+{
+    //AduWindow
+    var newWindow = new AduWindow() { Title = "AduSkin" };
+    //Header Property
+    HeaderAttach.SetBackground(newWindow, new SolidColorBrush(Color.FromArgb(0,0,0,0)));
+    HeaderAttach.SetMargin(newWindow, new Thickness(10));
+    HeaderAttach.SetFontSize(newWindow, 14);
+    HeaderAttach.SetIconWidth(newWindow, 30);
+    //Window Title Menu
+    var titleMenu = new AduTitleMenu();
+    var homeMenu = new AduTitleMenuItem() { Header = "Home" };
+    homeMenu.Items.Add(new AduMenuItem() { Header = "Header" });
+    homeMenu.Items.Add(new AduMenuItem() { Header = "Body" });
+    homeMenu.Items.Add(new AduMenuItem() { Header = "Footer" });
+    titleMenu.Items.Add(homeMenu);
+    titleMenu.Items.Add(new AduTitleMenuItem() { Header = "Project" });
+    titleMenu.Items.Add(new AduTitleMenuItem() { Header = "About" });
+    newWindow.Menu = titleMenu;
+    titleMenu.HorizontalAlignment = HorizontalAlignment.Left;
+    titleMenu.Margin = new Thickness(10,0,10,0);
+
+    newWindow.Show();
+}

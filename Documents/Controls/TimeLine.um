@@ -1,0 +1,48 @@
+AduTimeLine 是一个时间轴控件，继承自 WPF `ItemsControl`。它会为每个数据项生成 `AduTimeLineItem`，并自动标记第一项、中间项、最后一项、索引和左右交错布局。
+
+以下默认值以 `AduTimeLine` 的默认样式为准。控件支持垂直和水平排列，适合事件记录、流程节点、版本历史和操作日志展示。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `FirstSlotTemplate` | 第一项时间轴节点模板。 | `DataTemplate` | `FirstSlotTemplate` 资源 |
+| `MiddleSlotTemplate` | 中间项时间轴节点模板。 | `DataTemplate` | `MiddleSlotTemplate` 资源 |
+| `LastSlotTemplate` | 最后一项时间轴节点模板。 | `DataTemplate` | `LastSlotTemplate` 资源 |
+| `IsCustomEverySlot` | 是否为每个节点统一使用 `SlotTemplate`。为 `True` 时前三个模板失效。 | `bool` | `False` |
+| `SlotTemplate` | 每个时间轴节点的统一模板，仅在 `IsCustomEverySlot=True` 时生效。 | `DataTemplate` | `null` |
+| `Orientation` | 时间轴排列方向。 | `Orientation` | `Vertical` |
+
+## AduTimeLineItem 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsFirstItem` | 当前项是否为第一项。由容器自动设置。 | `bool` | `False` |
+| `IsMiddleItem` | 当前项是否为中间项。由容器自动设置。 | `bool` | `False` |
+| `IsLastItem` | 当前项是否为最后一项。由容器自动设置。 | `bool` | `False` |
+| `Index` | 当前项在时间轴中的索引。由容器自动设置。 | `int` | `0` |
+| `IsLeftItem` | 当前项是否显示在左侧。默认奇数索引显示在左侧。 | `bool` | `False` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 时间轴数据源。 | `IEnumerable` | `null` |
+| `ItemTemplate` | 时间轴内容模板。 | `DataTemplate` | `null` |
+| `Background` | 时间轴背景。 | `Brush` | `Transparent` |
+| `Foreground` | 内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 轴线和节点边框颜色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderThickness` | 外层边框厚度。 | `Thickness` | `0` |
+| `HorizontalContentAlignment` | 内容水平对齐方式。 | `HorizontalAlignment` | `Left` |
+| `VerticalContentAlignment` | 内容垂直对齐方式。 | `VerticalAlignment` | `Top` |
+| `Padding` | 外层滚动区域内边距。 | `Thickness` | `0,4,0,0` |
+
+## 使用说明
+- 默认垂直时间轴会让奇数索引项显示在左侧，偶数索引项显示在右侧。
+- 水平方向时内容排在节点下方，并启用横向滚动。
+- 竖向方向启用纵向滚动，横向滚动关闭。
+- `IsCustomEverySlot=True` 时，所有节点都使用 `SlotTemplate`，不再区分首项、中间项和末项模板。
+- 项集合变化时控件会重新刷新每个 `AduTimeLineItem` 的位置属性。
+
+## 典型场景
+- 版本发布记录和更新日志。
+- 审批、订单、工单等流程节点。
+- 操作历史、活动记录和事件流。
+- 横向阶段展示或纵向时间记录。

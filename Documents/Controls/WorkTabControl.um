@@ -1,0 +1,78 @@
+AduWorkTabControl 是一个面向工作区、多文档场景的标签页控件，基于 WPF `TabControl`，提供浏览器风格的标签头、新增标签按钮和关闭标签按钮。AduWorkTabItem 是它默认创建的标签项容器，基于 WPF `TabItem`，用于承载标签头、关闭命令和选中/悬浮视觉状态。
+
+以下默认值以 `AduWorkTabControl` 和 `AduWorkTabItem` 默认样式为准；继承自 WPF `TabControl`、`TabItem`、`ItemsControl`、`Selector` 和 `Control` 的属性只列出常用部分。
+
+## AduWorkTabControl 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AddTabCommand` | 点击标签栏右侧新增按钮时执行的命令。通常绑定到 ViewModel，用于向 `ItemsSource` 添加新标签数据并更新 `SelectedItem`。 | `ICommand` | `null` |
+| `IsAllowAddition` | 是否允许新增标签。为 `False` 时，默认样式会隐藏新增按钮。 | `bool` | `True` |
+| `IsAllowClose` | 是否允许关闭标签。为 `False` 时，所有 `AduWorkTabItem` 的关闭按钮都会隐藏。 | `bool` | `True` |
+| `TabItemDefaultWidth` | 标签项默认宽度。空间足够时每个标签项使用该宽度；空间不足时会等分压缩。 | `double` | `180` |
+| `TabItemMinWidth` | 标签项最小宽度。等分压缩不会低于该宽度；低于该宽度后标签头区域使用横向滚动。 | `double` | `80` |
+| `IsEditableHeader` | 是否允许编辑标签头。当前默认模板主要负责暴露属性，具体编辑交互需要配合标签头模板或业务逻辑实现。 | `bool` | `False` |
+
+## AduWorkTabControl 常用 TabControl 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 标签页数据源。设置后每个数据项会生成一个 `AduWorkTabItem` 容器。 | `IEnumerable` | `null` |
+| `SelectedItem` | 当前选中的标签页数据项。 | `object` | `null` |
+| `SelectedIndex` | 当前选中标签页索引。 | `int` | `-1` |
+| `ItemTemplate` | 标签头内容模板。用于统一定义每个标签头显示的文本、图标等内容。 | `DataTemplate` | `null` |
+| `ItemContainerStyle` | 标签项容器样式。通常用于给 `AduWorkTabItem` 设置 `Header`、`CloseTabCommand` 和 `CloseTabCommandParameter`。 | `Style` | 默认 `AduWorkTabItem` 样式 |
+| `ContentTemplate` | 选中标签页内容模板。 | `DataTemplate` | `null` |
+| `SelectionChanged` | 当前选中标签页变化时触发的事件。 | `SelectionChangedEventHandler` | - |
+| `IsEnabled` | 是否启用控件。禁用时默认样式会降低整体透明度。 | `bool` | `True` |
+
+## AduWorkTabControl 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 标签栏外层背景。默认样式用作浏览器风格标签栏底色。 | `Brush` | `SelectedBorderBrush` 动态资源 |
+| `BorderBrush` | 控件外层边框画刷。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 控件外层边框厚度。 | `Thickness` | `1` |
+| `Foreground` | 标签头文本和图标前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Padding` | 内容区域内边距。 | `Thickness` | `0` |
+| `AduAttach:ContentAttach.Background` | 选中内容区域背景。默认同时作为选中标签头背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `AduAttach:BorderAttach.CornerRadius` | 控件外层圆角。 | `CornerRadius` | `8` |
+
+## AduWorkTabItem 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `CloseTabCommand` | 点击标签头关闭按钮时执行的命令。通常通过 `ItemContainerStyle` 绑定到父级 `AduWorkTabControl.DataContext`。 | `ICommand` | `null` |
+| `CloseTabCommandParameter` | 关闭命令参数。通常绑定当前标签页数据项本身。 | `object` | `null` |
+| `IsPinned` | 是否固定当前标签项。为 `True` 时，默认样式会隐藏当前标签项的关闭按钮。 | `bool` | `False` |
+
+## AduWorkTabItem 常用 TabItem 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 标签头显示内容。可以是文本，也可以是任意 WPF 内容。 | `object` | `null` |
+| `HeaderTemplate` | 标签头模板。用于显示图标、状态点、标题等复合内容。 | `DataTemplate` | `null` |
+| `IsSelected` | 当前标签项是否选中。默认样式会显示浏览器风格的选中背景和底部反向圆角。 | `bool` | `False` |
+| `ToolTip` | 标签头悬浮提示。 | `object` | `null` |
+| `IsEnabled` | 是否启用标签项。 | `bool` | `True` |
+
+## AduWorkTabItem 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MinWidth` | 标签头最小宽度。默认由父级 `AduWorkTabControl.TabItemMinWidth` 统一计算并写入。 | `double` | `80` |
+| `Padding` | 标签头内容内边距。 | `Thickness` | `6` |
+| `Margin` | 标签项外边距。 | `Thickness` | `0,1,0,0` |
+| `Background` | 标签项默认背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 标签头内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认关闭系统焦点框。 | `Style` | `null` |
+
+## 使用说明
+- `AduWorkTabControl` 会通过 `GetContainerForItemOverride` 默认创建 `AduWorkTabItem`，数据绑定场景下通常只需要设置 `ItemsSource`、`SelectedItem` 和 `ItemContainerStyle`。
+- 新增标签由 `AddTabCommand` 负责，控件只提供按钮入口，不内置新增数据逻辑。
+- 关闭标签由每个 `AduWorkTabItem.CloseTabCommand` 负责，控件只提供关闭按钮和命令触发，不内置删除数据逻辑。
+- `IsAllowAddition=False` 时新增按钮隐藏，适合只读标签页或固定标签页场景。
+- `IsAllowClose=False` 时所有标签关闭按钮隐藏，适合不可关闭的工作区、导航标签或固定文档页。
+- `AduWorkTabItem.IsPinned=True` 时当前标签项关闭按钮隐藏，适合首页、固定导航页等单个标签不可关闭的场景。
+- 标签项宽度按 `TabItemDefaultWidth` 和 `TabItemMinWidth` 自动计算：空间足够时使用默认宽度，空间不足时等分压缩，压缩到最小宽度后显示横向滚动。
+- 标签头可以通过 `Header`、`HeaderTemplate` 或 `ItemTemplate` 显示文本、图标和状态信息。
+- 当前样式为顶部标签栏设计，选中项采用浏览器标签页风格，未选中项之间显示细分隔线。
+
+## 典型场景
+- 多文档编辑器、设计器、脚本编辑器等需要新增和关闭文档页的工作区。
+- 带固定内容区的业务后台页面，如查询结果、详情页、编辑页并行打开。
+- 需要浏览器风格标签头，并希望新增和关闭逻辑由 ViewModel 管理的 MVVM 场景。

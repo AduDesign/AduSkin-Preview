@@ -1,0 +1,21 @@
+public ObservableCollection<Color> PresetPalette { get; } = new()
+{
+    Colors.CornflowerBlue,
+    Colors.MediumSeaGreen,
+    Colors.Goldenrod,
+    Colors.Tomato,
+    Color.FromArgb(128, 30, 144, 255)
+};
+
+[ObservableProperty]
+private Color _selectedColor = Colors.CornflowerBlue;
+
+[ObservableProperty]
+private bool _isColorPickerOpen;
+
+[RelayCommand]
+private void ResetColor()
+{
+    SelectedColor = Colors.CornflowerBlue;
+    IsColorPickerOpen = false;
+}

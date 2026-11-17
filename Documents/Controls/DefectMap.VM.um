@@ -1,0 +1,11 @@
+const double initialMapLength = 50;
+
+map.MaxLength = initialMapLength;
+map.EnqueueDefects(DefectMapSimulation.CreateInitialDefects(120, maxLength: initialMapLength));
+map.ZoomToFit();
+
+map.DefectsAdded += (s, e) =>
+{
+    foreach (Defect defect in e.Defects)
+        Defects.Insert(0, new DefectViewModel(defect));
+};

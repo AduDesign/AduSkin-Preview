@@ -1,0 +1,57 @@
+[ObservableProperty]
+private bool _isDrawerOpen;
+
+[ObservableProperty]
+private Direction _placement = Direction.Right;
+
+[ObservableProperty]
+private double _drawerSize = 360;
+
+[ObservableProperty]
+private string _drawerSizeText = "Fixed 360";
+
+[ObservableProperty]
+private string _modeTitle = "Right drawer";
+
+[ObservableProperty]
+private string _modeDescription = "Fixed width drawer. Click outside the panel to close it.";
+
+[RelayCommand]
+private void OpenLeftAuto()
+{
+    Open(Direction.Left, double.NaN, "Auto", "Left drawer", "Auto width drawer. The panel width is measured from its content.");
+}
+
+[RelayCommand]
+private void OpenRightFixed()
+{
+    Open(Direction.Right, 360, "Fixed 360", "Right drawer", "Fixed width drawer using DrawerSize=360.");
+}
+
+[RelayCommand]
+private void OpenTopAuto()
+{
+    Open(Direction.Top, double.NaN, "Auto", "Top drawer", "Auto height drawer. The panel height follows its content.");
+}
+
+[RelayCommand]
+private void OpenBottomFixed()
+{
+    Open(Direction.Bottom, 300, "Fixed 300", "Bottom drawer", "Fixed height drawer using DrawerSize=300.");
+}
+
+[RelayCommand]
+private void Close()
+{
+    IsDrawerOpen = false;
+}
+
+private void Open(Direction placement, double drawerSize, string sizeText, string title, string description)
+{
+    Placement = placement;
+    DrawerSize = drawerSize;
+    DrawerSizeText = sizeText;
+    ModeTitle = title;
+    ModeDescription = description;
+    IsDrawerOpen = true;
+}

@@ -1,0 +1,77 @@
+﻿public PagerContainerViewModel()
+{
+        // 初始化类型选项
+        foreach (PageContainerType item in Enum.GetValues(typeof(PageContainerType)))
+            Types.Add(item);
+        SelectedType = PageContainerType.Normal;
+
+        // 初始化示例数据
+        InitSampleData();
+    }
+
+    private void InitSampleData()
+    {
+        ItemsSource = new ObservableCollection<PageModel>
+        {
+            new PageModel { Title = "Page 1", Description = "Welcome to Page 1", BackgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5B9BD5")) },
+            new PageModel { Title = "Page 2", Description = "This is Page 2 content", BackgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFED7D31")) },
+            new PageModel { Title = "Page 3", Description = "Continue to Page 3", BackgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF70AD47")) },
+            new PageModel { Title = "Page 4", Description = "Final Page 4", BackgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFC000")) }
+        };
+    }
+
+    [ObservableProperty]
+    private ObservableCollection<PageContainerType> _types = new ObservableCollection<PageContainerType>();
+
+    [ObservableProperty]
+    private PageContainerType _selectedType;
+
+    [ObservableProperty]
+    private ObservableCollection<PageModel> _itemsSource = new ObservableCollection<PageModel>();
+
+    [ObservableProperty]
+    private int _selectedIndex;
+
+    [RelayCommand]
+    public void Next()
+    {
+        if (SelectedIndex < ItemsSource.Count - 1)
+        {
+            SelectedIndex++;
+        }
+    }
+
+    [RelayCommand]
+    public void Previous()
+    {
+        if (SelectedIndex > 0)
+        {
+            SelectedIndex--;
+        }
+    }
+
+    [RelayCommand]
+    public void Add()
+    {
+        ItemsSource.Add(new PageModel { Title = $"Page{ItemsSource.Count}", Description = "Welcome to Page 1", BackgroundBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF5B9BD5")) });
+    }
+
+    [RelayCommand]
+    public void Remove()
+    {
+        if (ItemsSource.Count > 0)
+            ItemsSource.RemoveAt(ItemsSource.Count - 1);
+    }
+}
+
+public partial class PageModel : ObservableObject
+{
+    [ObservableProperty]
+    private string _title = string.Empty;
+
+    [ObservableProperty]
+    private string _description = string.Empty;
+
+    [ObservableProperty]
+    private Brush _backgroundBrush;
+}

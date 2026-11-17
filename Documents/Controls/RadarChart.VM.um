@@ -1,0 +1,71 @@
+﻿private Random random = new Random();
+
+[ObservableProperty]
+private ObservableCollection<AduRaderSeries> _itemsSource = new ObservableCollection<AduRaderSeries>();
+
+[ObservableProperty]
+private ObservableCollection<string> _labels = new ObservableCollection<string>();
+
+[ObservableProperty]
+private bool _isDrawingGrid = true;
+
+[ObservableProperty]
+private bool _isDrawingAxes = true;
+
+[ObservableProperty]
+private bool _isDrawingLegend = true;
+
+public RadarChartViewModel()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Generate()
+{
+    GenerateSampleData();
+}
+[RelayCommand]
+void Clear()
+{
+    ItemsSource.Clear();
+    Labels.Clear();
+}
+
+private void GenerateSampleData()
+{
+    Clear();
+
+    // 添加第一个系列
+    var series1 = new AduRaderSeries
+    {
+        Name = "Item1",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 70, 210, 210)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 70, 210, 210)),
+        Values = new List<double>()
+    };
+    var series2 = new AduRaderSeries
+    {
+        Name = "Item2",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 153, 0)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 255, 153, 0)),
+        Values = new List<double>()
+    };
+    var series3 = new AduRaderSeries
+    {
+        Name = "Item3",
+        Stroke = new SolidColorBrush(Color.FromArgb(255, 238, 121, 111)),
+        Fill = new SolidColorBrush(Color.FromArgb(100, 238, 121, 111)),
+        Values = new List<double>()
+    };
+    List<string> propertys = new List<string> { "Property1", "Property2", "Property3", "Property4", "Property5", "Property6", "Property7" };
+    for (int i = 0; i < 7; i++)
+    {
+        Labels.Add(propertys[i]);
+        series1.Values.Add(random.Next(10, 100));
+        series2.Values.Add(random.Next(10, 100));
+        series3.Values.Add(random.Next(10, 100));
+    }
+    ItemsSource.Add(series1);
+    ItemsSource.Add(series2);
+    ItemsSource.Add(series3);
+}

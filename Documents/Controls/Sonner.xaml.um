@@ -1,0 +1,179 @@
+﻿<AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="20">
+        <!--  Title  -->
+        <TextBlock
+            Margin="0,0,0,10"
+            FontSize="28"
+            FontWeight="Bold"
+            Text="Sonner Demo" />
+
+        <TextBlock
+            Margin="0,0,0,30"
+            FontSize="14"
+            Text="Modern toast notification system with multiple types and elegant animations" />
+
+        <!--  Example 1: Toast Notification Types  -->
+        <Border
+            Margin="0,0,0,20"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Example 1: Toast Notification Types" />
+
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="12"
+                    Text="Different toast types for various notification scenarios"
+                    TextWrapping="Wrap" />
+
+                <UniformGrid HorizontalAlignment="Left" Columns="4">
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenDefaultCommand}"
+                        Content="Default"
+                        Type="Default" />
+                    <AduSkin:AduButton
+                        Command="{Binding OpenSuccessCommand}"
+                        Content="Success"
+                        Type="Success" />
+                    <AduSkin:AduButton
+                        Command="{Binding OpenErrorCommand}"
+                        Content="Error"
+                        Type="Error" />
+                    <AduSkin:AduButton
+                        Command="{Binding OpenWarningCommand}"
+                        Content="Warning"
+                        Type="Warning" />
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+
+        <!--  Example 2: Manual Close Mode (No Auto-Close)  -->
+        <Border
+            Margin="0,0,0,20"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Example 2: Manual Close Mode (No Progress Bar)" />
+
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="12"
+                    Text="Manual close mode: Toast stays until user clicks the close button. No countdown progress bar."
+                    TextWrapping="Wrap" />
+
+                <UniformGrid HorizontalAlignment="Left" Columns="4">
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenManualCloseCommand}"
+                        Content="Manual Info"
+                        Type="Info" />
+                    <AduSkin:AduButton
+                        Command="{Binding OpenManualSuccessCommand}"
+                        Content="Manual Success"
+                        Type="Success" />
+                    <AduSkin:AduButton
+                        Command="{Binding OpenManualErrorCommand}"
+                        Content="Manual Error"
+                        Type="Error" />
+                    <AduSkin:AduButton
+                        Width="Auto"
+                        Command="{Binding OpenManualWarningCommand}"
+                        Content="Manual Warning"
+                        Type="Warning" />
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+
+        <!--  Example 3: Custom Duration  -->
+        <Border
+            Margin="0,0,0,20"
+            BorderThickness="1"
+            CornerRadius="8">
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="18"
+                    FontWeight="SemiBold"
+                    Text="Example 3: Custom Duration with Progress Bar" />
+
+                <TextBlock
+                    Margin="0,0,0,15"
+                    FontSize="12"
+                    Text="Custom duration: Toast auto-closes after specified time. Progress bar shows remaining time."
+                    TextWrapping="Wrap" />
+
+                <StackPanel Orientation="Horizontal">
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenDuration10sCommand}"
+                        Content="10 Seconds"
+                        Type="Default" />
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenDuration7sCommand}"
+                        Content="7 Seconds"
+                        Type="Info" />
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenDuration5sCommand}"
+                        Content="5 Seconds"
+                        Type="Success" />
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenDuration3sCommand}"
+                        Content="3 Seconds"
+                        Type="Error" />
+
+                    <AduSkin:AduButton
+                        Margin="5"
+                        Command="{Binding OpenFullOptionsCommand}"
+                        Content="Default"
+                        Type="Warning" />
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!--  Features Info  -->
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="14"
+                FontWeight="Bold"
+                Foreground="{DynamicResource NormalBlue}"
+                Text="Features:" />
+
+            <TextBlock
+                FontSize="12"
+                Foreground="{DynamicResource NormalBlue}"
+                TextWrapping="Wrap">
+                <Run Text="• Modern toast notification system inspired by Sonner" />
+                <LineBreak />
+                <Run Text="• Multiple notification types: Default, Success, Error, Warning" />
+                <LineBreak />
+                <Run Text="• Elegant animations and smooth transitions" />
+                <LineBreak />
+                <Run Text="• Stack support for multiple simultaneous notifications" />
+                <LineBreak />
+                <Run Text="• Auto-positioning and smart layout management" />
+                <LineBreak />
+                <Run Text="• Customizable duration and appearance" />
+                <LineBreak />
+                <Run Text="• Manual close mode: Toast stays until user clicks close button" />
+                <LineBreak />
+                <Run Text="• Progress bar shows remaining time for auto-close toasts" />
+                <LineBreak />
+                <Run Text="• Perfect for user feedback and system status updates" />
+            </TextBlock>
+        </StackPanel>
+    </StackPanel>
+</AduSkin:AduScrollViewer>

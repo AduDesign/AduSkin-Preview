@@ -1,0 +1,62 @@
+﻿xmlns:AduAttach="clr-namespace:AduSkin.AdditionalAttributes;assembly=AduSkin"
+xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"
+
+<AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="Auto"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    AduAttach:LayoutAttach.IconLayout="Left"
+    AduAttach:PathDataAttach.Margin="0,0,10,0"
+    Content="Left" />
+<AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="Auto"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    AduAttach:LayoutAttach.IconLayout="Right"
+    AduAttach:PathDataAttach.Margin="10,0,0,0"
+    Content="Right" />
+<AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="Auto"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    AduAttach:LayoutAttach.IconLayout="Top"
+    AduAttach:PathDataAttach.Margin="0,0,0,10"
+    Content="Top" />
+<AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="Auto"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    AduAttach:LayoutAttach.IconLayout="Bottom"
+    AduAttach:PathDataAttach.Margin="0,10,0,0"
+    Content="Bottom" />
+    <AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="30"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    Content="Default Layout" />
+<AduSkin:AduPathIconButton
+    Width="Auto"
+    Height="30"
+    Margin="10"
+    AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource MouseOverBackground}"
+    AduAttach:BorderAttach.CornerRadius="6"
+    AduAttach:PathDataAttach.PathData="{x:Null}"
+    AduAttach:PathDataAttach.Width="0"
+    Content="ContextMenu Button">
+    <AduAttach:MenuAttach.DropDownMenu>
+        <AduSkin:AduContextMenu>
+            <AduSkin:AduMenuItem Header="Edit" />
+            <AduSkin:AduMenuItem Header="Delete" />
+        </AduSkin:AduContextMenu>
+    </AduAttach:MenuAttach.DropDownMenu>
+</AduSkin:AduPathIconButton>

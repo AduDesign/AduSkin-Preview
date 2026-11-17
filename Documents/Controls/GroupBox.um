@@ -1,0 +1,42 @@
+AduGroupBox 是一个分组容器控件，继承自 `HeaderedContentControl`。它提供标题、分隔线和内容区域，用于把相关控件组织在一个清晰的视觉分组中。
+
+以下默认值以 `AduGroupBox` 的默认样式为准。控件适合表单分组、设置区域、详情面板和模块化内容块。
+
+## 依赖属性
+`AduGroupBox` 本身未新增依赖属性，主要使用 `HeaderedContentControl` 的继承属性和 AduSkin 附加属性控制表现。
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 分组标题内容。 | `object` | `null` |
+| `HeaderTemplate` | 标题内容模板。 | `DataTemplate` | `null` |
+| `HeaderStringFormat` | 标题字符串格式。 | `string` | `null` |
+| `Content` | 分组主体内容。 | `object` | `null` |
+| `ContentTemplate` | 主体内容模板。 | `DataTemplate` | `null` |
+| `ContentStringFormat` | 主体内容字符串格式。 | `string` | `null` |
+| `Padding` | 主体内容外边距。 | `Thickness` | WPF 默认值 |
+| `Foreground` | 标题和内容默认前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 分组背景。 | `Brush` | WPF 默认值 |
+| `BorderBrush` | 分组边框和标题下分隔线颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 分组边框厚度。 | `Thickness` | `1` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 分组边框圆角。 | `CornerRadius` | `6` |
+| `AduAttach:HeaderAttach.Background` | 标题区域背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:HeaderAttach.Padding` | 标题区域内边距。 | `Thickness` | `5` |
+| `AduAttach:HeaderAttach.HorizontalAlignment` | 标题内容水平对齐方式。 | `HorizontalAlignment` | `Stretch` |
+
+## 使用说明
+- 使用 `Header` 设置分组标题，使用 `Content` 放置分组内容。
+- 默认模板会在标题和内容之间绘制一条分隔线，颜色与 `BorderBrush` 一致。
+- `Padding` 控制主体内容区域与边框之间的距离。
+- `AduAttach:HeaderAttach.Padding` 只影响标题区域，不影响主体内容。
+- 需要更紧凑布局时，可减小 `Padding`、标题内边距和边框圆角。
+
+## 典型场景
+- 表单中按业务含义分组输入项。
+- 设置页中的基础设置、高级设置和权限设置。
+- 详情页中的概要、扩展信息和操作区域。
+- 面板式工具中的参数分组。

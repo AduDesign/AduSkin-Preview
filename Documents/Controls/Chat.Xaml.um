@@ -1,0 +1,175 @@
+﻿<Border
+     Margin="0,0,0,20"
+     BorderThickness="1"
+     CornerRadius="8">
+     <StackPanel>
+         <TextBlock
+             Margin="0,0,0,15"
+             FontSize="18"
+             FontWeight="SemiBold"
+             Text="Example 1: Primary and Ghost Buttons" />
+
+         <TextBlock
+             Margin="0,0,0,15"
+             FontSize="12"
+             Text="Primary buttons for main actions, Ghost buttons for secondary actions"
+             TextWrapping="Wrap" />
+
+         <Grid>
+             <Grid.RowDefinitions>
+                 <RowDefinition />
+                 <RowDefinition Height="Auto" />
+             </Grid.RowDefinitions>
+             <AduSkin:AduListBox
+                 MinHeight="200"
+                 MaxHeight="400"
+                 Margin="0,10"
+                 Padding="10"
+                 AduAttach:BackgroundAttach.MouseOverBackground="Transparent"
+                 AduAttach:BackgroundAttach.SelectedBackground="Transparent"
+                 AduSkin:ListBoxExtend.ScrollPositionType="End"
+                 BorderThickness="1"
+                 ItemsSource="{Binding Messages}"
+                 SelectedItem="{Binding SelectedMessage}">
+                 <AduSkin:AduListBox.Resources>
+                     <Style BasedOn="{StaticResource AduListBoxItem}" TargetType="AduSkin:AduListBoxItem">
+                         <Setter Property="BorderThickness" Value="0" />
+                         <Setter Property="Padding" Value="2" />
+                         <Setter Property="Margin" Value="0" />
+                     </Style>
+                 </AduSkin:AduListBox.Resources>
+                 <AduSkin:AduListBox.ItemTemplate>
+                     <DataTemplate>
+                         <AduSkin:AduChatBubble
+                             Margin="0"
+                             BorderThickness="0"
+                             Header="{Binding Header}"
+                             MessageType="{Binding MessageType}"
+                             ReceptionType="{Binding ReceptionType}"
+                             Text="{Binding Content}"
+                             UserName="{Binding UserName}" />
+                     </DataTemplate>
+                 </AduSkin:AduListBox.ItemTemplate>
+             </AduSkin:AduListBox>
+             <Border
+                 Grid.Row="1"
+                 Background="{DynamicResource NormalBackground}"
+                 BorderBrush="{DynamicResource NormalBorderBrush}"
+                 BorderThickness="1"
+                 CornerRadius="12"
+                 Effect="{DynamicResource PanelShadow}">
+                 <Grid>
+                     <Grid.RowDefinitions>
+                         <RowDefinition />
+                         <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+                     <AduSkin:AduTextBox
+                         MinHeight="54"
+                         Padding="8,10,8,0"
+                         VerticalContentAlignment="Top"
+                         AduAttach:BackgroundAttach.MouseOverBackground="Transparent"
+                         AduAttach:BorderAttach.CornerRadius="10"
+                         AduAttach:InputAttach.InputHint="Work with ChatAI..."
+                         Background="Transparent"
+                         BorderThickness="0"
+                         FontSize="14"
+                         Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}"
+                         TextWrapping="Wrap">
+                         <AduSkin:AduTextBox.InputBindings>
+                             <KeyBinding Key="Return" Command="{Binding SendCommand}" />
+                         </AduSkin:AduTextBox.InputBindings>
+                     </AduSkin:AduTextBox>
+                     <Grid Grid.Row="1" Margin="6">
+                         <Grid.ColumnDefinitions>
+                             <ColumnDefinition />
+                             <ColumnDefinition Width="Auto" />
+                         </Grid.ColumnDefinitions>
+                         <StackPanel Orientation="Horizontal">
+                             <AduSkin:AduPathIconButton
+                                 Width="28"
+                                 Height="28"
+                                 AduAttach:BorderAttach.CornerRadius="15"
+                                 AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource NormalForeground}"
+                                 AduAttach:PathDataAttach.PathData="{DynamicResource Icon_Add}"
+                                 AduAttach:PathDataAttach.Width="10"
+                                 ToolTip="Send">
+                                 <AduAttach:MenuAttach.DropDownMenu>
+                                     <AduSkin:AduContextMenu Width="Auto">
+                                         <AduSkin:AduMenuItem Header="Add Photos Image">
+                                             <AduSkin:AduMenuItem.Icon>
+                                                 <Path
+                                                     Width="14"
+                                                     Data="{DynamicResource Icon_Attachment}"
+                                                     Fill="{DynamicResource NormalForeground}" />
+                                             </AduSkin:AduMenuItem.Icon>
+                                         </AduSkin:AduMenuItem>
+                                         <AduSkin:AduSeparator />
+                                         <AduSkin:AduMenuItem Header="Create Image">
+                                             <AduSkin:AduMenuItem.Icon>
+                                                 <Path
+                                                     Width="14"
+                                                     Data="{DynamicResource Icon_Image}"
+                                                     Fill="{DynamicResource NormalForeground}" />
+                                             </AduSkin:AduMenuItem.Icon>
+                                         </AduSkin:AduMenuItem>
+                                         <AduSkin:AduMenuItem Header="Deep Research">
+                                             <AduSkin:AduMenuItem.Icon>
+                                                 <Path
+                                                     Width="14"
+                                                     Data="{DynamicResource Icon_Search}"
+                                                     Fill="{DynamicResource NormalForeground}" />
+                                             </AduSkin:AduMenuItem.Icon>
+                                         </AduSkin:AduMenuItem>
+                                         <AduSkin:AduMenuItem Header="Web Search">
+                                             <AduSkin:AduMenuItem.Icon>
+                                                 <Path
+                                                     Width="14"
+                                                     Data="{DynamicResource Icon_Web}"
+                                                     Fill="{DynamicResource NormalForeground}" />
+                                             </AduSkin:AduMenuItem.Icon>
+                                         </AduSkin:AduMenuItem>
+                                     </AduSkin:AduContextMenu>
+                                 </AduAttach:MenuAttach.DropDownMenu>
+                             </AduSkin:AduPathIconButton>
+                             <AduSkin:AduPathIconButton
+                                 Width="28"
+                                 Height="28"
+                                 Margin="4,0"
+                                 AduAttach:BorderAttach.CornerRadius="15"
+                                 AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource NormalForeground}"
+                                 AduAttach:PathDataAttach.PathData="{DynamicResource Icon_UpArrow}"
+                                 AduAttach:PathDataAttach.Width="10"
+                                 ToolTip="Send" />
+                         </StackPanel>
+
+
+                         <StackPanel Grid.Column="1" Orientation="Horizontal">
+                             <AduSkin:AduComboBox
+                                 Margin="4,0"
+                                 BorderThickness="0"
+                                 SelectedIndex="0">
+                                 <ComboBoxItem Content="GPT 5.6 极高" />
+                                 <ComboBoxItem Content="GPT 5.5" />
+                                 <ComboBoxItem Content="GPT 5.4" />
+                             </AduSkin:AduComboBox>
+                             <AduSkin:AduPathIconButton
+                                 Width="28"
+                                 Height="28"
+                                 AduAttach:BackgroundAttach.MouseOverBackground="{DynamicResource NormalForeground}"
+                                 AduAttach:BackgroundAttach.PressedBackground="{DynamicResource NormalForeground}"
+                                 AduAttach:BorderAttach.CornerRadius="15"
+                                 AduAttach:PathBrushAttach.MouseOverPathBrush="{DynamicResource NormalBackground}"
+                                 AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource NormalBackground}"
+                                 AduAttach:PathBrushAttach.PressedPathBrush="{DynamicResource NormalBackground}"
+                                 AduAttach:PathDataAttach.PathData="{DynamicResource Icon_UpArrow1}"
+                                 AduAttach:PathDataAttach.Width="10"
+                                 Background="{DynamicResource NormalForeground}"
+                                 Command="{Binding SendCommand}"
+                                 ToolTip="Send" />
+                         </StackPanel>
+                     </Grid>
+                 </Grid>
+             </Border>
+         </Grid>
+     </StackPanel>
+ </Border>

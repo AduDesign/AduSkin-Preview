@@ -1,0 +1,190 @@
+`DockWorkspace` 是一个受 Visual Studio 启发的停靠工作区控件，用于组织文档页、工具面板、递归拆分布局、自动隐藏面板和浮动窗口。布局由独立的 `DockLayout` 模型描述，既可以直接在 XAML 中声明，也可以在 ViewModel 中动态创建和修改。
+
+控件支持拖放停靠指示器、文档固定、标签溢出导航、布局锁定、关闭取消、键盘切换和 JSON 布局持久化。布局数据与视觉呈现分离，业务代码应优先修改布局模型或调用 `DockWorkspace.Operations`，不要直接操作内部 Presenter。
+
+## DockWorkspace 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Layout` | 当前停靠布局。包含主布局树、自动隐藏面板和浮动布局。支持绑定；替换该对象会重建工作区视觉树。 | `DockLayout` | 新建的 `DockLayout`，包含空的 `Documents` 文档面板 |
+| `SplitterThickness` | 停靠区域之间尺寸调整条的厚度。小于 `1` 的值会被修正为 `1`。 | `double` | `2` |
+| `AutoHideStripThickness` | 左右自动隐藏栏占用的厚度。小于 `1` 的值会被修正为 `1`。 | `double` | `30` |
+| `AutoHideTabMaxHeight` | 自动隐藏按钮的最大高度。标题未超出时按内容自适应，超出后显示省略号。 | `double` | `140` |
+| `AutoHideOpenDelay` | 鼠标进入自动隐藏按钮后，展开面板前的延迟，单位为毫秒。负数会被修正为 `0`。 | `int` | `120` |
+| `AutoHideCloseDelay` | 鼠标离开自动隐藏区域后，收起面板前的延迟，单位为毫秒。负数会被修正为 `0`。 | `int` | `650` |
+| `DockIndicatorSize` | 拖放时中心和边缘停靠指示器的尺寸。小于 `1` 的值会被修正为 `1`。 | `double` | `36` |
+| `AutoHideAffectsActiveItemOnly` | 多标签工具面板执行自动隐藏时，是否只拆出并隐藏当前标签。为 `False` 时隐藏整个面板。 | `bool` | `False` |
+| `FloatingWindowOwnerMode` | 浮动窗口的 Owner 策略。可选 `None`、`ToolWindows`、`All`。 | `DockFloatingWindowOwnerMode` | `ToolWindows` |
+| `IsLayoutLocked` | 是否锁定用户布局。锁定后禁止拖拽、关闭、浮动、自动隐藏、固定、拆分和尺寸调整，并隐藏相关操作按钮。 | `bool` | `False` |
+
+## DockWorkspace 只读属性
+| 名称 | 描述 | 数据类型 |
+| --- | --- | --- |
+| `ActiveItem` | 当前激活的文档或工具项。选择停靠标签或浮动窗口中的内容时更新。 | `DockItem?` |
+| `Operations` | 当前 `Layout` 对应的布局操作服务。替换 `Layout` 后会生成新的实例。 | `DockLayoutOperations` |
+| `ItemResolver` | 加载布局时，如果序列化数据中的项目不在当前布局中，用该委托按项目 Id 恢复内容。 | `Func<string, DockItem?>?` |
+
+## DockWorkspace 事件
+| 名称 | 描述 | 事件类型 |
+| --- | --- | --- |
+| `ItemClosing` | 项目关闭前触发。将 `DockItemClosingEventArgs.Cancel` 设置为 `True` 可取消关闭。 | `EventHandler<DockItemClosingEventArgs>` |
+| `ItemClosed` | 项目成功关闭后触发。 | `EventHandler<DockItemClosingEventArgs>` |
+| `ActiveItemChanged` | `ActiveItem` 变化时触发。 | `EventHandler` |
+| `LayoutChanged` | 通过 `Operations` 完成布局修改后触发。批量更新只触发一次。 | `EventHandler` |
+
+## DockWorkspace 常用方法
+| 名称 | 描述 | 返回值 |
+| --- | --- | --- |
+| `AddDocument(DockItem item, string paneId = "Documents")` | 将项目作为文档加入指定文档面板；找不到指定面板时使用第一个文档面板，再找不到时自动创建。添加后自动激活。 | `DockItem` |
+| `AddTool(DockItem item, DockSide side = Right, string? paneId = null)` | 将项目作为工具项停靠到指定侧；提供兼容的 `paneId` 时合并到该面板。 | `DockItem` |
+| `SelectItem(DockItem item)` | 选择项目并更新 `ActiveItem` 与 MRU 激活历史。项目必须已经属于某个 `DockPane`。 | `void` |
+| `CloseItem(DockItem item)` | 经过布局锁定、`CanClose` 和 `ItemClosing` 检查后关闭项目。 | 是否成功关闭 |
+| `AutoHide(DockPane pane)` | 自动隐藏工具面板。受 `IsLayoutLocked` 和 `AutoHideAffectsActiveItemOnly` 影响。 | `void` |
+| `Pin(DockPane pane)` | 将自动隐藏面板恢复到此前的停靠位置和顺序。 | `void` |
+| `Float(DockItem item, Rect? bounds = null)` | 将单个项目放入浮动窗口。未指定位置时在当前鼠标附近创建默认大小的窗口。 | `void` |
+| `Float(DockPane pane, Rect? bounds = null)` | 将整个面板放入浮动窗口。 | `void` |
+| `SaveLayout()` | 将当前主布局、自动隐藏状态、浮动树和窗口边界序列化为 JSON。 | `string` |
+| `SaveLayout(Stream stream)` | 将布局 JSON 写入流。 | `void` |
+| `SaveLayout(string path)` | 将布局 JSON 写入文件。 | `void` |
+| `LoadLayout(string json)` | 从 JSON 恢复布局。会优先复用当前项目，再使用 `ItemResolver` 解析缺失项目。 | `void` |
+| `LoadLayout(Stream stream)` | 从流恢复布局。 | `void` |
+| `LoadLayoutFile(string path)` | 从文件恢复布局。 | `void` |
+
+## DockLayout
+| 名称 | 描述 | 数据类型 |
+| --- | --- | --- |
+| `Root` | 主停靠区域的根节点，可以是 `DockSplitNode` 或 `DockPane`。 | `DockNode` |
+| `AutoHidePanes` | 左右自动隐藏栏中的工具面板集合。 | `ObservableCollection<DockPane>` |
+| `FloatingLayouts` | 浮动窗口布局集合。每个浮动布局可以包含完整的拆分树。 | `ObservableCollection<DockFloatingLayout>` |
+| `DockedPanes` | 主布局树中的全部面板。 | `IEnumerable<DockPane>` |
+| `AllPanes` | 主布局、自动隐藏布局和浮动布局中的全部面板。 | `IEnumerable<DockPane>` |
+| `AllItems` | 当前布局中的全部唯一项目。 | `IEnumerable<DockItem>` |
+| `FindPane(string id)` | 根据 Id 查找面板。 | `DockPane?` |
+| `FindItem(string id)` | 根据 Id 查找项目。 | `DockItem?` |
+
+## DockNode 与 DockSplitNode
+| 名称 | 控件 | 描述 | 默认值 |
+| --- | --- | --- | --- |
+| `Id` | `DockNode` | 节点唯一标识。保存和恢复布局时应保持稳定。空值会自动替换为 Guid。 | 自动生成 Guid |
+| `Length` | `DockNode` | 节点在父拆分区域中的比例长度，不是固定像素值。无效或非正数会修正为 `1`。 | `1` |
+| `MinLength` | `DockNode` | 节点在父拆分方向上的最小长度。 | `100` |
+| `MaxLength` | `DockNode` | 节点在父拆分方向上的最大长度。非正数表示不限制。 | `Double.PositiveInfinity` |
+| `Orientation` | `DockSplitNode` | 子节点排列方向。`Horizontal` 表示左右排列，`Vertical` 表示上下排列。 | `Horizontal` |
+| `Children` | `DockSplitNode` | 子节点集合，支持继续嵌套拆分节点。 | 空集合 |
+
+`DockSplitNode` 使用 `[ContentProperty(nameof(Children))]`，因此 XAML 中可以直接嵌套 `DockPane` 或其他 `DockSplitNode`，无需显式书写 `Children`。
+
+## DockPane
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Kind` | 面板类型。文档和工具项目不能合并到不同类型的面板中。 | `DockItemKind` | `Tool` |
+| `Items` | 面板标签集合。加入集合时会自动同步项目 `Kind` 和内部所属面板。 | `ObservableCollection<DockItem>` | 空集合 |
+| `SelectedItem` | 当前选中项目，必须属于当前 `Items`。集合非空且选中项失效时自动选择第一项。 | `DockItem?` | `null` |
+| `State` | 当前状态：`Docked`、`AutoHidden` 或 `Floating`。通常由 `Operations` 维护。 | `DockPaneState` | `Docked` |
+| `Side` | 工具面板停靠或自动隐藏所在侧。 | `DockSide` | `Right` |
+| `AutoHideSize` | 自动隐藏面板展开后的宽度。小于 `120` 或无效值会恢复为 `320`。 | `double` | `320` |
+
+`DockPane` 使用 `[ContentProperty(nameof(Items))]`，因此 XAML 中可以直接嵌套多个 `DockItem`。
+
+## DockItem
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Id` | 项目唯一标识。持久化布局和 `ItemResolver` 依赖该值。 | `string` | 自动生成 Guid |
+| `Title` | 标签、工具标题栏和浮动窗口显示的标题。 | `string` | `string.Empty` |
+| `Content` | 页面内容，可以是任意对象或控件。 | `object` | `null` |
+| `ContentTemplate` | 内容模板，适合让 `Content` 保持纯 ViewModel。 | `DataTemplate` | `null` |
+| `Icon` | 标签图标。 | `ImageSource` | `null` |
+| `Kind` | 项目类型。加入 `DockPane.Items` 后自动与面板类型同步。 | `DockItemKind` | `Tool` |
+| `CanClose` | 是否允许关闭。 | `bool` | `True` |
+| `CanFloat` | 是否允许浮动和拖出工作区。 | `bool` | `True` |
+| `CanAutoHide` | 工具项目是否允许自动隐藏。 | `bool` | `True` |
+| `IsDirty` | 是否有未保存修改。为 `True` 时标题后显示 `*`。 | `bool` | `False` |
+| `IsPinned` | 文档是否固定在标签组前部。 | `bool` | `False` |
+
+`DockItem` 使用 `[ContentProperty(nameof(Content))]`，因此 XAML 中可直接将用户控件写在 `DockItem` 内部。
+
+## DockLayoutPreview 布局示意图
+
+`DockLayoutPreview` 根据 `DockLayout.Root` 的拆分方向和节点 `Length` 自动绘制当前主停靠布局，适合放在布局方案列表、布局选择窗口或保存方案卡片中。节点比例、拆分方向、停靠状态和根节点发生变化时会自动刷新。自动隐藏面板和浮动窗口不占主停靠区域，因此不会绘制在主布局示意图中。
+
+```xml
+<AduSkin:DockLayoutPreview
+    Width="180"
+    Height="110"
+    Layout="{Binding WorkspaceLayout}"
+    Gap="4"
+    CornerRadius="5"
+    BorderThickness="1"
+    PreviewPadding="4" />
+```
+
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Layout` | 要预览的停靠布局。 | `DockLayout` | `null` |
+| `PaneBackground` | 工具面板填充色。 | `Brush` | 浅灰色 |
+| `DocumentPaneBackground` | 文档面板填充色。 | `Brush` | 浅蓝灰色 |
+| `PaneBorderBrush` | 面板边框颜色。 | `Brush` | 灰色 |
+| `Gap` | 缩略图中相邻面板的间距。 | `double` | `4` |
+| `CornerRadius` | 面板缩略块圆角。 | `double` | `5` |
+| `BorderThickness` | 面板缩略块边框宽度。 | `double` | `1` |
+| `PreviewPadding` | 示意图内部留白。 | `Thickness` | `4` |
+
+## DockLayoutOperations 常用操作
+| 名称 | 描述 |
+| --- | --- |
+| `BeginUpdate()` | 将一组操作合并为一次 `Changed` 通知。应通过 `using` 释放返回值。 |
+| `DockItem(item, targetPane, position, tabIndex)` | 将单个项目合并到目标标签组，或停靠到目标面板的左、上、右、下方。 |
+| `DockPane(pane, targetPane, position)` | 合并或相对停靠整个面板。 |
+| `DockToSide(item, side, targetPaneId)` | 将项目停靠到工作区左侧或右侧。 |
+| `DockItemToWorkspaceEdge(item, position)` | 将项目停靠到整个工作区边缘，而不是某个面板边缘。 |
+| `DockPaneToWorkspaceEdge(pane, position)` | 将面板停靠到整个工作区边缘。 |
+| `FloatItem(item, bounds)` / `FloatPane(pane, bounds)` | 使用明确的窗口边界创建浮动窗口。 |
+| `AutoHide(pane, side)` / `AutoHideItem(item, side)` | 隐藏整个工具面板或拆出并隐藏单个工具项。 |
+| `Pin(pane)` | 恢复自动隐藏面板。 |
+| `DockBack(pane)` / `DockItemBack(item)` | 将浮动面板或项目恢复到此前位置。 |
+| `SetDocumentPinned(item, pinned)` | 固定或取消固定文档，并维护标签顺序。 |
+| `Close(item)` | 直接修改布局并移除项目。需要关闭事件时应优先调用 `DockWorkspace.CloseItem`。 |
+
+## 路由命令
+| 名称 | 参数 | 描述 |
+| --- | --- | --- |
+| `DockWorkspaceCommands.CloseItem` | `DockItem`，省略时使用 `ActiveItem` | 关闭项目。 |
+| `DockWorkspaceCommands.FloatItem` | `DockItem` 或 `DockPane` | 浮动项目或面板。 |
+| `DockWorkspaceCommands.ToggleDocumentPin` | `DockItem` | 切换文档固定状态。 |
+| `DockWorkspaceCommands.AutoHidePane` | `DockPane` | 自动隐藏工具面板。 |
+
+## 键盘与标签操作
+- `Ctrl+Tab`：按最近使用顺序切换文档；按住 `Ctrl` 时保持同一轮 MRU 切换会话。
+- `Ctrl+Shift+Tab`：反向切换文档。
+- `Ctrl+PageUp` / `Ctrl+PageDown`：在当前面板标签中前后切换。
+- `Ctrl+F4` / `Ctrl+W`：关闭当前激活项目。
+- 鼠标中键点击标签：关闭可关闭项目。
+- 双击标签：在浮动和停靠状态之间切换。
+- 文档标签菜单支持关闭其他、关闭右侧、关闭全部、新建水平/垂直标签组和固定。
+
+## 布局锁定说明
+- `IsLayoutLocked=True` 主要限制用户驱动的布局修改，并使 `DockWorkspace` 提供的关闭、浮动、固定和自动隐藏入口失效。
+- `DockLayoutOperations` 是底层模型服务，其公开方法仍可由业务代码直接调用。业务希望实现完全只读时，也应在命令 `CanExecute` 或 ViewModel 中阻止直接调用 `Operations`。
+- 锁定浮动窗口后，窗口禁止调整尺寸和关闭；已有内容仍可选择和使用。
+
+## 持久化说明
+- 请为每个 `DockNode`、`DockPane` 和 `DockItem` 设置稳定且唯一的 `Id`。
+- JSON 保存布局结构和项目状态，不直接序列化 `Content` 控件实例。
+- 加载时会先按 Id 复用当前布局中的项目；找不到时调用 `ItemResolver`。
+- Demo 在保存时保留项目索引，并通过 `ItemResolver` 找回保存后已关闭的项目（包含动态新增文档）。再次保存会替换该索引；这只是当前进程内的内容复用，不是内容数据的快照。跨程序启动恢复时，需要由应用按 Id 重建内容和数据上下文。
+- 保存前控件会同步当前浮动窗口的位置、大小和窗口状态。
+- 若布局保存在用户配置中，建议捕获文件读写和 JSON 格式异常，并提供恢复默认布局入口。
+
+## 行为说明
+- `Orientation=Horizontal` 的子节点左右排列，`Orientation=Vertical` 的子节点上下排列。
+- `Length` 是同级节点之间的比例权重；实际尺寸还会受 `MinLength`、工作区尺寸和分隔条影响。
+- 同类项目拖到面板中心时合并为标签；拖到边缘时创建或调整拆分树。
+- 工具面板只有一个项目时显示工具标题栏；多个项目时同时显示当前标题和底部等宽标签。
+- 单项目浮动窗口不显示多余标签栏，直接使用工具标题栏。
+- 自动隐藏面板会记住原拆分方向、索引和标签顺序，重新固定时恢复原布局。
+- 当左侧或右侧没有可见停靠面板时，对应布局空间和尺寸调整条会自动收起。
+
+## 典型场景
+- IDE、编辑器、设计器和调试工具中的文档/工具窗口布局。
+- 数据分析应用中的主报表、筛选器、属性面板和日志窗口。
+- 支持用户自定义工作区并跨会话恢复布局的桌面应用。
+- 需要动态创建文档、批量自动隐藏工具面板或创建浮动工作组的复杂 WPF 应用。

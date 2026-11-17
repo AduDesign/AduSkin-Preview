@@ -1,0 +1,19 @@
+﻿[ObservableProperty]
+private string _searchKeyword = string.Empty;
+
+public List<Item> Items { get; } = new()
+{
+    new Item { Name = "Apple - 红色的苹果" },
+    new Item { Name = "Banana - 黄色的香蕉" },
+    new Item { Name = "Cherry - 樱桃" },
+    new Item { Name = "Durian - 榴莲" },
+    new Item { Name = "Elderberry - 接骨木" },
+    new Item { Name = "Fig - 无花果" },
+    new Item { Name = "Grape - 紫色的葡萄" },
+    new Item { Name = "Honeydew - 蜜瓜" },
+};
+
+public class Item
+{
+    public string Name { get; set; } = string.Empty;
+}

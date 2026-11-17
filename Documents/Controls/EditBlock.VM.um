@@ -1,0 +1,20 @@
+// 示例使用 CommunityToolkit.Mvvm，ViewModel 必须为 partial。
+public partial class EditBlockViewModel : ObservableObject
+{
+    public string[] StatusOptions { get; } = { "待处理", "进行中", "已完成" };
+
+    [ObservableProperty]
+    private string _name2 = "可编辑块";
+
+    [ObservableProperty]
+    private string _selectedStatus = "进行中";
+
+    [ObservableProperty]
+    private int _quantity = 10;
+
+    [ObservableProperty]
+    private double _amount = 12.34;
+
+    [ObservableProperty]
+    private DateTime? _selectedDate = DateTime.Today;
+}

@@ -1,0 +1,55 @@
+AduTabControl 是一个选项卡控件，继承自 WPF `TabControl`。它会自动为普通数据项创建 `AduTabItem` 容器，并提供支持上、下、左、右停靠的 AduSkin 默认样式。
+
+以下默认值以 `AduTabControl` 和 `AduTabItem` 的默认样式为准。控件适合多页面切换、分类内容展示和设置页导航。
+
+## 控件类型
+| 名称 | 描述 |
+| --- | --- |
+| `AduTabControl` | 选项卡容器。 |
+| `AduTabItem` | 选项卡项，继承自 `TabItem`。 |
+
+## 依赖属性
+`AduTabControl` 与 `AduTabItem` 本身未新增依赖属性，主要使用 WPF 选项卡继承属性和 AduSkin 附加属性控制表现。
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 选项卡数据源。 | `IEnumerable` | `null` |
+| `Items` | 直接添加的选项卡集合。 | `ItemCollection` | 空集合 |
+| `SelectedIndex` | 当前选中项索引。 | `int` | `0` |
+| `SelectedItem` | 当前选中项。 | `object` | `null` |
+| `SelectedValue` | 当前选中值。 | `object` | `null` |
+| `TabStripPlacement` | 标签栏位置。 | `Dock` | `Top` |
+| `ItemTemplate` | 标签头模板。 | `DataTemplate` | `null` |
+| `ContentTemplate` | 内容区域模板。 | `DataTemplate` | `null` |
+| `Background` | 控件背景。 | `Brush` | `WindowBackground` 动态资源 |
+| `BorderBrush` | 控件边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `1` |
+| `Padding` | 内容区域内边距。 | `Thickness` | `0` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:BorderAttach.CornerRadius` | 控件外框圆角。 | `CornerRadius` | `10` |
+| `AduAttach:HeaderAttach.Visible` | 标签栏可见性。 | `Visibility` | `Visible` |
+| `AduAttach:HeaderAttach.Height` | 标签栏高度。 | `double` | `40` |
+| `AduAttach:HeaderAttach.Width` | 左右停靠时可设置标签栏宽度。 | `double` | 左侧默认 `100` |
+| `AduAttach:HeaderAttach.BorderBrush` | 标签栏分隔线颜色。 | `Brush` | `SeparatorBrush` 动态资源 |
+| `AduAttach:HeaderAttach.BorderThickness` | 标签栏分隔线厚度，随停靠方向切换。 | `Thickness` | 顶部为 `0,0,0,1` |
+| `AduAttach:HeaderAttach.Background` | 标签栏背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:HeaderAttach.Margin` | 标签栏外边距，随停靠方向切换。 | `Thickness` | 顶部为 `4,0` |
+| `AduAttach:ContentAttach.Background` | 内容区域背景。 | `Brush` | `WindowBackground` 动态资源 |
+
+## 使用说明
+- 可直接添加 `AduTabItem`，也可通过 `ItemsSource` 绑定数据项。
+- 当数据项不是 `AduTabItem` 时，控件会自动创建 `AduTabItem` 作为容器。
+- 使用 `SelectedIndex` 或 `SelectedItem` 控制当前选项卡。
+- `TabStripPlacement` 支持 `Top`、`Bottom`、`Left`、`Right`，默认样式会自动切换模板和分隔线方向。
+- 需要隐藏标签栏时，可设置 `AduAttach:HeaderAttach.Visible`。
+- 禁用控件后，默认样式会降低整体透明度。
+
+## 典型场景
+- 设置页中的分类切换。
+- 详情页中的基础信息、历史记录和权限切换。
+- 多视图工作区的内容切换。
+- 表单页面中按步骤或按模块组织内容。

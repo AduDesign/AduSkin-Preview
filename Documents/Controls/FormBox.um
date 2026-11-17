@@ -1,0 +1,55 @@
+AduFormBox 是一个表单项容器控件，继承自 WPF `HeaderedContentControl`。它把标题、内容和尾部提示文本组织在同一个控件中，适合统一排列表单标签、输入框、选择器、按钮组等内容。
+
+以下默认值以 `AduFormBox` 的默认样式为准。控件本身不限制内容类型，`Content` 可以是任意 WPF 元素。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Prompt` | 内容右侧或下方显示的提示文本，常用于单位、错误信息或补充说明。 | `string` | `""` |
+| `PromptForeground` | 提示文本颜色。依赖属性注册默认值为 `Black`，默认样式会覆盖为 `TooltipForeground`。 | `Brush` | `TooltipForeground` 动态资源 |
+| `PromptVisibility` | 提示文本可见性。 | `Visibility` | `Collapsed` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 表单项标题。 | `object` | `null` |
+| `Content` | 表单项主体内容。 | `object` | `null` |
+| `HeaderTemplate` | 标题内容模板。 | `DataTemplate` | `null` |
+| `ContentTemplate` | 主体内容模板。 | `DataTemplate` | `null` |
+| `HorizontalContentAlignment` | 主体内容水平对齐方式。 | `HorizontalAlignment` | `Stretch` |
+| `VerticalContentAlignment` | 主体内容垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `IsEnabled` | 是否启用表单项。禁用时默认降低整体透明度。 | `bool` | `True` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MinHeight` | 表单项最小高度。 | `double` | `30` |
+| `FontSize` | 标题、提示等文本字号。 | `double` | `12` |
+| `Foreground` | 默认前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 外层边框颜色。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `AduAttach:LayoutAttach.DirectionType` | 表单项布局方向，决定标题和内容横排或竖排。 | `DirectionType` | `Horizontal` |
+| `AduAttach:HeaderAttach.Width` | 横向布局时标题列宽度。 | `GridLength` | `Auto` |
+| `AduAttach:HeaderAttach.HorizontalAlignment` | 标题水平对齐方式。 | `HorizontalAlignment` | `Left` |
+| `AduAttach:HeaderAttach.VerticalAlignment` | 标题垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `AduAttach:HeaderAttach.Padding` | 标题内边距。竖向布局时默认改为 `0,0,0,5`。 | `Thickness` | `0` |
+| `AduAttach:HeaderAttach.Foreground` | 标题前景色。 | `Brush` | `NormalForeground` 动态资源 |
+
+## 枚举说明
+### `DirectionType`
+| 名称 | 描述 |
+| --- | --- |
+| `Horizontal` | 标题、内容、提示横向排列。 |
+| `Vertical` | 标题在上，内容和提示在下方排列。 |
+
+## 使用说明
+- `Header` 用于放置字段名，`Content` 用于放置输入控件、选择控件或任意内容。
+- 横向布局适合常规表单；竖向布局适合窄列、复杂控件或需要更大输入区域的表单项。
+- `PromptVisibility` 默认为 `Collapsed`，设置 `Prompt` 后仍需要显式改为 `Visible` 才会显示。
+- `Prompt` 可以用来显示单位，例如 `(ms)`、`(px)`；也可以结合校验结果显示错误或说明。
+- 多个 `AduFormBox` 组合使用时，统一设置 `AduAttach:HeaderAttach.Width` 可以让表单标签对齐。
+ 
+## 典型场景
+- 设置面板、筛选条件区、弹窗表单。
+- 输入框、下拉框、单选/复选按钮组的统一标题排版。
+- 需要在控件末尾显示单位、错误提示或辅助说明的表单项。
+- 需要横向和竖向布局混用的紧凑表单。

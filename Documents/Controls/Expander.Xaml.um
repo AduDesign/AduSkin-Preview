@@ -1,0 +1,60 @@
+﻿<!--  Example 1: Expander with Different Directions  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Expanders in All Directions" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Expanders can expand content in four different directions"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="2" Rows="2">
+			<UniformGrid.Resources>
+				<Style TargetType="TextBlock">
+					<Setter Property="HorizontalAlignment" Value="Center" />
+					<Setter Property="VerticalAlignment" Value="Center" />
+					<Setter Property="Margin" Value="20" />
+				</Style>
+			</UniformGrid.Resources>
+
+			<AduSkin:AduExpander
+				Margin="5"
+				ExpandDirection="Right"
+				Header="Expand Right">
+				<TextBlock Text="Content" />
+			</AduSkin:AduExpander>
+
+			<AduSkin:AduExpander
+				Margin="5"
+				ExpandDirection="Up"
+				Header="Expand Up">
+				<TextBlock Text="Content" />
+			</AduSkin:AduExpander>
+
+			<AduSkin:AduExpander
+				Margin="5"
+				ExpandDirection="Down"
+				Header="Expand Down">
+				<TextBlock Text="Content" />
+			</AduSkin:AduExpander>
+
+			<AduSkin:AduExpander
+				Margin="5"
+				ExpandDirection="Left"
+				Header="Expand Left">
+				<TextBlock
+					HorizontalAlignment="Center"
+					VerticalAlignment="Center"
+					Text="Content" />
+			</AduSkin:AduExpander>
+		</UniformGrid>
+	</StackPanel>
+</Border>

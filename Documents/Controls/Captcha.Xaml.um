@@ -1,0 +1,210 @@
+<!--  Example 1: Basic Captcha  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Basic Input" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Six cells, each cell accepts one number or letter. Input automatically moves to the next cell."
+			TextWrapping="Wrap" />
+
+		<StackPanel>
+			<AduSkin:AduCaptcha Length="6" Text="{Binding BasicCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+			<TextBlock
+				Margin="0,10,0,0"
+				FontSize="12"
+				Text="{Binding BasicCode, StringFormat=Current value: {0}}" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 2: Input Types  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 2: Input Types" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Numeric, letter-only, and number-or-letter modes"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="3">
+			<StackPanel Margin="0,0,16,0">
+				<TextBlock
+					Margin="0,0,0,8"
+					FontSize="11"
+					Text="Number" />
+				<AduSkin:AduCaptcha
+					CellHeight="34"
+					CellWidth="34"
+					InputType="Number"
+					Length="4"
+					Text="{Binding NumberCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</StackPanel>
+
+			<StackPanel Margin="0,0,16,0">
+				<TextBlock
+					Margin="0,0,0,8"
+					FontSize="11"
+					Text="Letter + Uppercase" />
+				<AduSkin:AduCaptcha
+					CellHeight="34"
+					CellWidth="34"
+					InputType="Letter"
+					Length="4"
+					LetterCase="Upper"
+					Text="{Binding LetterCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</StackPanel>
+
+			<StackPanel>
+				<TextBlock
+					Margin="0,0,0,8"
+					FontSize="11"
+					Text="Number or Letter" />
+				<AduSkin:AduCaptcha
+					CellHeight="34"
+					CellWidth="34"
+					InputType="NumberOrLetter"
+					Length="4"
+					Text="{Binding MixedCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</StackPanel>
+		</UniformGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 3: Password Mode  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 3: Password Mode" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Masked verification code input for payment codes, reset codes, and sensitive tokens"
+			TextWrapping="Wrap" />
+
+		<StackPanel>
+			<AduSkin:AduCaptcha
+				InputType="Number"
+				Length="6"
+				PasswordChar="*"
+				Text="{Binding PasswordCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+				TextMode="Password" />
+
+			<TextBlock
+				Margin="0,10,0,0"
+				FontSize="12"
+				Text="{Binding PasswordCode, StringFormat=Real value: {0}}" />
+		</StackPanel>
+	</StackPanel>
+</Border>
+
+<!--  Example 4: Custom Characters and Layout  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 4: Custom Rules and Layout" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Custom character set, larger cells, vertical layout, and read-only display"
+			TextWrapping="Wrap" />
+
+		<UniformGrid Columns="2">
+			<StackPanel Margin="0,0,16,0">
+				<TextBlock
+					Margin="0,0,0,8"
+					FontSize="11"
+					Text="Allowed characters: A-F / 0-9" />
+				<AduSkin:AduCaptcha
+					AllowedCharacters="ABCDEF0123456789"
+					CellHeight="42"
+					CellSpacing="6"
+					CellWidth="42"
+					InputType="Custom"
+					Length="6"
+					LetterCase="Upper"
+					Text="{Binding HexCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+			</StackPanel>
+
+			<StackPanel>
+				<TextBlock
+					Margin="0,0,0,8"
+					FontSize="11"
+					Text="Read-only" />
+				<AduSkin:AduCaptcha
+					CellHeight="36"
+					CellWidth="36"
+					IsReadOnly="True"
+					Length="4"
+					Text="A2D8" />
+			</StackPanel>
+		</UniformGrid>
+	</StackPanel>
+</Border>
+
+<!--  Example 5: Completed Command  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 5: Completed Command" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="CompletedCommand runs once the input is filled. Try A2B4C6."
+			TextWrapping="Wrap" />
+
+		<StackPanel>
+			<AduSkin:AduCaptcha
+				CompletedCommand="{Binding VerifyCaptchaCommand}"
+				InputType="NumberOrLetter"
+				Length="6"
+				LetterCase="Upper"
+				Text="{Binding VerificationCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+			<TextBlock
+				Margin="0,10,0,0"
+				FontSize="12"
+				FontWeight="SemiBold"
+				Text="{Binding VerificationResult}" />
+		</StackPanel>
+	</StackPanel>
+</Border>

@@ -1,0 +1,131 @@
+﻿    <AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <!--  Title  -->
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="GridSplitter Demo" />
+
+            <TextBlock
+                Margin="0,0,0,30"
+                FontSize="14"
+                Text="网格分割控件，支持水平和垂直方向的面板分割调整" />
+
+            <!--  Example 1: Horizontal Splitter  -->
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: Horizontal Splitter" />
+
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="水平分割器，可上下拖动调整上下两个面板的高度"
+                        TextWrapping="Wrap" />
+
+                    <Border
+                        MaxHeight="500"
+                        BorderBrush="{DynamicResource NormalBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" MinHeight="200" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition MinHeight="200" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" MinWidth="200" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition MinWidth="200" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Grid.Row="0"
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                Margin="10"
+                                Background="{DynamicResource PanelBackground}"
+                                CornerRadius="10">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    Text="Left" />
+                            </Border>
+                            <AduSkin:AduGridSplitter
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="3"
+                                ResizeDirection="Rows" />
+                            <Border
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Margin="10"
+                                Background="{DynamicResource PanelBackground}"
+                                CornerRadius="10">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    Text="Right Top" />
+                            </Border>
+
+                            <AduSkin:AduGridSplitter
+                                Grid.RowSpan="3"
+                                Grid.Column="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Stretch"
+                                AduAttach:BorderAttach.CornerRadius="2"
+                                ResizeDirection="Columns" />
+                            <Border
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Margin="10"
+                                Background="{DynamicResource PanelBackground}"
+                                CornerRadius="10">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    Text="Right Bottom" />
+                            </Border>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!--  Features Info  -->
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource NormalBlue}"
+                    Text="💡 Features:" />
+
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource NormalBlue}"
+                    TextWrapping="Wrap">
+                    <Run Text="• 支持水平（行）和垂直（列）方向的分割调整" />
+                    <LineBreak />
+                    <Run Text="• 可配置最小尺寸限制，防止面板被调整过小" />
+                    <LineBreak />
+                    <Run Text="• 支持星号(*)和固定像素的灵活布局" />
+                    <LineBreak />
+                    <Run Text="• 自定义分割条样式和圆角" />
+                    <LineBreak />
+                    <Run Text="• 平滑的拖动体验和视觉反馈" />
+                    <LineBreak />
+                    <Run Text="• 完美融入 AduSkin 主题系统" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>

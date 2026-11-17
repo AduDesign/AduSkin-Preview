@@ -1,0 +1,28 @@
+﻿
+    [ObservableProperty]
+    private ObservableCollection<ShippingAddressVM> _itemsSource = new ObservableCollection<ShippingAddressVM>();
+
+    [ObservableProperty]
+    private ShippingAddressVM _selectedItem;
+
+    public WorkTabControlViewModel()
+    {
+        AddTab(null);
+    }
+
+    [RelayCommand]
+    void CloseTab(object param)
+    {
+        if (param is ShippingAddressVM vm && ItemsSource.Contains(vm))
+        {
+            ItemsSource.Remove(vm);
+        }
+    }
+
+    [RelayCommand]
+    public void AddTab(object param)
+    {
+        var selected = new ShippingAddressVM() { Name = $"页面 {ItemsSource.Count + 1}" };
+        ItemsSource.Add(selected);
+        SelectedItem = selected;
+    }

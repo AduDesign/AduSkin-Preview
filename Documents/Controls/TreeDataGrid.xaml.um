@@ -1,0 +1,144 @@
+﻿<StackPanel>
+	<TextBlock
+		Margin="0,0,0,15"
+		FontSize="18"
+		FontWeight="SemiBold"
+		Text="Example 1: TreeDataGrid - File Explorer Style" />
+
+	<TextBlock
+		Margin="0,0,0,8"
+		FontSize="12"
+		Text="Hierarchical grid with expandable nodes and action buttons"
+		TextWrapping="Wrap" />
+
+	<!--  Control Panel  -->
+	<WrapPanel Margin="0,0,0,8" Orientation="Horizontal">
+		<AduSkin:AduButton
+			Width="Auto"
+			Margin="6"
+			Padding="10,0"
+			Command="{Binding ExpandAllCommand}"
+			Content="Expand All" />
+		<AduSkin:AduButton
+			Width="Auto"
+			Margin="10,0,0,0"
+			Padding="10,0"
+			Command="{Binding CollapseAllCommand}"
+			Content="Collapse All" />
+		<AduSkin:AduButton
+			Width="Auto"
+			Margin="10,0,0,0"
+			Padding="10,0"
+			Command="{Binding AddFileCommand}"
+			Content="Add File" />
+		<AduSkin:AduButton
+			Width="Auto"
+			Margin="10,0,0,0"
+			Padding="10,0"
+			Command="{Binding AddFolderCommand}"
+			Content="Add Folder" />
+		<AduSkin:AduButton
+			Width="Auto"
+			Margin="10,0,0,0"
+			Padding="10,0"
+			Command="{Binding RefreshDataCommand}"
+			Content="Refresh Data"
+			Type="Success" />
+		<AduSkin:AduFormBox Margin="10,0,0,0" Header="Default Expand Level">
+			<AduSkin:AduComboBox
+				Width="120"
+				ItemsSource="{Binding ExpandLevels}"
+				SelectedItem="{Binding SelectedExpandLevel}" />
+		</AduSkin:AduFormBox>
+
+		<AduSkin:AduFormBox Margin="10,0,0,0" Header="Indent Size">
+			<AduSkin:AduTextBox Width="100" Text="{Binding IndentSize, Mode=TwoWay}" />
+		</AduSkin:AduFormBox>
+	</WrapPanel>
+
+	<!--  TreeDataGrid  -->
+	<AduSkin:AduTreeDataGrid
+		x:Name="treeDataGrid"
+		AduAttach:BorderAttach.CornerRadius="10"
+		AlternationCount="2"
+		AutoGenerateColumns="False"
+		ChildrenPropertyName="Children"
+		DefaultExpandLevel="{Binding SelectedExpandLevel}"
+		GridLinesVisibility="All"
+		HeadersVisibility="Column"
+		IndentSize="{Binding IndentSize}"
+		IsScrollViewerEnabled="True"
+		RowHeight="35"
+		TreeItemsSource="{Binding FileTreeData}">
+
+		<AduSkin:AduTreeDataGrid.Resources>
+			<Style BasedOn="{StaticResource AduButton}" TargetType="AduSkin:AduButton">
+				<Setter Property="AduAttach:BorderAttach.CornerRadius" Value="3" />
+				<Setter Property="Margin" Value="2,0" />
+				<Setter Property="Height" Value="24" />
+				<Setter Property="Width" Value="Auto" />
+				<Setter Property="Padding" Value="6,2" />
+			</Style>
+		</AduSkin:AduTreeDataGrid.Resources>
+
+		<AduSkin:AduTreeDataGrid.Columns>
+			<!--  Tree Column: Display Name and Expand Button  -->
+			<AduSkin:AduTreeDataGridColumn
+				Width="*"
+				DataItemProperty="Name"
+				Header="Name"
+				IsTreeColumn="True" />
+
+			<!--  Type Column  -->
+			<AduSkin:AduTreeDataGridColumn
+				Width="Auto"
+				DataItemProperty="Type"
+				Header="Type" />
+
+			<!--  Size Column  -->
+			<AduSkin:AduTreeDataGridColumn
+				Width="120"
+				DataItemProperty="Size"
+				Header="Size" />
+
+			<!--  Modified Date Column  -->
+			<DataGridTemplateColumn Width="180" Header="Modified Date">
+				<DataGridTemplateColumn.CellTemplate>
+					<DataTemplate>
+						<TextBlock
+							VerticalAlignment="Center"
+							Text="{Binding DataItem.ModifiedDate, StringFormat='yyyy-MM-dd HH:mm'}"
+							TextAlignment="Center" />
+					</DataTemplate>
+				</DataGridTemplateColumn.CellTemplate>
+			</DataGridTemplateColumn>
+
+			<!--  Actions Column  -->
+			<DataGridTemplateColumn Width="Auto" Header="Actions">
+				<DataGridTemplateColumn.CellTemplate>
+					<DataTemplate>
+						<StackPanel
+							Margin="10,0"
+							HorizontalAlignment="Center"
+							Orientation="Horizontal">
+							<AduSkin:AduButton
+								Command="{Binding DataContext.ViewCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+								CommandParameter="{Binding}"
+								Content="View" />
+							<AduSkin:AduButton
+								Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+								CommandParameter="{Binding}"
+								Content="Edit"
+								Type="Info" />
+							<AduSkin:AduButton
+								Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+								CommandParameter="{Binding}"
+								Content="Delete"
+								Type="Error" />
+						</StackPanel>
+					</DataTemplate>
+				</DataGridTemplateColumn.CellTemplate>
+			</DataGridTemplateColumn>
+		</AduSkin:AduTreeDataGrid.Columns>
+	</AduSkin:AduTreeDataGrid>
+</StackPanel>

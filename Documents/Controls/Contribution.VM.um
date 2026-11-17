@@ -1,0 +1,155 @@
+﻿ /// <summary>
+/// 格子大小（用于示例2的RadioButton绑定）
+/// </summary>
+[ObservableProperty] private double _cellSize = 12;
+
+/// <summary>
+/// 是否显示月份标签
+/// </summary>
+[ObservableProperty] private bool _showMonthLabels = true;
+
+/// <summary>
+/// 是否显示星期标签
+/// </summary>
+[ObservableProperty] private bool _showDayLabels = true;
+
+/// <summary>
+/// 是否显示年份标签
+/// </summary>
+[ObservableProperty] private bool _showYearLabel = true;
+
+/// <summary>
+/// 是否显示图例
+/// </summary>
+[ObservableProperty] private bool _showLegend = true;
+
+public ContributionViewModel()
+{
+    // 生成示例数据 
+    GenerateSampleData();
+}
+
+/// <summary>
+/// 贡献数据集合
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<ContributionDay> _contributions = new ObservableCollection<ContributionDay>();
+
+/// <summary>
+/// 贡献数据集合
+/// </summary>
+[ObservableProperty]
+private ObservableCollection<ContributionDay> _contributions2 = new ObservableCollection<ContributionDay>();
+
+/// <summary>
+/// 选中的日期显示文本
+/// </summary>
+public string SelectedDateText { get; set; } = "Click a cell to see details";
+
+/// <summary>
+/// 是否有提交详情
+/// </summary>
+public bool HasDetails { get; set; }
+
+/// <summary>
+/// 选中的提交详情列表
+/// </summary>
+public IList<ContributionDetail> SelectedDetails { get; set; }
+
+[RelayCommand]
+void CellClick(ContributionDay day)
+{
+    if (day == null)
+    {
+        SelectedDateText = "Click a cell to see details";
+        HasDetails = false;
+        SelectedDetails = null;
+        return;
+    }
+
+    SelectedDateText = $"{day.Date:yyyy-MM-dd} - {day.Count} contributions";
+    HasDetails = day.Count > 0 && day.Details != null && day.Details.Count > 0;
+    SelectedDetails = HasDetails ? day.Details : null;
+
+    OnPropertyChanged(nameof(SelectedDateText));
+    OnPropertyChanged(nameof(HasDetails));
+    OnPropertyChanged(nameof(SelectedDetails));
+}
+
+/// <summary>
+/// 生成示例贡献数据
+/// </summary>
+private void GenerateSampleData()
+{
+    var random = new Random(42);
+            
+    var endDate = DateTime.Today;
+    var startDate = endDate.AddDays(-365);
+
+    Task.Run(async () =>
+    {
+        var days = new List<ContributionDay>(); 
+        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            var count = random.Next(0, 15);
+            var details = new List<ContributionDetail>();
+            for (int i = 0; i < Math.Min(count, 5); i++)
+            {
+                details.Add(new ContributionDetail
+                {
+                    Message = $"Commit message #{i + 1}",
+                    Author = "Developer",
+                    Time = date.AddHours(random.Next(24)),
+                    Repository = "AduSkin",
+                    Sha = random.Next(1000000).ToString("X6")
+                });
+            }
+
+            days.Add(new ContributionDay
+            {
+                Date = date,
+                Count = count,
+                Details = details
+            });
+        }
+
+        await App.Current.Dispatcher.InvokeAsync(() =>
+        {
+            Contributions = new ObservableCollection<ContributionDay>(days);
+        });
+    });
+
+
+    Task.Run(async () =>
+    {
+        var days2 = new List<ContributionDay>(); 
+        for (var date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            var count = random.Next(0, 15);
+            var details = new List<ContributionDetail>();
+            for (int i = 0; i < Math.Min(count, 5); i++)
+            {
+                details.Add(new ContributionDetail
+                {
+                    Message = $"Commit message #{i + 1}",
+                    Author = "Developer",
+                    Time = date.AddHours(random.Next(24)),
+                    Repository = "AduSkin",
+                    Sha = random.Next(1000000).ToString("X6")
+                });
+            }
+
+            days2.Add(new ContributionDay
+            {
+                Date = date,
+                Count = count,
+                Details = details
+            });
+        }
+
+        await App.Current.Dispatcher.InvokeAsync(() =>
+        {
+            Contributions2 = new ObservableCollection<ContributionDay>(days2);
+        });
+    });
+}

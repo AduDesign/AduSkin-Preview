@@ -1,0 +1,15 @@
+﻿<UniformGrid Rows="4">
+    <AduSkin:AduSwitch Margin="4" Content="开关" TextHorizontalAlignment="Left"
+        AduAttach:PathBrushAttach.SelectedPathBrush="{DynamicResource PrimaryBrush}" 
+        AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource PrimaryBrush70}" 
+        CornerRadius="10"/>
+    <AduSkin:AduSwitch IsChecked="True" Margin="4" Content="文字居右" HorizontalAlignment="Right"
+        AduAttach:PathBrushAttach.SelectedPathBrush="{DynamicResource PrimaryBrush}" 
+        AduAttach:PathBrushAttach.NormalPathBrush="{DynamicResource PrimaryBrush70}"  
+        TextHorizontalAlignment="Right" 
+        BackgroundCornerRadius="6" CornerRadius="6"/>
+    <AduSkin:AduSwitch IsChecked="True" IsEnabled="False" Margin="4" Content="禁用" 
+        AduAttach:BorderAttach.CornerRadius="18"/>
+    <AduSkin:AduSwitch IsChecked="True" IsEnabled="False" Margin="4" Content="禁用"  
+        BackgroundCornerRadius="6" CornerRadius="6"/>
+</UniformGrid>

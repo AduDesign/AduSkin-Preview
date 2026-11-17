@@ -1,0 +1,36 @@
+        private string _basicAddress = string.Empty;
+        public string BasicAddress
+        {
+            get => _basicAddress;
+            set => SetProperty(ref _basicAddress, value);
+        }
+
+        private string _address = string.Empty;
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                SetProperty(ref _address, value);
+            }
+        }
+
+        private string _result = "Enter or paste an IPv4 address.";
+        public string Result
+        {
+            get => _result;
+            set => SetProperty(ref _result, value);
+        }
+
+        [RelayCommand]
+        private void AddressCompleted(string address) => Result = $"Complete IPv4 address: {address}";
+
+        [RelayCommand]
+        private void SetAddress() => Address = "192.168.1.100";
+
+        [RelayCommand]
+        private void ClearAddress()
+        {
+            Address = string.Empty;
+            Result = "Enter or paste an IPv4 address.";
+        }

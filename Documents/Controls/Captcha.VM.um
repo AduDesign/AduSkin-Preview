@@ -1,0 +1,78 @@
+private string _basicCode = string.Empty;
+public string BasicCode
+{
+    get => _basicCode;
+    set => SetProperty(ref _basicCode, value);
+}
+
+private string _numberCode = string.Empty;
+public string NumberCode
+{
+    get => _numberCode;
+    set => SetProperty(ref _numberCode, value);
+}
+
+private string _letterCode = string.Empty;
+public string LetterCode
+{
+    get => _letterCode;
+    set => SetProperty(ref _letterCode, value);
+}
+
+private string _mixedCode = string.Empty;
+public string MixedCode
+{
+    get => _mixedCode;
+    set => SetProperty(ref _mixedCode, value);
+}
+
+private string _passwordCode = string.Empty;
+public string PasswordCode
+{
+    get => _passwordCode;
+    set => SetProperty(ref _passwordCode, value);
+}
+
+private string _hexCode = string.Empty;
+public string HexCode
+{
+    get => _hexCode;
+    set => SetProperty(ref _hexCode, value);
+}
+
+private string _verticalCode = string.Empty;
+public string VerticalCode
+{
+    get => _verticalCode;
+    set => SetProperty(ref _verticalCode, value);
+}
+
+private string _verificationCode = string.Empty;
+public string VerificationCode
+{
+    get => _verificationCode;
+    set
+    {
+        string newValue = value ?? string.Empty;
+        if (SetProperty(ref _verificationCode, newValue) && newValue.Length < 6)
+        {
+            VerificationResult = "Waiting for complete input...";
+        }
+    }
+}
+
+private string _verificationResult = "Waiting for complete input...";
+public string VerificationResult
+{
+    get => _verificationResult;
+    set => SetProperty(ref _verificationResult, value);
+}
+
+[RelayCommand]
+private void VerifyCaptcha(string? code)
+{
+    VerificationResult = string.Equals(code, "A2B4C6", StringComparison.Ordinal)
+        ? "Verification passed."
+        : $"Verification failed. Input: {code}";
+    AduMessageBox.Show(VerificationResult);
+}

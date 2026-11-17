@@ -1,0 +1,59 @@
+AduSpectrum 是频谱柱状可视化控件，用于展示音频频谱、实时强度数组或任意归一化数值序列。控件支持绑定数据集合、绑定数据源接口、直接调用更新方法、平滑动画、柱宽、间距、圆角、上下对称绘制和背景边框。
+
+以下默认值以 `AduSpectrum` 的默认样式和源码默认值为准。控件适合用于音频播放器、录音监测、信号强度、实时数据波动等场景。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduSpectrum` | 频谱柱状可视化控件。 | `Control` |
+| `IAduSpectrumSource` | 频谱数据源接口，用于把控件与具体音频库解耦。 | 接口 |
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `SpectrumValues` | 频谱数据集合。值通常在 `0` 到 `MaximumValue` 之间。 | `IEnumerable<double>` | `null` |
+| `SpectrumSource` | 频谱数据源，适合实时数据和 MVVM 场景。 | `IAduSpectrumSource` | `null` |
+| `SpectrumCount` | 绘制的频谱柱数量，小于 `1` 时会按 `1` 处理。 | `int` | `64` |
+| `BarWidth` | 每个柱子的首选宽度。非法或负数会按 `0` 处理。 | `double` | `4` |
+| `BarSpacing` | 柱子之间的间距。非法或负数会按 `0` 处理。 | `double` | `2` |
+| `SpectrumBrush` | 频谱柱画刷。 | `Brush` | `NormalBlue` 动态资源 |
+| `MaximumValue` | 归一化最大值。小于等于 `0` 或非法值会按 `1` 处理。 | `double` | `1` |
+| `SmoothingFactor` | 平滑系数。`0` 表示立即响应，值越大变化越平滑，最大会限制到 `0.95`。 | `double` | `0.86` |
+| `MinimumBarHeight` | 非零柱子的最小可见高度。 | `double` | `1` |
+| `BarCornerRadius` | 频谱柱圆角。 | `double` | `1.5` |
+| `CornerRadius` | 控件背景和边框圆角。 | `CornerRadius` | `4` |
+| `IsSymmetric` | 是否从垂直中心向上下两侧对称绘制。 | `bool` | `False` |
+| `Background` | 控件背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `BorderBrush` | 控件边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 控件边框厚度。 | `Thickness` | `1` |
+| `Padding` | 频谱绘制区域内边距。 | `Thickness` | `8` |
+
+## IAduSpectrumSource 接口
+| 名称 | 描述 |
+| --- | --- |
+| `SpectrumChanged` | 数据源变化事件。触发后控件会在界面线程刷新频谱。 |
+| `CopyTo(double[] buffer, int count)` | 将频谱值复制到控件提供的缓冲区，并返回实际写入数量。 |
+
+## 公开方法
+| 名称 | 描述 |
+| --- | --- |
+| `UpdateSpectrum(float[] values)` | 使用 `float` 数组更新频谱。传入 `null` 时清空频谱。 |
+| `UpdateSpectrum(double[] values)` | 使用 `double` 数组更新频谱。传入 `null` 时清空频谱。 |
+| `UpdateSpectrum(IReadOnlyList<double> values)` | 使用只读列表更新频谱。传入 `null` 时清空频谱。 |
+| `UpdateSpectrum(IAduSpectrumSource source)` | 从数据源复制频谱并刷新。传入 `null` 时清空频谱。 |
+| `ClearSpectrum()` | 清空所有频谱柱并停止平滑渲染。 |
+
+## 使用说明
+- 优先使用 `SpectrumSource` 可让控件响应数据源的 `SpectrumChanged` 事件，适合实时音频或高频更新。
+- 使用 `SpectrumValues` 时，集合变化本身不会自动通知控件；需要重新赋值或调用更新方法刷新。
+- 输入值小于等于 `0`、`NaN` 或无穷大会按 `0` 处理。
+- 绘制高度按 `value / MaximumValue` 归一化，超过最大值会按满高显示。
+- 控件会根据实际宽度自动压缩柱宽和间距，避免频谱超出绘制区域。
+- `SmoothingFactor` 大于 `0` 时，控件会使用逐帧过渡；设为 `0` 可获得即时响应。
+- `IsSymmetric=True` 适合音乐可视化；默认底部向上绘制更适合普通柱状强度展示。
+
+## 典型场景
+- 音频播放器的频谱动画。
+- 麦克风输入、录音电平、FFT 结果展示。
+- 实时信号强度、传感器波动可视化。
+- 需要轻量柱状动态效果的仪表面板。

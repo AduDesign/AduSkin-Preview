@@ -1,0 +1,56 @@
+﻿[ObservableProperty]
+private bool _isBlinking = false;
+
+[ObservableProperty]
+private bool _isVisible = true;
+
+[ObservableProperty]
+private int _blinkInterval = 500;
+
+[ObservableProperty]
+private string _toolTipText = "AduSkin NotifyIcon Demo";
+
+[RelayCommand]
+private void ShowNotification(Window window)
+{
+    try
+    {
+        if (window != null)
+        {
+            var notifyIcon = FindChild<AduSkin.Controls.AduNotifyIcon>(window);
+            notifyIcon?.ShowBalloonTip("Notification", "This is a balloon tip from AduSkin!");
+        }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Failed to show balloon tip: {ex.Message}", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
+}
+
+[RelayCommand]
+private void Open()
+{
+    MessageBox.Show("Open clicked!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+}
+
+[RelayCommand]
+private void Exit()
+{
+    MessageBox.Show("Exit clicked!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+}
+
+private T? FindChild<T>(DependencyObject parent) where T : DependencyObject
+{
+    if (parent == null) return null;
+    int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
+    for (int i = 0; i < childrenCount; i++)
+    {
+        var child = VisualTreeHelper.GetChild(parent, i);
+        if (child is T typedChild)
+            return typedChild;
+        var foundChild = FindChild<T>(child);
+        if (foundChild != null)
+            return foundChild;
+    }
+    return null;
+}

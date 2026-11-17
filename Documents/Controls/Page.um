@@ -1,0 +1,47 @@
+AduPage 是一个页码导航控件，用于显示上一页、下一页、首页、末页、中间页码和省略号。它支持当前页、最大页数、每页数量和页码间隔控制，并在页码变化时触发路由事件。
+
+以下默认值以 `AduPage` 的源码和默认样式为准。控件适合列表、表格、搜索结果和分页数据视图。
+
+## 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MaxPageCount` | 最大页数。值小于 `1` 时会修正为 `1`。 | `int` | `1` |
+| `DataCountPerPage` | 每页数据量。值小于 `1` 时会修正为 `1`。 | `int` | `20` |
+| `PageIndex` | 当前页码。值小于 `0` 时会修正为 `0`，大于 `MaxPageCount` 时会修正为最大页。 | `int` | `1` |
+| `MaxPageInterval` | 当前页与两侧方向按钮之间的最大间隔，超过后显示省略号。 | `int` | `3` |
+
+## 路由事件
+| 名称 | 描述 | 事件参数 |
+| --- | --- | --- |
+| `PageUpdated` | `PageIndex` 更新后触发。 | `FunctionEventArgs<int>`，`Info` 为新的页码 |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Height` | 控件高度。 | `double` | `40` |
+| `Background` | 控件背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Focusable` | 是否可获得键盘焦点。 | `bool` | `False` |
+| `UseLayoutRounding` | 是否启用布局取整。 | `bool` | `True` |
+| `Visibility` | 控件可见性。`MaxPageCount` 不大于 `1` 时控件会隐藏。 | `Visibility` | 按页数决定 |
+
+## 样式说明
+| 名称 | 描述 |
+| --- | --- |
+| 左右方向按钮 | 使用 `AduPathIconButton`，分别执行上一页和下一页命令。 |
+| 首页和末页按钮 | 使用 `AduRadioButton`，选中后跳转到第一页或最后一页。 |
+| 中间页码按钮 | 根据 `PageIndex`、`MaxPageCount` 和 `MaxPageInterval` 动态生成。 |
+| 省略号 | 当前页距离首页或末页超过间隔时显示。 |
+
+## 使用说明
+- 使用 `MaxPageCount` 设置总页数，使用 `PageIndex` 设置或绑定当前页。
+- 点击上一页、下一页或页码按钮会更新 `PageIndex`。
+- `PageIndex` 改变后会触发 `PageUpdated`，可在该事件中加载对应页数据。
+- `MaxPageInterval=0` 时只显示当前页码，不显示首页、末页和省略号。
+- 当 `MaxPageCount` 不大于 `1` 时，控件会自动隐藏。
+- `DataCountPerPage` 只保存每页数量，不会自动计算 `MaxPageCount`，总页数仍需由业务层设置。
+
+## 典型场景
+- 表格数据分页。
+- 搜索结果分页。
+- 日志、消息和订单列表分页。
+- 数据接口按页加载的导航区域。

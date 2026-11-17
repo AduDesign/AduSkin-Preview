@@ -1,0 +1,60 @@
+AduTreeView 是一个带 AduSkin 默认样式和选中项绑定扩展的树控件，继承自 WPF `TreeView`。它提供统一的展开图标、选中态、占位提示、虚拟化和 `TreeViewExtend.SelectedItem` 双向绑定支持。
+
+以下默认值以 `AduTreeView` 的默认样式为准。控件适合目录树、层级数据、属性树和导航树。
+
+## 控件行为
+| 名称 | 描述 |
+| --- | --- |
+| `SelectedItemChanged` | 控件内部监听该事件，并把新值写入 `TreeViewExtend.SelectedItem`。 |
+| `GetContainerForItemOverride` | 继承 WPF 默认树项容器行为，默认容器为 `TreeViewItem`。 |
+
+## TreeViewExtend 附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `TreeViewExtend.SelectedItem` | 当前选中项，支持双向绑定。 | `object` | `null` |
+| `TreeViewExtend.ChildrenPropertyName` | 子集合属性名。当前源码保留该属性，默认模板仍绑定 `Children`。 | `string` | `Children` |
+| `TreeViewExtend.DisplayPropertyName` | 显示属性名。当前源码保留该属性，默认模板仍绑定 `Name`。 | `string` | `Name` |
+
+## 常用继承属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `ItemsSource` | 树数据源。 | `IEnumerable` | `null` |
+| `ItemTemplate` | 树节点模板。 | `DataTemplate` | `ItemNode` 资源 |
+| `ItemContainerStyle` | 树节点容器样式。 | `Style` | `DefaultTreeViewItem` 资源 |
+| `Foreground` | 节点前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `BorderBrush` | 外层边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 外层边框厚度。 | `Thickness` | `0` |
+| `Padding` | 滚动区域内边距。 | `Thickness` | `0` |
+| `VirtualizingStackPanel.IsVirtualizing` | 是否启用虚拟化。 | `bool` | `True` |
+| `VirtualizingStackPanel.VirtualizationMode` | 虚拟化模式。 | `VirtualizationMode` | `Recycling` |
+
+## 占位附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PlaceHolderAttach.PlaceHolderBrush` | 空状态图标和文字颜色。 | `Brush` | `NormalForeground10` 动态资源 |
+| `AduAttach:PlaceHolderAttach.PathData` | 空状态图标。 | `Geometry` | `Icon_Empty` 动态资源 |
+| `AduAttach:PlaceHolderAttach.Message` | 空状态提示文本。 | `string` | `PlaceHolderMessage` 动态资源 |
+| `AduAttach:PlaceHolderAttach.PlaceHolderVisible` | 占位区域可见性。数据为空时模板自动设为可见。 | `Visibility` | 默认值 |
+| `AduAttach:PlaceHolderAttach.IsLoading` | 是否显示加载占位。为 `True` 时切换为加载图标和 Loading 文本。 | `bool` | `False` |
+
+## 默认节点模板
+| 名称 | 描述 |
+| --- | --- |
+| `ItemNode` | 默认层级模板，绑定 `Children` 作为子集合，绑定 `Name` 作为显示文本。 |
+| `PropertyItemNode` | 属性型层级模板，绑定 `Name` 和 `Value` 两列文本。 |
+| `DefaultTreeViewItem` | 默认树项样式，包含展开按钮、标题区域和选中图标。 |
+| `DataTreeViewItem` | 数据树项样式，适合更紧凑的属性展示。 |
+
+## 使用说明
+- 需要绑定当前选中项时，使用 `TreeViewExtend.SelectedItem`。
+- 默认模板假设数据项包含 `Name` 和 `Children` 属性。
+- 选中节点会显示选中背景和右侧勾选图标。
+- 节点无子项时自动隐藏展开按钮。
+- 数据为空时显示占位区域；加载中可通过 `PlaceHolderAttach.IsLoading` 切换加载提示。
+- 如果需要自定义字段名，当前更可靠的方式是直接设置 `ItemTemplate` 或 `ItemContainerStyle`。
+
+## 典型场景
+- 文件目录、资源目录和模块导航。
+- 组织结构、权限结构、分类树。
+- 属性树、配置树和层级数据编辑。
+- 大量节点下需要虚拟化回收的树列表。

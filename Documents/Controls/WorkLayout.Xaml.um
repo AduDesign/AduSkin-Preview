@@ -1,0 +1,50 @@
+<!-- WorkLayout XAML Example -->
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ad="clr-namespace:AduSkin.Controls;assembly=AduSkin">
+
+    <ad:DockingManager x:Name="DockManager">
+        <ad:LayoutRoot>
+            <ad:LayoutPanel Orientation="Horizontal">
+                <!-- Left tool area -->
+                <ad:LayoutAnchorablePane DockWidth="220">
+                    <ad:LayoutAnchorable Title="Solution Explorer"
+                                         ContentId="SolutionExplorer">
+                        <TreeView />
+                    </ad:LayoutAnchorable>
+                </ad:LayoutAnchorablePane>
+
+                <!-- Center document area -->
+                <ad:LayoutDocumentPaneGroup>
+                    <ad:LayoutDocumentPane>
+                        <ad:LayoutDocument Title="Document"
+                                           ContentId="Document">
+                            <TextBox AcceptsReturn="True" />
+                        </ad:LayoutDocument>
+                    </ad:LayoutDocumentPane>
+                </ad:LayoutDocumentPaneGroup>
+
+                <!-- Right tool area -->
+                <ad:LayoutAnchorablePaneGroup DockWidth="240">
+                    <ad:LayoutAnchorablePane>
+                        <ad:LayoutAnchorable Title="Properties"
+                                             ContentId="Properties">
+                            <ContentControl />
+                        </ad:LayoutAnchorable>
+                    </ad:LayoutAnchorablePane>
+                </ad:LayoutAnchorablePaneGroup>
+            </ad:LayoutPanel>
+
+            <ad:LayoutRoot.LeftSide>
+                <ad:LayoutAnchorSide>
+                    <ad:LayoutAnchorGroup>
+                        <ad:LayoutAnchorable Title="Toolbox"
+                                             ContentId="Toolbox">
+                            <ListBox />
+                        </ad:LayoutAnchorable>
+                    </ad:LayoutAnchorGroup>
+                </ad:LayoutAnchorSide>
+            </ad:LayoutRoot.LeftSide>
+        </ad:LayoutRoot>
+    </ad:DockingManager>
+</Window>

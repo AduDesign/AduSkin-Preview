@@ -1,0 +1,14 @@
+﻿<AduSkin:AduFormBox
+	Header="Rating Score"
+	Prompt="{Binding ElementName=ratingbar, Path=Value}"
+	PromptForeground="Red"
+	PromptVisibility="Visible">
+	<AduSkin:AduRatingBar
+		x:Name="ratingbar"
+		Margin="10"
+		AduAttach:PathDataAttach.PathData="{DynamicResource Icon_Support}"
+		AduAttach:PathDataAttach.Width="20"
+		Maximum="9"
+		ToolTip="{Binding ElementName=ratingbar, Path=Value}"
+		Value="4.5" />
+</AduSkin:AduFormBox>

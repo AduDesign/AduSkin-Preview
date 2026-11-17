@@ -1,0 +1,66 @@
+AduColumnarChart 是柱状图控件，用于按分类标签展示一组或多组数值数据。控件支持多系列柱状图、X 轴分类标签、Y 轴刻度、网格线、图例、悬浮提示，以及点击图例切换系列显示状态。
+
+以下默认值以 `AduColumnarChart` 的默认样式和源码默认值为准。控件适合用于统计对比、分组数据分析、报表面板和仪表盘。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduColumnarChart` | 柱状图控件，按 `Labels` 分类绘制 `Series` 中的多组数据。 | `Control` |
+| `AduColumnarSeries` | 柱状图数据系列，包含系列名称、颜色、可见性和数值集合。 | `AduSeriesBase` |
+
+## AduColumnarChart 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Series` | 数据系列集合。每个系列使用一个 `AduColumnarSeries` 表示，支持双向绑定。 | `IEnumerable<AduColumnarSeries>` | `null` |
+| `Labels` | X 轴分类标签集合。标签数量通常应与每个系列的 `Values` 数量对应。 | `IEnumerable<string>` | `null` |
+| `ColumnSpacing` | 同一分类下多个系列柱子之间的间距。 | `double` | `5.0` |
+| `SeriesSpacing` | 不同分类组之间的间距。 | `double` | `10.0` |
+| `YAxisMaxValue` | Y 轴最大值。为 `0` 或小于等于 `0` 时由数据自动计算。 | `double` | `0.0` |
+| `YAxisTickCount` | Y 轴刻度分段数量。小于 `1` 时按 `1` 处理。 | `int` | `5` |
+| `AxisStroke` | 坐标轴线条颜色。未设置 `ChartAttach.AxesBrush` 时使用。 | `Brush` | `LightGray` |
+| `AxisLineThickness` | 坐标轴线条粗细。 | `double` | `1.0` |
+| `GridStroke` | 网格线颜色。未设置 `ChartAttach.GridBrush` 时使用。 | `Brush` | 半透明浅灰 |
+| `GridLineThickness` | 网格线粗细。 | `double` | `1.0` |
+| `AxisLabelFontSize` | 坐标轴标签字号。 | `double` | `12.0` |
+| `AxisLabelForeground` | 坐标轴标签前景色。 | `Brush` | `Gray` |
+
+## AduColumnarSeries 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Values` | 当前系列的数值集合。 | `List<double>` | `null` |
+| `SeriesColor` | 系列颜色，柱体边框和图例使用该颜色，柱体填充会使用半透明效果。 | `Color` | `Blue` |
+| `Name` | 系列名称，显示在图例和悬浮提示中。 | `string` | `null` |
+| `StrokeThickness` | 柱体边框粗细。 | `double` | `2.0` |
+| `IsVisible` | 当前系列是否参与绘制。图例点击会切换该值。 | `bool` | `True` |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 图表标题内容。 | `Columnar Chart` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题区域。 | `Visible` |
+| `AduAttach:LegendAttach.Visible` | 是否显示图例区域。 | `Visible` |
+| `AduAttach:ChartAttach.IsDrawingAxes` | 是否绘制坐标轴。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingGrid` | 是否绘制网格线。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingLegend` | 是否绘制图例内容。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingXAxisValues` | 是否显示 X 轴标签。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingYAxisValues` | 是否显示 Y 轴刻度值。 | `True` |
+| `AduAttach:ChartAttach.AxesBrush` | 坐标轴颜色，优先级高于 `AxisStroke`。 | `NormalBorderBrush30` 动态资源 |
+| `AduAttach:ChartAttach.GridBrush` | 网格线颜色，优先级高于 `GridStroke`。 | `NormalBorderBrush50` 动态资源 |
+| `AduAttach:TooltipAttach.IsShowHoverTooltip` | 是否在鼠标悬浮柱体时显示提示。 | `True` |
+| `AduAttach:BorderAttach.CornerRadius` | 图表外框圆角。 | `10` |
+
+## 使用说明
+- `Labels` 决定分类数量，`Series` 决定每个分类下绘制多少个柱体。
+- 每个 `AduColumnarSeries.Values` 中的数值按索引与 `Labels` 对应；多余数据不会显示，缺少数据的分类不会绘制该系列柱体。
+- `YAxisMaxValue` 大于 `0` 时会作为 Y 轴最大值使用；不设置时控件会根据可见系列自动计算范围。
+- 支持正负值；当数据包含负数时，控件会按零值基线向上或向下绘制柱体。
+- `Series` 和 `Labels` 如果实现集合变更通知，增删项会触发刷新。
+- 如果直接修改 `AduColumnarSeries.Values` 内部元素，建议重新赋值 `Values` 或调用 `RequestChartRefresh` 刷新图表。
+- 图例项可点击，用于切换对应系列的 `IsVisible`。
+- 鼠标悬浮到柱体时，提示会显示分类名称以及该分类下各系列的数值。
+
+## 典型场景
+- 展示月度、季度、年度统计数据。
+- 对比多个产品、部门、渠道或类别的指标。
+- 报表页中的分组柱状图。
+- 需要通过图例临时隐藏部分系列的分析面板。

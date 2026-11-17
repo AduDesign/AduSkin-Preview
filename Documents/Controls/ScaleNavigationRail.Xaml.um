@@ -1,0 +1,53 @@
+<!--  Scale Navigation Rail With Content List  -->
+<Border Padding="20" BorderThickness="1" CornerRadius="8">
+	<Grid Height="430">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="70" />
+			<ColumnDefinition Width="18" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<AduSkin:AduScaleNavigationRail
+			FarScaleLength="12"
+			HoverRange="2"
+			HoverScaleBrush="{DynamicResource NormalForeground}"
+			HoverScaleLength="32"
+			ItemClick="OnNavigationItemClick"
+			ItemClickCommand="{Binding NavigateCommand}"
+			ItemsSource="{Binding NavigationItems}"
+			NearScaleLength="18"
+			ScaleBrush="{DynamicResource NormalForeground}"
+			ScaleLength="9"
+			ScaleSpacing="3"
+			ScaleThickness="2"
+			SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+			SelectedScaleBrush="{DynamicResource NormalForeground}">
+			<AduSkin:AduScaleNavigationRail.PreviewContentTemplate>
+				<DataTemplate>
+					<StackPanel Width="230">
+						<TextBlock FontSize="16" FontWeight="SemiBold" Text="{Binding Title}" />
+						<TextBlock Margin="0,7,0,0" Opacity="0.7" Text="{Binding Preview}" TextWrapping="Wrap" />
+					</StackPanel>
+				</DataTemplate>
+			</AduSkin:AduScaleNavigationRail.PreviewContentTemplate>
+		</AduSkin:AduScaleNavigationRail>
+
+		<AduSkin:AduListBox
+			x:Name="ContentListBox"
+			Grid.Column="2"
+			ItemsSource="{Binding NavigationItems}"
+			SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+			<AduSkin:AduListBox.ItemTemplate>
+				<DataTemplate>
+					<Border Margin="2" Padding="28" Background="{DynamicResource PanelBackground}" CornerRadius="10">
+						<StackPanel>
+							<TextBlock FontSize="12" Opacity="0.6" Text="{Binding Index, StringFormat=SECTION {0:00}}" />
+							<TextBlock Margin="0,10,0,0" FontSize="26" FontWeight="SemiBold" Text="{Binding Title}" />
+							<TextBlock Margin="0,14,0,0" FontSize="14" Opacity="0.75" Text="{Binding Description}" TextWrapping="Wrap" />
+						</StackPanel>
+					</Border>
+				</DataTemplate>
+			</AduSkin:AduListBox.ItemTemplate>
+		</AduSkin:AduListBox>
+	</Grid>
+</Border>

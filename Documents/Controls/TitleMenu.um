@@ -1,0 +1,51 @@
+AduTitleMenu 是一个用于窗口标题栏或顶部导航区的菜单控件，继承自 WPF `Menu`。它通常配合 `AduTitleMenuItem` 使用，支持顶层菜单项、下拉子菜单、图标和可勾选状态。
+
+以下默认值以 `AduTitleMenu` 和 `AduTitleMenuItem` 的默认样式为准。控件适合主导航、标题栏菜单、顶部功能入口和带下拉菜单的导航项。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduTitleMenu` | 顶部菜单容器。 | `Menu` |
+| `AduTitleMenuItem` | 顶部菜单项，支持下拉子菜单。 | `MenuItem` |
+| `AduMenuItem` | 子菜单项，常用于标题菜单的下拉内容。 | `MenuItem` |
+
+## AduTitleMenu 样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Background` | 菜单背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `VerticalAlignment` | 垂直对齐方式。 | `VerticalAlignment` | `Center` |
+| `Height` | 菜单高度。 | `double` | `Auto` |
+| `AduAttach:BorderAttach.CornerRadius` | 菜单裁剪圆角。 | `CornerRadius` | 默认值 |
+
+## AduTitleMenuItem 样式
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Header` | 菜单项标题。 | `object` | `null` |
+| `Icon` | 菜单项图标。为空时隐藏图标区域。 | `object` | `null` |
+| `Command` | 点击菜单项时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 命令参数。 | `object` | `null` |
+| `IsCheckable` | 是否可勾选。 | `bool` | `False` |
+| `IsChecked` | 勾选状态。 | `bool` | `False` |
+| `Background` | 菜单项背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `Foreground` | 菜单项前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Height` | 顶部菜单项高度。 | `double` | `40` |
+| `Cursor` | 鼠标指针。 | `Cursor` | `Hand` |
+| `AduAttach:BackgroundAttach.PanelBackground` | 下拉面板背景。 | `Brush` | `PanelBackground` 动态资源 |
+| `AduAttach:BorderAttach.BorderBrush` | 下拉面板边框。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `AduAttach:BorderAttach.BorderThickness` | 下拉面板边框厚度。 | `Thickness` | `1` |
+| `AduAttach:BorderAttach.CornerRadius` | 下拉面板圆角。 | `CornerRadius` | `6` |
+| `AduAttach:PathDataAttach.Width` | 图标区域宽度。 | `double` | `20` |
+| `AduAttach:PathDataAttach.Margin` | 图标区域边距。 | `Thickness` | `8,0,0,0` |
+
+## 使用说明
+- 顶层项建议使用 `AduTitleMenuItem`，下拉子项可使用 `AduMenuItem`。
+- 顶层项有子菜单时，模板会显示下拉箭头并弹出下方面板。
+- `Icon` 为空时图标区域隐藏。
+- 可勾选项在选中时显示勾选图标。
+- 模板中顶层内容设置了窗口标题栏命中支持，适合放在自定义窗口标题区域。
+
+## 典型场景
+- 应用主导航菜单。
+- 自定义窗口标题栏中的导航入口。
+- 顶部功能菜单和更多功能入口。
+- 带链接、命令或下拉项的主菜单区域。

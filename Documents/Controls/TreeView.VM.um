@@ -1,0 +1,31 @@
+﻿public TreeViewViewModel()
+{
+    //性能测试
+    Task.Run(async () =>
+    {
+        await Application.Current.Dispatcher.InvokeAsync(() =>
+          {
+              for (int i = 0; i < 5; i++)
+              {
+                  var newItem = new NodeModel() { Name = $"Parent[{i}]", Value = $"Parent[{i}] = 追求极致，永臻完美", Description = "TempColumn", IsExpanded = true };
+                  for (int j = 0; j < 10000; j++)
+                  {
+                      var newSubItem = new NodeModel() { Name = $"Children[{j}]", Value = $"Children[{j}] = 追求极致，永臻完美", Description = "TempColumn" };
+                      for (int k = 0; k < 5; k++)
+                      {
+                          newSubItem.Children.Add(new NodeModel() { Name = $"Children2[{k}]", Value = $"Children2[{k}] = 追求极致，永臻完美", Description = "TempColumn" });
+                      }
+                      newItem.Children.Add(newSubItem);
+                  }
+                  Nodes.Add(newItem);
+              }
+              Nodes.LastOrDefault().IsSelected = true;
+          });
+    });
+}
+
+[ObservableProperty]
+private ObservableCollection<NodeModel> _nodes = new ObservableCollection<NodeModel>();
+
+[ObservableProperty]
+private NodeModel _selectedItem;

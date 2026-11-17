@@ -1,0 +1,25 @@
+﻿[RelayCommand]
+public void OpenDefault()
+{
+    AduMessageBox.Show(messageBoxText: "消息内容");
+}
+[RelayCommand]
+public void OpenOk()
+{
+    var result = AduMessageBox.ShowOK(messageBoxText: "消息内容", caption: "提示", okButtonText: "Ok");
+}
+[RelayCommand]
+public void OpenOkCancel()
+{
+    AduMessageBox.ShowOKCancel(messageBoxText: "消息内容", caption: "提示", okButtonText: "Ok", cancelButtonText: "Cancel");
+}
+[RelayCommand]
+public void OpenYesNo()
+{
+    AduMessageBox.ShowYesNo(messageBoxText: "消息内容", caption: "提示", yesButtonText: "Yes", noButtonText: "No");
+}
+[RelayCommand]
+public void OpenYesNoCancel()
+{
+    AduMessageBox.ShowYesNoCancel(messageBoxText: "消息内容", caption: "提示", yesButtonText: "Yes", noButtonText: "No", cancelButtonText: "Cancel");
+}

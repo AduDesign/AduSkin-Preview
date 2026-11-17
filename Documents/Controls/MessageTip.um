@@ -1,0 +1,88 @@
+AduMessageTip 是一个轻量消息提示控件，支持标题消息、描述、通知类型、操作按钮、关闭按钮和自动关闭。配合 `AduMessageTipHost` 与 `AduMessageTipService` 使用时，可以在页面顶部显示可堆叠、悬停展开的通知提示。
+
+以下默认值以 `AduMessageTip`、`AduMessageTipHost` 的源码和默认样式为准。
+
+## 控件类型
+| 名称 | 描述 |
+| --- | --- |
+| `AduMessageTip` | 单条消息提示控件。 |
+| `AduMessageTipHost` | 消息提示宿主，负责堆叠、布局、自动关闭和关闭动画。 |
+| `AduMessageTipService` | 静态服务入口，用于向已初始化的宿主显示消息。 |
+
+## AduMessageTip 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Message` | 主消息文本。 | `string` | 空字符串 |
+| `Description` | 描述文本。为空时描述行隐藏。 | `string` | 空字符串 |
+| `NotificationType` | 通知类型。 | `NotificationType` | `Info` |
+| `Duration` | 自动关闭时长，单位毫秒。小于等于 `0` 时不自动关闭。 | `int` | `4000` |
+| `ActionContent` | 操作按钮内容。为空时操作按钮隐藏。 | `object` | `null` |
+| `ActionCommand` | 操作按钮命令。 | `ICommand` | `null` |
+| `ActionCommandParameter` | 操作按钮命令参数。为空时默认使用当前提示控件。 | `object` | `null` |
+| `CloseOnAction` | 点击操作按钮后是否关闭提示。 | `bool` | `True` |
+| `CloseButtonVisibility` | 关闭按钮可见性。 | `Visibility` | `Collapsed` |
+| `ContentOpacity` | 内容区域透明度，宿主折叠堆叠时会调整该值。 | `double` | `1.0` |
+
+## AduMessageTipHost 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `MaxVisibleCount` | 最大可见提示数量，超出后关闭最旧提示。 | `int` | `3` |
+| `DefaultDuration` | 宿主显示提示时的默认自动关闭时长。 | `int` | `4000` |
+| `TipWidth` | 提示宽度。 | `double` | `426.0` |
+| `MinTipHeight` | 单条提示最小高度。 | `double` | `56.0` |
+| `ExpandedGap` | 鼠标悬停展开时，提示之间的间距。 | `double` | `18.0` |
+| `CollapsedOffset` | 折叠堆叠时，提示之间的垂直偏移。 | `double` | `14.0` |
+| `CollapsedScaleStep` | 折叠堆叠时，每层缩放递减值。 | `double` | `0.045` |
+| `CollapsedOpacityStep` | 折叠堆叠时，每层透明度递减值。 | `double` | `0.12` |
+
+## 事件
+| 名称 | 所属类型 | 描述 |
+| --- | --- | --- |
+| `CloseRequested` | `AduMessageTip` | 请求关闭提示。独立使用时会直接隐藏，宿主使用时由宿主处理关闭。 |
+| `ActionClicked` | `AduMessageTip` | 操作按钮点击后触发。 |
+| `TipClosed` | `AduMessageTipHost` | 单条提示关闭并移除后触发。 |
+
+## 服务方法
+| 名称 | 描述 |
+| --- | --- |
+| `Initialize(host)` | 初始化全局消息提示宿主。 |
+| `Show(...)` | 显示指定类型的消息提示。 |
+| `Success(...)` | 显示成功提示。 |
+| `Error(...)` | 显示错误提示。 |
+| `Warning(...)` | 显示警告提示。 |
+| `Info(...)` | 显示信息提示。 |
+| `Clear()` | 清空当前宿主中的所有提示。 |
+
+## 枚举说明
+| 名称 | 描述 |
+| --- | --- |
+| `Info` | 消息提示。 |
+| `Warn` | 警告提示。 |
+| `Error` | 失败提示。 |
+| `Success` | 成功提示。 |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Foreground` | 文本和按钮前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 提示背景。 | `Brush` | `NormalBackground` 动态资源 |
+| `BorderBrush` | 提示边框颜色。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `BorderThickness` | 提示边框厚度。 | `Thickness` | `1` |
+| `Padding` | 提示内边距。 | `Thickness` | `10,7` |
+| `MinWidth` | 提示最小宽度。 | `double` | `200` |
+| `MinHeight` | 提示最小高度。 | `double` | `56` |
+| `AduAttach:BorderAttach.CornerRadius` | 提示圆角。 | `CornerRadius` | `10` |
+
+## 使用说明
+- 通常先在页面中放置并初始化 `AduMessageTipHost`，再通过 `AduMessageTipService` 显示提示。
+- `duration=-1` 的服务调用会使用宿主的 `DefaultDuration`。
+- `Duration<=0` 时提示不会自动关闭，需要手动关闭或通过宿主清理。
+- 鼠标移入宿主时，多条提示会展开排列并暂停自动关闭；鼠标移出后恢复折叠堆叠并继续计时。
+- `ActionContent` 为空时操作按钮隐藏；设置 `ActionCommand` 后点击操作按钮会执行命令。
+- 需要显示关闭按钮时，设置 `CloseButtonVisibility=Visible`。
+
+## 典型场景
+- 页面顶部轻量提示。
+- 保存成功、校验失败、连接异常等非阻塞通知。
+- 带“查看详情”“重试”等操作按钮的消息。
+- 需要短时间堆叠显示的连续通知。

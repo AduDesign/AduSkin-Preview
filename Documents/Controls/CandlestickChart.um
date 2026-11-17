@@ -1,0 +1,107 @@
+AduCandlestickChart 是 K 线图控件，用于展示开盘价、最高价、最低价、收盘价和成交量等金融时间序列数据。控件支持多系列 K 线、成交量窗格、MA5 / MA10 / MA20 均线、指示线、坐标轴、网格、图例、十字线、悬浮提示、鼠标滚轮缩放、拖动平移和双击重置视口。
+
+以下默认值以 `AduCandlestickChart` 的默认样式和源码默认值为准。控件适合用于股票、期货、数字资产、行情回放和 OHLC 数据分析。
+
+## 控件类型
+| 名称 | 描述 | 基类 |
+| --- | --- | --- |
+| `AduCandlestickChart` | K 线图控件，绘制价格 K 线、成交量、均线和指示线。 | `Control` |
+| `AduCandlestickSeries` | K 线数据系列，包含 K 线数据集合和涨跌颜色配置。 | `AduSeriesBase` |
+| `AduCandlestickItem` | 单根 K 线数据模型。 | `NotifyPropertyBase` |
+| `AduIndicatorLine` | 指示线模型，常用于价格阈值线、成本线、止盈止损线等。 | `NotifyPropertyBase` |
+
+## AduCandlestickChart 依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Series` | K 线数据系列集合。控件会以第一个可见且有数据的系列作为主系列计算视口、坐标和提示。 | `IEnumerable<AduCandlestickSeries>` | `null` |
+| `IndicatorLines` | 价格指示线集合。支持双向绑定。 | `IEnumerable<AduIndicatorLine>` | `null` |
+| `ShowIndicatorLines` | 是否显示价格指示线。 | `bool` | `True` |
+| `MaxRenderedPoints` | 最大渲染 K 线数量，也是初始可见数量上限。 | `int` | `240` |
+| `CandleBodyWidthFactor` | K 线实体宽度系数，会被限制在 `0.2` 到 `0.95` 之间参与计算。 | `double` | `0.72` |
+| `MinCandleBodyHeight` | K 线实体最小显示高度，避免开收盘价接近时实体不可见。 | `double` | `2.0` |
+| `ShowVolumePane` | 是否显示成交量窗格。 | `bool` | `True` |
+| `VolumePaneHeightRatio` | 成交量窗格高度比例，实际会限制在 `0.12` 到 `0.4` 之间。 | `double` | `0.22` |
+| `ShowMa5` | 是否显示 5 周期移动平均线。 | `bool` | `True` |
+| `ShowMa10` | 是否显示 10 周期移动平均线。 | `bool` | `True` |
+| `ShowMa20` | 是否显示 20 周期移动平均线。 | `bool` | `True` |
+| `EnableZoom` | 是否允许鼠标滚轮缩放可见 K 线数量。 | `bool` | `True` |
+| `EnablePan` | 是否允许鼠标左键拖动平移视口。 | `bool` | `True` |
+| `MinVisibleCandles` | 缩放时保留的最小可见 K 线数量。源码会同时保证不小于 `8`。 | `int` | `20` |
+
+## AduCandlestickSeries 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `DataPoints` | K 线数据集合。集合增删或单项属性变化时会触发刷新。 | `ObservableCollection<AduCandlestickItem>` | `null` |
+| `RiseColor` | 上涨 K 线颜色。为空时使用默认上涨色。 | `Color?` | `null` |
+| `FallColor` | 下跌 K 线颜色。为空时使用默认下跌色。 | `Color?` | `null` |
+| `EqualColor` | 平盘 K 线颜色。为空时使用默认平盘色。 | `Color?` | `null` |
+| `IsHollowRise` | 上涨 K 线是否使用空心实体。 | `bool` | `True` |
+| `Name` | 系列名称，显示在图例和提示中。 | `string` | `null` |
+| `IsVisible` | 当前系列是否参与绘制。图例点击会切换该值。 | `bool` | `True` |
+
+## AduCandlestickItem 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Time` | 当前 K 线对应的时间。用于 X 轴标签、悬浮提示和时间格式判断。 | `DateTime` | 默认日期值 |
+| `Open` | 开盘价。 | `double` | `0` |
+| `High` | 最高价。 | `double` | `0` |
+| `Low` | 最低价。 | `double` | `0` |
+| `Close` | 收盘价。 | `double` | `0` |
+| `Volume` | 成交量。为空时按 `0` 显示。 | `double?` | `null` |
+
+## AduIndicatorLine 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Name` | 指示线名称。 | `string` | 空字符串 |
+| `Value` | 指示线所在的价格值。 | `double` | `0` |
+| `Brush` | 指示线颜色。 | `Brush` | `Red` |
+| `Thickness` | 指示线粗细。 | `double` | `1` |
+| `IsVisible` | 当前指示线是否显示。 | `bool` | `True` |
+| `IsDash` | 是否为虚线标记。当前 K 线图绘制主要使用指示线颜色和粗细。 | `bool` | `True` |
+
+## 事件
+| 名称 | 描述 | 参数 |
+| --- | --- | --- |
+| `AduCandlestickSeries.DataPointsChanged` | `DataPoints` 集合、单根 K 线属性或系列颜色配置变化时触发，控件订阅后会刷新图表。 | `EventArgs` |
+
+## 公开方法
+| 名称 | 描述 |
+| --- | --- |
+| `ResetViewport()` | 重置视口，清除缩放和平移状态，并恢复自动滚动到最新数据。 |
+| `ScrollToLatest()` | 将视口滚动到最新 K 线位置。 |
+
+## 常用附加属性
+| 名称 | 描述 | 默认值 |
+| --- | --- | --- |
+| `AduAttach:HeaderAttach.Header` | 图表标题内容。 | `null` |
+| `AduAttach:HeaderAttach.Visible` | 是否显示标题区域。 | `Visible` |
+| `AduAttach:HeaderAttach.Margin` | 标题区域外边距。 | `0,0,0,20` |
+| `AduAttach:LegendAttach.Visible` | 是否显示图例区域。 | `Visible` |
+| `AduAttach:LegendAttach.Margin` | 图例区域外边距。 | `0,6,0,0` |
+| `AduAttach:ChartAttach.IsDrawingGrid` | 是否绘制网格线。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingAxes` | 是否绘制坐标轴和轴标签。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingLegend` | 是否绘制图例内容。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingXAxisValues` | 是否显示 X 轴时间标签。 | `True` |
+| `AduAttach:ChartAttach.IsDrawingYAxisValues` | 是否显示 Y 轴价格标签。 | `True` |
+| `AduAttach:ChartAttach.XAxisName` | X 轴名称。 | 空字符串 |
+| `AduAttach:ChartAttach.YAxisName` | Y 轴名称。 | 空字符串 |
+| `AduAttach:ChartAttach.GridBrush` | 网格线颜色。 | `GridBrush` 动态资源 |
+| `AduAttach:ChartAttach.AxesBrush` | 坐标轴颜色。 | `PrimaryBrush` 动态资源 |
+
+## 使用说明
+- 控件以第一个 `IsVisible=True` 且 `DataPoints` 不为空的系列作为主系列，成交量、X 轴、缩放、平移、十字线和摘要栏都以主系列为基准。
+- `DataPoints` 建议按时间升序排列。控件按集合顺序绘制，不会自动排序。
+- `High`、`Low`、`Open`、`Close` 会共同参与价格范围计算；可见指示线也会扩展价格范围。
+- `ShowVolumePane=True` 且图表高度足够时会显示成交量窗格，否则成交量窗格可能不绘制。
+- MA5、MA10、MA20 使用主系列收盘价计算；数据不足对应周期时，该点不会绘制均线值。
+- 鼠标滚轮缩放会改变可见 K 线数量，最少数量受 `MinVisibleCandles` 控制，最多不超过数据总数。
+- 鼠标左键拖动会平移视口，拖动后会关闭自动滚动到最新数据。
+- 双击图表区域会调用 `ResetViewport()`，恢复默认视口。
+- 图例中的 K 线系列项可点击，用于切换对应系列的可见性。
+- 鼠标悬浮时会绘制十字线、价格和时间标记，并显示当前 K 线的 OHLC、涨跌幅、成交量和均线信息。
+
+## 典型场景
+- 股票、期货、外汇、数字资产等行情 K 线展示。
+- 金融数据回放和历史走势分析。
+- 带成交量和均线的交易终端图表。
+- 需要阈值线、成本线、止盈止损线的价格监控界面。

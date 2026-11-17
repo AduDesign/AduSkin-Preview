@@ -1,0 +1,145 @@
+<UserControl
+    x:Class="AduSkin.Demo.Views.Demo.UCSpatialView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:AduSkin="clr-namespace:AduSkin.Controls;assembly=AduSkin"
+    xmlns:Example="clr-namespace:AduSkin.Demo.Views.Example">
+    <AduSkin:AduScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="20">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="28"
+                FontWeight="Bold"
+                Text="SpatialView Demo" />
+            <TextBlock
+                Margin="0,0,0,30"
+                FontSize="14"
+                Text="将可交互的 AduSkin 面板放入三维空间，通过鼠标自由环视。"
+                TextWrapping="Wrap" />
+
+            <Border
+                Margin="0,0,0,20"
+                BorderThickness="1"
+                CornerRadius="8">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="18"
+                        FontWeight="SemiBold"
+                        Text="Example 1: 空间面板交互" />
+                    <TextBlock
+                        Margin="0,0,0,15"
+                        FontSize="12"
+                        Text="左键操作面板内容，按住右键拖动环视，滚轮控制远近，Shift + 滚轮操作内容，Ctrl + 滚轮调整视野。"
+                        TextWrapping="Wrap" />
+                    <WrapPanel Margin="0,0,0,15">
+                        <AduSkin:AduButton
+                            Margin="4"
+                            Padding="12,6"
+                            Click="LookLeft"
+                            Content="查看左侧" />
+                        <AduSkin:AduButton
+                            Margin="4"
+                            Padding="12,6"
+                            Click="ResetView"
+                            Content="复位视角" />
+                        <AduSkin:AduButton
+                            Margin="4"
+                            Padding="12,6"
+                            Click="LookRight"
+                            Content="查看右侧" />
+                    </WrapPanel>
+                    <WrapPanel Margin="4,0,0,15">
+                        <TextBlock
+                            Margin="0,0,12,0"
+                            VerticalAlignment="Center"
+                            Text="渲染质量" />
+                        <AduSkin:AduSlider
+                            x:Name="QualitySlider" Width="150"
+                            IsSnapToTickEnabled="True"
+                            Maximum="4"
+                            Minimum="1"
+                            TickFrequency="1"
+                            Value="2" />
+                        <TextBlock
+                            Margin="12,0"
+                            VerticalAlignment="Center"
+                            x:Name="QualityValue" />
+                        <TextBlock VerticalAlignment="Center" Text="倍率越高，缓存开销越大" />
+                    </WrapPanel>
+                    <WrapPanel Margin="4,0,0,15">
+                        <TextBlock
+                            Margin="0,0,12,0"
+                            VerticalAlignment="Center"
+                            Text="相机距离" />
+                        <AduSkin:AduSlider
+                            x:Name="DistanceSlider" Width="180"
+                            Maximum="12"
+                            Minimum="0.5"
+                            Value="4" />
+                        <TextBlock
+                            Margin="12,0"
+                            VerticalAlignment="Center"
+                            x:Name="DistanceValue" />
+                        <AduSkin:AduCheckBox Content="启用滚轮远近" x:Name="WheelZoomCheckBox" />
+                    </WrapPanel>
+                    <Border
+                        Height="560"
+                        Margin="0,0,0,20"
+                        CornerRadius="8">
+                        <Border.Background>
+                            <ImageBrush ImageSource="/AduSkin.Demo;component/Resources/Cover/4.png" Stretch="UniformToFill" />
+                        </Border.Background>
+                        <Border Background="#80000000">
+                            <AduSkin:AduSpatialView
+                                x:Name="Space"
+                                CameraDistance="4"
+                                FieldOfView="90"
+                                MaxCameraDistance="12"
+                                PanelSpacing="0.25"
+                                Radius="4"
+                                UseEdgeLayout="True"
+                                ZoomStep="0.25">
+                                <AduSkin:AduSpatialPanel
+                                    Width="500"
+                                    Height="480"
+                                    Azimuth="-44">
+                                    <ContentControl VerticalContentAlignment="Center" Content="{Binding Trafficchannels}" />
+                                </AduSkin:AduSpatialPanel>
+                                <AduSkin:AduSpatialPanel Width="800" Height="480">
+                                    <AduCornerClip CornerRadius="10">
+                                        <ContentControl Content="{Binding MusicPlayer}" />
+                                    </AduCornerClip>
+                                </AduSkin:AduSpatialPanel>
+                                <AduSkin:AduSpatialPanel
+                                    Width="400"
+                                    Height="480"
+                                    Azimuth="44">
+                                    <ContentControl Content="{Binding Login}" />
+                                </AduSkin:AduSpatialPanel>
+                            </AduSkin:AduSpatialView>
+                        </Border>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,8"
+                    FontSize="14"
+                    FontWeight="Bold"
+                    Foreground="{DynamicResource NormalBlue}"
+                    Text="💡 Features:" />
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource NormalBlue}"
+                    TextWrapping="Wrap">
+                    <Run Text="• 支持左侧、前方、右侧空间面板及自定义方位角" /><LineBreak />
+                    <Run Text="• 支持 AduSkin 按钮、文本输入、列表选择、复选框及滑块交互" /><LineBreak />
+                    <Run Text="• 右键环视，滚轮控制远近，Shift + 滚轮操作内容，Ctrl + 滚轮调整视野" /><LineBreak />
+                    <Run Text="• 支持视角复位、数据绑定及运行时添加和移除面板" />
+                </TextBlock>
+            </StackPanel>
+        </StackPanel>
+    </AduSkin:AduScrollViewer>
+</UserControl>

@@ -1,0 +1,46 @@
+`TextBlockHighlightAttach` 为 WPF `TextBlock` 提供关键字高亮能力。它会将原始文本拆分成多个 `Run`，对全部匹配片段应用背景色、前景色、字重、下划线或删除线，并在文本或关键字变化时自动重新生成显示内容。
+
+以下默认值以 `TextBlockHighlightAttach` 的源码默认值为准。该功能适合搜索结果、列表过滤、日志查看、文档预览和命令面板等需要突出匹配文字的场景。
+
+## 功能类型
+| 名称 | 描述 | 应用目标 |
+| --- | --- | --- |
+| `TextBlockHighlightAttach` | 提供文本匹配、高亮样式和启用状态等附加属性。 | `TextBlock` |
+| `HighlightStyle` | 定义匹配文字的视觉表现。 | 附加属性枚举 |
+
+## 附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `HighlightText` | 需要查找并高亮的关键字；为空时恢复原始文本。 | `string` | 空字符串 |
+| `HighlightBrush` | 背景高亮颜色；在下划线和删除线模式下作为匹配文字颜色。 | `Brush` | `Yellow` |
+| `HighlightForeground` | 匹配文字的前景色；未设置时通常保留原文字前景。 | `Brush` | `null` |
+| `HighlightFontWeight` | 匹配文字的字重。 | `FontWeight` | `Normal` |
+| `HighlightStyle` | 高亮表现方式。 | `HighlightStyle` | `Background` |
+| `IsIgnoreCase` | 是否忽略英文大小写。 | `bool` | `True` |
+| `IsEnabled` | 是否启用高亮；关闭时恢复原始文本。 | `bool` | `True` |
+
+## HighlightStyle 枚举
+| 枚举值 | 描述 |
+| --- | --- |
+| `Background` | 使用 `HighlightBrush` 设置背景，并可同时使用 `HighlightForeground`。 |
+| `Underline` | 为匹配文字添加下划线，并使用 `HighlightBrush` 作为前景色。 |
+| `Strikethrough` | 为匹配文字添加删除线，并使用 `HighlightBrush` 作为前景色。 |
+| `UnderlineStrikethrough` | 同时添加下划线和删除线。 |
+| `None` | 不添加文字装饰；可通过前景色、背景色和字重突出匹配内容。 |
+
+## 使用说明
+- 附加属性只处理 `TextBlock`，设置到其他控件上不会产生文本高亮效果。
+- 匹配会处理文本中的全部非重叠结果，而不只是第一个结果。
+- `IsIgnoreCase=True` 使用不区分大小写的序号比较；设置为 `False` 时大小写必须完全一致。
+- `HighlightText`、原始 `Text` 或任一视觉属性变化后，高亮内容会自动刷新。
+- `TextBlock.Text` 后续通过绑定发生变化时，控件会保存新文本并在 Dispatcher 空闲阶段重新应用高亮。
+- 清空 `HighlightText` 或设置 `IsEnabled=False` 会删除生成的高亮 `Run` 并恢复原始文本。
+- 高亮实现会接管 `TextBlock.Inlines`。如果 TextBlock 原本包含多个手工创建且具有独立格式的 `Run`，重新高亮后这些逐段格式不会保留。
+- 搜索框绑定通常应设置 `UpdateSourceTrigger=PropertyChanged`，以便输入过程中即时更新结果。
+- 列表模板中可以通过 `RelativeSource` 访问页面级搜索关键字，示例展示了这种用法。
+
+## 典型场景
+- 搜索结果标题和摘要中的关键字标记。
+- ListBox、TreeView 或表格模板中的过滤词高亮。
+- 日志、诊断信息和代码搜索结果。
+- 中英文混合文本的实时查找提示。

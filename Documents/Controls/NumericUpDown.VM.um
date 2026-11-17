@@ -1,0 +1,32 @@
+﻿[RelayCommand]
+public void Refresh()
+{
+    DoubleValue += 1.0;
+    IntValue += 1;
+}
+
+[ObservableProperty]
+private double _doubleValue = 0.1;
+partial void OnDoubleValueChanged(double oldValue, double newValue)
+{
+
+}
+
+[ObservableProperty]
+private double _doubleMin = -999.0;
+
+[ObservableProperty]
+private double _doubleMax = 100.0;
+
+[ObservableProperty]
+private int _intValue = 1;
+partial void OnIntValueChanged(int oldValue, int newValue)
+{
+
+}
+
+[ObservableProperty]
+private int _intMin = -999;
+
+[ObservableProperty]
+private int _intMax = 999;

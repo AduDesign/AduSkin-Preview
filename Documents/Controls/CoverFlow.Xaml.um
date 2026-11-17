@@ -1,0 +1,41 @@
+﻿<!--  Example 1: Basic CoverFlow  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Basic CoverFlow with Images" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Interactive image carousel with smooth transitions"
+			TextWrapping="Wrap" />
+
+		<AduSkin:AduCoverFlow
+			x:Name="coverflow"
+			Width="500"
+			Height="300"
+			MaxSideCount="4"
+			ItemsSource="{Binding ItemsSource}">
+			<AduSkin:AduCoverFlow.ItemTemplate>
+				<DataTemplate>
+					<Border
+						Width="200"
+						Height="200"
+						BorderBrush="{DynamicResource NormalBorderBrush}"
+						BorderThickness="1"
+						CornerRadius="10">
+						<Border.Background>
+							<ImageBrush ImageSource="{Binding String1}" Stretch="UniformToFill" />
+						</Border.Background>
+					</Border>
+				</DataTemplate>
+			</AduSkin:AduCoverFlow.ItemTemplate>
+		</AduSkin:AduCoverFlow>
+	</StackPanel>
+</Border>

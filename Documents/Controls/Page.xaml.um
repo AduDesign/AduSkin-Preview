@@ -1,0 +1,62 @@
+﻿<!--  Example 1: Page Control with Items  -->
+<Border
+	Margin="0,0,0,20"
+	BorderThickness="1"
+	CornerRadius="8">
+	<StackPanel>
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="18"
+			FontWeight="SemiBold"
+			Text="Example 1: Page Control with Grid Layout" />
+
+		<TextBlock
+			Margin="0,0,0,15"
+			FontSize="12"
+			Text="Pagination control showing page numbers and navigation"
+			TextWrapping="Wrap" />
+
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="auto" />
+			</Grid.RowDefinitions>
+			<ItemsControl ItemsSource="{Binding ItemsSource}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<UniformGrid Columns="4" Rows="3" />
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Border
+							Margin="4"
+							Padding="6"
+							BorderBrush="{DynamicResource NormalBorderBrush}"
+							BorderThickness="1"
+							CornerRadius="6">
+							<TextBlock
+								Width="120"
+								Margin="10"
+								FontSize="16"
+								Text="{Binding}"
+								TextAlignment="Center"
+								TextWrapping="Wrap" />
+						</Border>
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+			</ItemsControl>
+			<AduSkin:AduPage
+				Grid.Row="1"
+				DataCountPerPage="{Binding DataCountPerPage}"
+				MaxPageCount="{Binding PageCount}"
+				PageIndex="1">
+				<Interactivity:Interaction.Triggers>
+					<Interactivity:EventTrigger EventName="PageUpdated">
+						<Interactivity:EventToCommand Command="{Binding PageUpdatedCommand}" PassEventArgsToCommand="True" />
+					</Interactivity:EventTrigger>
+				</Interactivity:Interaction.Triggers>
+			</AduSkin:AduPage>
+		</Grid>
+	</StackPanel>
+</Border>

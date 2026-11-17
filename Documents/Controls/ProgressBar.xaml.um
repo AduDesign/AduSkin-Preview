@@ -1,0 +1,67 @@
+﻿<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="Default Style"
+	AduAttach:HeaderAttach.Visible="Visible"
+	Background="{DynamicResource NormalForeground}"
+	CornerRadius="7"
+	Foreground="{DynamicResource NormalBackground}"
+	Maximum="100"
+	ProgressBarHeight="14"
+	Value="30" />
+
+<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="50% Progress"
+	Maximum="100"
+	Value="50" />
+
+<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="70% Progress"
+	Maximum="100"
+	Value="70" />
+
+<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="State = Error"
+	Maximum="100"
+	State="Error"
+	Value="50" />
+
+<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="State = Wait"
+	State="Wait" />
+
+<AduSkin:AduProgressBar
+	Margin="4,8"
+	AduAttach:HeaderAttach.Header="IsEnabled = False"
+	IsEnabled="False"
+	Maximum="100"
+	Value="70" />
+
+<AduSkin:AduGridProgressBar
+	Margin="0,8"
+	AduAttach:HeaderAttach.Header="AAA"
+	AduAttach:HeaderAttach.Visible="Visible"
+	ActiveBrush="{DynamicResource NormalYellow}"
+	Hint="Green Theme - 55%"
+	InactiveBrush="#1A2332"
+	Maximum="100"
+	Value="70" />
+
+<AduSkin:AduGridProgressBar
+	Margin="0,8"
+	ActiveBrush="{DynamicResource NormalBlue}"
+	Hint="Purple Theme - 65%"
+	InactiveBrush="#1A2332"
+	Maximum="100"
+	Value="60" />
+
+<AduSkin:AduGridProgressBar
+	Margin="0,8"
+	ActiveBrush="{DynamicResource NormalRed}"
+	Hint="Solid Orange - 80%"
+	InactiveBrush="#1A2332"
+	Maximum="100"
+	Value="30" /> 

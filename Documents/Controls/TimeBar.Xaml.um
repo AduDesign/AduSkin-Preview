@@ -1,0 +1,25 @@
+﻿	<!--  Example 1: TimeBar Controls  -->
+	<Border
+		Margin="0,0,0,20"
+		BorderThickness="1"
+		CornerRadius="8">
+		<StackPanel>
+			<TextBlock
+				Margin="0,0,0,15"
+				FontSize="18"
+				FontWeight="SemiBold"
+				Text="Example 1: TimeBar Variations" />
+
+			<TextBlock
+				Margin="0,0,0,15"
+				FontSize="12"
+				Text="Multiple TimeBar instances demonstrating different configurations"
+				TextWrapping="Wrap" />
+
+			<UniformGrid Rows="3">
+				<AduSkin:AduTimeBar Margin="0,10" />
+				<AduSkin:AduTimeBar />
+				<AduSkin:AduTimeBar />
+			</UniformGrid>
+		</StackPanel>
+	</Border>

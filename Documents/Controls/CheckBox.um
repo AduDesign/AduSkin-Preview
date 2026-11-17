@@ -1,0 +1,73 @@
+AduCheckBox 是一个基于 WPF `CheckBox` 的复选框控件，提供统一的 AduSkin 默认样式和可替换的状态图标。它保留 `CheckBox` 原有的选中、未选中、不确定三态能力，以及命令、点击事件和选中状态事件。
+
+`AduCheckBox.cs` 当前没有新增自定义依赖属性，主要通过默认样式和 AduSkin 附加属性控制图标、颜色、间距和边框表现。
+
+以下默认值以 `AduCheckBox` 的默认样式为准；继承自 WPF `CheckBox`、`ToggleButton`、`ButtonBase`、`ContentControl`、`Control` 的属性只列出常用部分。
+
+## 自定义依赖属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| - | `AduCheckBox` 未新增自定义依赖属性。 | - | - |
+
+## 常用 CheckBox 属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `IsChecked` | 当前选中状态。`True` 表示选中，`False` 表示未选中，`null` 表示不确定状态。 | `bool?` | `False` |
+| `IsThreeState` | 是否允许用户通过交互切换到不确定状态。为 `False` 时通常只在选中和未选中之间切换。 | `bool` | `False` |
+| `Content` | 复选框右侧显示内容，可为文本或任意 WPF 内容。 | `object` | `CheckBoxContent` 动态资源 |
+| `Command` | 点击复选框时执行的命令。 | `ICommand` | `null` |
+| `CommandParameter` | 命令参数。 | `object` | `null` |
+| `CommandTarget` | 命令目标元素。 | `IInputElement` | `null` |
+| `Click` | 点击复选框时触发的事件。 | `RoutedEventHandler` | - |
+| `Checked` | `IsChecked` 变为 `True` 时触发的事件。 | `RoutedEventHandler` | - |
+| `Unchecked` | `IsChecked` 变为 `False` 时触发的事件。 | `RoutedEventHandler` | - |
+| `Indeterminate` | `IsChecked` 变为 `null` 时触发的事件。 | `RoutedEventHandler` | - |
+| `IsEnabled` | 是否启用复选框。禁用时默认降低整体透明度。 | `bool` | `True` |
+
+## 样式说明
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `Foreground` | 内容前景色。 | `Brush` | `NormalForeground` 动态资源 |
+| `Background` | 复选框根区域背景。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderBrush` | 复选框根区域边框画刷。 | `Brush` | `NormalTransparentBrush` 动态资源 |
+| `BorderThickness` | 复选框根区域边框厚度。 | `Thickness` | `0` |
+| `AduAttach:BorderAttach.CornerRadius` | 复选框根区域圆角。默认模板使用该附加属性控制外层边框圆角。 | `CornerRadius` | `0` |
+| `AduAttach:BorderAttach.SelectedBorderBrush` | 选中状态下根区域边框画刷。 | `Brush` | `NormalBorderBrush` 动态资源 |
+| `Cursor` | 鼠标悬停时的指针样式。 | `Cursor` | `Hand` |
+| `FocusVisualStyle` | 键盘焦点视觉样式。默认样式关闭系统焦点框。 | `Style` | `null` |
+| `FontSize` | 内容字号。 | `double` | `12` |
+
+## 图标附加属性
+| 名称 | 描述 | 数据类型 | 默认值 |
+| --- | --- | --- | --- |
+| `AduAttach:PathDataAttach.PathData` | 未选中状态图标。 | `Geometry` | `Icon_NoChecked` 动态资源 |
+| `AduAttach:PathDataAttach.SelectedPathData` | 选中状态图标。 | `Geometry` | `Icon_Checked` 动态资源 |
+| `AduAttach:PathDataAttach.SelectNullPathData` | 不确定状态图标。 | `Geometry` | `Icon_NullChecked` 动态资源 |
+| `AduAttach:PathDataAttach.Width` | 状态图标宽度。模板中图标高度由 `Stretch=Uniform` 根据几何比例自动适配。 | `double` | `16` |
+| `AduAttach:PathDataAttach.Margin` | 状态图标和内容之间的间距。 | `Thickness` | `4,0` |
+| `AduAttach:PathDataAttach.Visibility` | 状态图标可见性。 | `Visibility` | `Visible` |
+| `AduAttach:PathBrushAttach.NormalPathBrush` | 未选中和不确定状态图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+| `AduAttach:PathBrushAttach.SelectedPathBrush` | 选中状态图标颜色。 | `Brush` | `PrimaryBrush` 动态资源 |
+
+## 状态表现
+| 状态 | 触发条件 | 默认表现 |
+| --- | --- | --- |
+| 未选中 | `IsChecked=False` | 显示 `PathData` 图标，并使用 `NormalPathBrush`。 |
+| 选中 | `IsChecked=True` | 显示 `SelectedPathData` 图标，并使用 `SelectedPathBrush`；根区域边框切换为 `SelectedBorderBrush`。 |
+| 不确定 | `IsChecked=null` | 显示 `SelectNullPathData` 图标，并使用 `NormalPathBrush`。 |
+| 鼠标悬停 | `IsMouseOver=True` | 状态图标透明度切换为 `MouseOverOpacity` 动态资源。 |
+| 禁用 | `IsEnabled=False` | 控件整体透明度切换为 `DisableOpacity` 动态资源。 |
+
+## 使用说明
+- `AduCheckBox` 继承自 `CheckBox`，可以直接使用 `IsChecked`、`IsThreeState`、`Command`、`Checked`、`Unchecked`、`Indeterminate` 等标准能力。
+- 默认模板左侧显示一个 `Path` 图标，右侧显示 `Content`。如果只需要文本，直接设置 `Content` 即可。
+- `IsChecked` 为 `null` 时显示不确定状态图标。需要让用户通过点击切换到不确定状态时，应同时启用 `IsThreeState`。
+- 可以通过 `AduAttach:PathDataAttach.*` 替换不同状态的图标，通过 `AduAttach:PathBrushAttach.*` 替换图标颜色。
+- 默认模板只绑定了 `PathDataAttach.Width`，未绑定 `PathDataAttach.Height`。图标大小主要由宽度和几何比例决定。
+- 禁用状态通过整体透明度表现，不会单独替换图标几何或内容颜色。
+
+## 典型场景
+- 表单中的多选项、功能开关组、偏好设置。
+- 列表项、表格行或树节点中的选择状态。
+- 需要表达部分选择、混合选择的三态复选框。
+- 自定义图标复选框，例如协议确认、批量选择、筛选条件选择。
